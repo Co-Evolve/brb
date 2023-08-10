@@ -8,12 +8,13 @@ from dm_control.composer import Arena
 from dm_control.mujoco.wrapper import mjbindings
 from transforms3d.euler import euler2quat
 
-from brb.brittle_star.environment.arenas.utils import generate_perlin_noise_map
-from erpy.utils import colors
 
+from brb.utils import colors
+from brb.utils.colors import rgba_sand
+from brb.utils.noise import generate_perlin_noise_map
 
 class HillyLightAquarium(Arena):
-    assets_directory = f"{os.getcwd()}/environment/arenas/assets"
+    assets_directory = str(Path(__file__).parent / "assets")
     BASE_ELEVATION = 0.5
     MAX_ELEVATION = 1.5
     BASE_LIGHT = 0.2
@@ -118,7 +119,7 @@ class HillyLightAquarium(Arena):
 
         # color
         lightmap = np.stack((self.lightmap,) * 3, axis=-1)
-        light_color_map = lightmap * np.asarray([225, 191, 146]) / 255
+        light_color_map = lightmap * rgba_sand[:3]
         self._color_lightmap = (light_color_map * 255).astype(np.uint8)
 
         if save_assets:

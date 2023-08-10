@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Callable, Dict, List, Tuple
+from typing import Dict, List, Tuple
 
 import numpy as np
 from dm_control import composer
@@ -9,23 +8,21 @@ from dm_control import mjcf
 from dm_control import viewer
 from dm_control.composer.observation import observable
 from dm_control.mujoco.math import euler2quat
+from mujoco_utils.environment import MJCEnvironmentConfig
+from mujoco_utils.observables import ConfinedObservable
 from scipy.interpolate import RegularGridInterpolator
 
-from brb.brittle_star.environment.arenas.hilly_light_aquarium import HillyLightAquarium
+from brb.brittle_star.arena.hilly_light_aquarium import HillyLightAquarium
 from brb.brittle_star.morphology.morphology import MJCBrittleStarMorphology
-from brb.brittle_star.morphology.specification.default import default_arm_length_based_brittle_star_morphology_specification
-from erpy.framework.specification import RobotSpecification
-from erpy.interfaces.mujoco.environment import MJCEnvironmentConfig
-from erpy.interfaces.mujoco.observables import ConfinedObservable
-from erpy.interfaces.mujoco.phenome import MJCMorphology
+from brb.brittle_star.morphology.specification.default import \
+    default_arm_length_based_brittle_star_morphology_specification
 
 
 class LightEvasionTask(composer.Task):
     def __init__(
             self,
             config: LightEvasionTaskConfiguration,
-            morphology: MJCBrittleStarMorphology,
-            ) -> None:
+            morphology: MJCBrittleStarMorphology, ) -> None:
         self.config = config
 
         self._arena = self._build_arena()
@@ -99,7 +96,6 @@ class LightEvasionTask(composer.Task):
         self._arena.add_free_entity(
                 entity=morphology
                 )
-        morphology.after_attachment()
         morphology.touch_coloring = self.config.touch_coloring
         return morphology
 
@@ -280,49 +276,40 @@ class LightEvasionTask(composer.Task):
         super().after_step(physics=physics, random_state=random_state)
 
 
-@dataclass
 class LightEvasionTaskConfiguration(
         MJCEnvironmentConfig
         ):
-    env_id: int = 0
-    arena_size: Tuple[int, int] = (10, 5)
-    light_noise: bool = True
-    hilly_terrain: bool = True
-    random_current: bool = True
-    random_friction: bool = True
-    starting_position: Tuple[int, int] = (-8.0, 0.0)
-    touch_coloring: bool = False
-    light_coloring: bool = False
-
-    @property
-    def task(
-            self
-            ) -> Callable[[MJCEnvironmentConfig, MJCMorphology], composer.Task]:
-        return LightEvasionTask
-
-    @property
-    def simulation_time(
-            self
-            ) -> float:
-        return 20.0
-
-    @property
-    def num_substeps(
-            self
-            ) -> int:
-        return 1
-
-    @property
-    def time_scale(
-            self
-            ) -> float:
-        return 0.5
-
-    @property
-    def camera_ids(
-            self
-            ) -> List[int]:
-        return [0, 1]
+    def __init__(
+            self,
+            env_id: int = 0,
+            arena_size: Tuple[int, int] = (10, 5),
+            light_noise: bool = True,
+            hilly_terrain: bool = True,
+            random_current: bool = True,
+            random_friction: bool = True,
+            starting_position: Tuple[int, int] = (-8.0, 0.0),
+            touch_coloring: bool = False,
+            light_coloring: bool = False,
+            time_scale: float = 0.5,
+            control_substeps: int = 1,
+            simulation_time: int = 20
+            ) -> None:
+        super().__init__(
+                task=LightEvasionTask,
+                time_scale=time_scale,
+                control_substeps=control_substeps,
+                simulation_time=simulation_time,
+                camera_ids=[0, 1]
+                )
+        self.env_id = env_id
+        self.arena_size = arena_size
+        self.light_noise = light_noise
+        self.hilly_terrain = hilly_terrain
+        self.random_current = random_current
+        self.random_friction = random_friction
+        self.starting_position = starting_position
+        self.touch_coloring = touch_coloring
+        self.light_coloring = light_coloring
 
 
 if __name__ == '__main__':
@@ -335,26 +322,23 @@ if __name__ == '__main__':
             random_friction=True
             )
 
-    print(f"Steps per episode: {env_config.num_timesteps}")
-    print(f"True steps per episode: {env_config.num_timesteps / 5}")
+    print(f"Steps per episode: {env_config.total_num_timesteps}")
+
     morphology_specification = default_arm_length_based_brittle_star_morphology_specification(
             num_arms=5, arm_length_in_disc_diameters=4, use_p_control=True
             )
-    robot_specification = RobotSpecification(
-            morphology_specification=morphology_specification, controller_specification=None
-            )
     morphology = MJCBrittleStarMorphology(
-            specification=robot_specification
+            specification=morphology_specification
             )
 
     dm_env = env_config.environment(
             morphology=morphology, wrap2gym=False
             )
 
-    observation_spec = env_config.observation_specification
-    action_spec = env_config.action_specification
+    observation_spec = dm_env.observation_spec()
+    action_spec = dm_env.action_spec()
 
-    num_actions = action_spec.shape[0]
+    num_actions = dm_env.action_spec().shape[0]
 
 
     def policy_fn(

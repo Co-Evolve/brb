@@ -1,10 +1,10 @@
 from typing import Union
 
 import numpy as np
+from mujoco_utils.robot import MJCMorphology, MJCMorphologyPart
 
 from brb.brittle_star.morphology.specification.specification import BrittleStarMorphologySpecification
-from erpy.interfaces.mujoco.phenome import MJCMorphology, MJCMorphologyPart
-from erpy.utils import colors
+from brb.utils import colors
 
 
 class MJCBrittleStarDisc(MJCMorphologyPart):

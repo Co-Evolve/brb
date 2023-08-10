@@ -4,9 +4,9 @@ import numpy as np
 from dm_control import composer, mjcf
 from dm_control.composer.observation.observable import MJCFFeature
 from dm_control.mjcf.physics import SynchronizingArrayWrapper
+from mujoco_utils.observables import ConfinedMJCFFeature
 
 from brb.brittle_star.morphology.utils.morphology import calculate_arm_length
-from erpy.interfaces.mujoco.observables import ConfinedMJCFFeature
 
 
 def normalizer_factory(original_range: np.ndarray, target_range: np.ndarray = np.array([-1, 1])):

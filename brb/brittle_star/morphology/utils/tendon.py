@@ -2,12 +2,13 @@ from typing import List
 
 import numpy as np
 from dm_control import mjcf
+from mujoco_utils.robot import MJCMorphologyPart
 
-from erpy.interfaces.mujoco.phenome import MJCMorphologyPart
 
-
-def calculate_relaxed_tendon_length(morphology_parts: List[MJCMorphologyPart],
-                                    attachment_points: List[mjcf.Element]) -> float:
+def calculate_relaxed_tendon_length(
+        morphology_parts: List[MJCMorphologyPart],
+        attachment_points: List[mjcf.Element]
+        ) -> float:
     relaxed_tendon_length = 0
     for current_index in range(len(attachment_points) - 1):
         next_index = current_index + 1

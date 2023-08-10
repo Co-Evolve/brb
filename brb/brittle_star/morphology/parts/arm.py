@@ -3,11 +3,11 @@ from typing import Union, List, Tuple
 import numpy as np
 from dm_control import mjcf
 from dm_control.mjcf.element import _ElementImpl
+from mujoco_utils.robot import MJCMorphology, MJCMorphologyPart
 
 from brb.brittle_star.morphology.parts.arm_segment import MJCBrittleStarArmSegment
 from brb.brittle_star.morphology.specification.specification import BrittleStarMorphologySpecification
-from erpy.interfaces.mujoco.phenome import MJCMorphologyPart, MJCMorphology
-from erpy.utils import colors
+from brb.utils import colors
 
 
 class MJCBrittleStarArm(MJCMorphologyPart):

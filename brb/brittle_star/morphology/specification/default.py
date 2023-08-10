@@ -6,7 +6,6 @@ from brb.brittle_star.morphology.morphology import MJCBrittleStarMorphology
 from brb.brittle_star.morphology.specification.specification import BrittleStarJointSpecification, \
     BrittleStarArmSegmentSpecification, BrittleStarArmSpecification, BrittleStarDiscSpecification, \
     BrittleStarMorphologySpecification, BrittleStarActuationSpecification
-from erpy.framework.specification import RobotSpecification
 
 START_SEGMENT_RADIUS = 0.025
 STOP_SEGMENT_RADIUS = 0.0125
@@ -103,5 +102,4 @@ if __name__ == '__main__':
     morph_spec = default_arm_length_based_brittle_star_morphology_specification(num_arms=5,
                                                                                 arm_length_in_disc_diameters=4,
                                                                                 use_p_control=False)
-    robot_spec = RobotSpecification(morphology_specification=morph_spec, controller_specification=None)
-    MJCBrittleStarMorphology(specification=robot_spec).export_to_xml_with_assets("./shifted")
+    MJCBrittleStarMorphology(specification=morph_spec).export_to_xml_with_assets("./shifted")
