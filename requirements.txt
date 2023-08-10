@@ -13,7 +13,7 @@ idna==3.4
 labmaze==1.0.6
 lxml==4.9.3
 mujoco==2.3.7
-mujoco-utils @ git+https://github.com/Co-Evolve/mujoco-utils@7990cad519bbc1ab11b61e4e03fc02f8d7726d54
+mujoco-utils @ git+https://github.com/Co-Evolve/mujoco-utils@b25a84bd01f2ee7ce317c9e6c698e4dc5d4363bf
 numpy==1.25.2
 perlin-noise==1.12
 Pillow==10.0.0
