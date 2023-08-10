@@ -57,31 +57,31 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
         length = self._segment_specification.length.value
 
         self._capsule = self.mjcf_body.add(
-            "geom",
-            name=f"{self.base_name}_capsule",
-            type="capsule",
-            pos=self.center_of_capsule,
-            euler=[0, np.pi / 2, 0],
-            size=[radius, length / 2],
-            rgba=colors.rgba_green,
-            contype=0,
-            conaffinity=0
-            )
+                "geom",
+                name=f"{self.base_name}_capsule",
+                type="capsule",
+                pos=self.center_of_capsule,
+                euler=[0, np.pi / 2, 0],
+                size=[radius, length / 2],
+                rgba=colors.rgba_green,
+                contype=0,
+                conaffinity=0
+                )
 
     def _build_connector(
             self
             ) -> None:
         radius = self._segment_specification.radius.value
         self._connector = self.mjcf_body.add(
-            "geom",
-            name=f"{self.base_name}_connector",
-            type="sphere",
-            pos=np.zeros(3),
-            size=[0.5 * radius],
-            rgba=colors.rgba_gray,
-            contype=0,
-            conaffinity=0
-            )
+                "geom",
+                name=f"{self.base_name}_connector",
+                type="sphere",
+                pos=np.zeros(3),
+                size=[0.5 * radius],
+                rgba=colors.rgba_gray,
+                contype=0,
+                conaffinity=0
+                )
 
     @property
     def center_of_capsule(
@@ -99,30 +99,30 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             joint_specification: BrittleStarJointSpecification
             ) -> _ElementImpl:
         joint = self.mjcf_body.add(
-            "joint",
-            name=name,
-            type="hinge",
-            limited=True,
-            range=[-joint_specification.range.value, joint_specification.range.value],
-            axis=axis,
-            stiffness=joint_specification.stiffness.value,
-            damping=joint_specification.damping
-            )
+                "joint",
+                name=name,
+                type="hinge",
+                limited=True,
+                range=[-joint_specification.range.value, joint_specification.range.value],
+                axis=axis,
+                stiffness=joint_specification.stiffness.value,
+                damping=joint_specification.damping
+                )
         return joint
 
     def _configure_joints(
             self
             ) -> None:
         self._in_plane_joint = self._configure_joint(
-            name=f"{self.base_name}_in_plane_joint",
-            axis=[0, 0, 1],
-            joint_specification=self._segment_specification.in_plane_joint_specification
-            )
+                name=f"{self.base_name}_in_plane_joint",
+                axis=[0, 0, 1],
+                joint_specification=self._segment_specification.in_plane_joint_specification
+                )
         self._out_of_plane_joint = self._configure_joint(
-            name=f"{self.base_name}_out_of_plane_joint",
-            axis=[0, 1, 0],
-            joint_specification=self._segment_specification.out_of_plane_joint_specification
-            )
+                name=f"{self.base_name}_out_of_plane_joint",
+                axis=[0, 1, 0],
+                joint_specification=self._segment_specification.out_of_plane_joint_specification
+                )
 
     @property
     def tendon_plate_radius(
@@ -140,14 +140,14 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             position: np.ndarray
             ) -> None:
         tendon_plate = self.mjcf_body.add(
-            "geom",
-            name=f"{self.base_name}_tendon_plate_{side}",
-            type="cylinder",
-            size=[self.tendon_plate_radius, self._tendon_plate_thickness],
-            pos=position,
-            euler=[0, np.pi / 2, 0],
-            rgba=colors.rgba_green
-            )
+                "geom",
+                name=f"{self.base_name}_tendon_plate_{side}",
+                type="cylinder",
+                size=[self.tendon_plate_radius, self._tendon_plate_thickness],
+                pos=position,
+                euler=[0, np.pi / 2, 0],
+                rgba=colors.rgba_green
+                )
         self._tendon_plates.append(tendon_plate)
 
         self._configure_tendon_attachment_points(side=side, x_offset=position[0])
@@ -157,11 +157,11 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             ) -> None:
         self._tendon_plate_thickness = 0.1 * self._segment_specification.length.value
         self._build_tendon_plate(
-            side="proximal", position=0.5 * self.center_of_capsule
-            )
+                side="proximal", position=0.5 * self.center_of_capsule
+                )
         self._build_tendon_plate(
-            side="distal", position=1.5 * self.center_of_capsule
-            )
+                side="distal", position=1.5 * self.center_of_capsule
+                )
 
     @property
     def tendon_attachment_points(
@@ -188,8 +188,8 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
                 name = f"{self.base_name}_muscle_attachment_point_{side}_{tendon_index}_{sub_side}"
 
                 attachment_point = self.mjcf_body.add(
-                    "site", name=name, pos=position, size=[0.0001]
-                    )
+                        "site", name=name, pos=position, size=[0.0001]
+                        )
                 attachment_points.append(attachment_point)
 
             self.tendon_attachment_points[side].append(attachment_points)
@@ -228,17 +228,14 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             self,
             joint: _ElementImpl
             ) -> None:
-        actuator = self.mjcf_model.actuator.add(
-            'position',
-            name=f"{joint.name}_p_control",
-            joint=joint,
-            kp=self._get_p_control_kp(joint),
-            ctrllimited=True,
-            ctrlrange=joint.range
-            )
-
-        # self.mjcf_model.sensor.add("actuatorfrc",  #                            name=f"{
-        # joint.name}_actuator_force_sensor",  #                            actuator=actuator)
+        self.mjcf_model.actuator.add(
+                'position',
+                name=f"{joint.name}_p_control",
+                joint=joint,
+                kp=self._get_p_control_kp(joint),
+                ctrllimited=True,
+                ctrlrange=joint.range
+                )
 
     def _configure_p_control_actuators(
             self
@@ -257,24 +254,24 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             ) -> None:
         for tendon_plate in self._tendon_plates:
             tendon_plate_touch_site = self.mjcf_body.add(
-                "site",
-                name=f"{tendon_plate.name}_touch_site",
-                type="cylinder",
-                pos=tendon_plate.pos,
-                euler=tendon_plate.euler,
-                rgba=colors.rgba_green,
-                size=tendon_plate.size
-                )
+                    "site",
+                    name=f"{tendon_plate.name}_touch_site",
+                    type="cylinder",
+                    pos=tendon_plate.pos,
+                    euler=tendon_plate.euler,
+                    rgba=colors.rgba_green,
+                    size=tendon_plate.size
+                    )
             self.mjcf_model.sensor.add(
-                "touch", name=f"{tendon_plate.name}_touch_sensor", site=tendon_plate_touch_site
-                )
+                    "touch", name=f"{tendon_plate.name}_touch_sensor", site=tendon_plate_touch_site
+                    )
 
     def _configure_position_sensor(
             self
             ) -> None:
         self.mjcf_model.sensor.add(
-            "framepos", name=f"{self.base_name}_position_sensor", objtype="geom", objname=self._capsule.name
-            )
+                "framepos", name=f"{self.base_name}_position_sensor", objtype="geom", objname=self._capsule.name
+                )
 
     def _configure_sensors(
             self

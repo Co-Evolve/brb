@@ -22,7 +22,7 @@ def create_brittle_star_environment(
 
     # Define the morphology
     morphology_specification = default_brittle_star_morphology_specification(
-            num_arms=5, num_segments_per_arm=5, use_p_control=True
+            num_arms=5, num_segments_per_arm=5, use_p_control=False
             )
 
     morphology = MJCBrittleStarMorphology(
@@ -35,3 +35,9 @@ def create_brittle_star_environment(
             )
 
     return env
+
+
+if __name__ == '__main__':
+    env = create_brittle_star_environment()
+    obs = env.reset()
+    print('here')
