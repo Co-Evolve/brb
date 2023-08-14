@@ -8,10 +8,10 @@ from dm_control.composer import Arena
 from dm_control.mujoco.wrapper import mjbindings
 from transforms3d.euler import euler2quat
 
-
 from brb.utils import colors
 from brb.utils.colors import rgba_sand
 from brb.utils.noise import generate_perlin_noise_map
+
 
 class HillyLightAquarium(Arena):
     assets_directory = str(Path(__file__).parent / "assets")
@@ -27,6 +27,7 @@ class HillyLightAquarium(Arena):
             name='hilly_light_aquarium',
             env_id: int = 0,
             size=(10, 5),
+            light_texture: bool = True,
             light_noise: bool = True,
             hilly_terrain: bool = True,
             random_current: bool = True,
@@ -36,6 +37,7 @@ class HillyLightAquarium(Arena):
 
         self._dynamic_assets_identifier = env_id
         self.size = np.array(size)
+        self._light_texture = light_texture
         self._light_noise = light_noise
         self._hilly_terrain = hilly_terrain
         self._random_current = random_current
@@ -59,11 +61,15 @@ class HillyLightAquarium(Arena):
         self.mjcf_model.compiler.assetdir = self.assets_directory
 
     @property
-    def _light_map_asset_path(self) -> str:
+    def _light_map_asset_path(
+            self
+            ) -> str:
         return f"{self.assets_directory}/lightmap_{self._dynamic_assets_identifier}.png"
 
     @property
-    def _heightmap_asset_path(self) -> str:
+    def _heightmap_asset_path(
+            self
+            ) -> str:
         return f"{self.assets_directory}/heightmap_{self._dynamic_assets_identifier}.png"
 
     def _generate_random_height_and_light_maps(
@@ -152,14 +158,32 @@ class HillyLightAquarium(Arena):
     def _build_ground(
             self
             ) -> None:
-        self._ground_texture = self._mjcf_root.asset.add(
-                'texture',
-                type='2d',
-                name='light_gradient_ground_plane',
-                file=f"lightmap_{self._dynamic_assets_identifier}.png", )
-        ground_material = self._mjcf_root.asset.add(
-                'material', name='groundplane', reflectance=0.0, texture=self._ground_texture
-                )
+        if self._light_texture:
+            self._ground_texture = self._mjcf_root.asset.add(
+                    'texture',
+                    type='2d',
+                    name='light_gradient_ground_plane',
+                    file=f"lightmap_{self._dynamic_assets_identifier}.png", )
+            ground_material = self._mjcf_root.asset.add(
+                    'material', name='groundplane', reflectance=0.0, texture=self._ground_texture
+                    )
+        else:
+            ground_texture = self._mjcf_root.asset.add(
+                    'texture',
+                    rgb1=[.2, .3, .4],
+                    rgb2=[.1, .2, .3],
+                    type='2d',
+                    builtin='checker',
+                    name='groundplane',
+                    width=200,
+                    height=200,
+                    mark='edge',
+                    markrgb=[0.8, 0.8, 0.8]
+                    )
+            ground_material = self._mjcf_root.asset.add(
+                    'material', name='groundplane', texrepeat=[2, 2],  # Makes white squares exactly 1x1 length units.
+                    texuniform=True, reflectance=0.0, texture=ground_texture
+                    )
 
         self._ground_hfield = self._mjcf_root.asset.add(
                 "hfield",
@@ -170,7 +194,8 @@ class HillyLightAquarium(Arena):
 
         # Build groundplane.
         self._ground_geom = self._mjcf_root.worldbody.add(
-                'geom', type='hfield', name='height_map_geom', hfield="heightmap", material=ground_material, )
+                'geom', type='hfield', name='height_map_geom', hfield="heightmap", material=ground_material
+                )
         self.needs_collision.append(self._ground_geom)
 
     def _build_walls(
@@ -269,7 +294,7 @@ class HillyLightAquarium(Arena):
             self,
             physics: mjcf.Physics
             ) -> None:
-        if self._light_noise:
+        if self._light_noise and self._light_texture:
             texture = physics.bind(self._ground_texture)
             h, w, adr = texture.height, texture.width, texture.adr
             size = h * w * 3
