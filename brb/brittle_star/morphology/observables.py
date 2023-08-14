@@ -25,7 +25,6 @@ class BrittleStarObservables(composer.Observables):
     _number_of_arms = None
     _arm_length = None
     _touch_sensors = None
-    _sinuosity_sensors = None
     _actuator_force_sensors = None
     _linear_velocity_sensor = None
     _angular_velocity_sensor = None
