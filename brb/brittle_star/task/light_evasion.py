@@ -14,8 +14,7 @@ from scipy.interpolate import RegularGridInterpolator
 
 from brb.brittle_star.arena.hilly_light_aquarium import HillyLightAquarium
 from brb.brittle_star.morphology.morphology import MJCBrittleStarMorphology
-from brb.brittle_star.morphology.specification.default import \
-    default_arm_length_based_brittle_star_morphology_specification
+from brb.brittle_star.morphology.specification.default import default_brittle_star_morphology_specification
 
 
 class LightEvasionTask(composer.Task):
@@ -324,8 +323,8 @@ if __name__ == '__main__':
 
     print(f"Steps per episode: {env_config.total_num_timesteps}")
 
-    morphology_specification = default_arm_length_based_brittle_star_morphology_specification(
-            num_arms=5, arm_length_in_disc_diameters=4, use_p_control=True
+    morphology_specification = default_brittle_star_morphology_specification(
+            num_arms=5, num_segments_per_arm=5, use_p_control=True
             )
     morphology = MJCBrittleStarMorphology(
             specification=morphology_specification
