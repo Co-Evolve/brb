@@ -101,6 +101,14 @@ class BrittleStarMorphologySpecification(MorphologySpecification):
         return len(self.arm_specifications)
 
     @property
+    def number_of_non_empty_arms(
+            self
+            ) -> int:
+        return len(
+                [number_of_segments for number_of_segments in self.number_of_segments_per_arm if number_of_segments > 0]
+                )
+
+    @property
     def number_of_segments_per_arm(
             self
             ) -> np.ndarray:
