@@ -12,6 +12,7 @@ from mujoco_utils.environment import MJCEnvironmentConfig
 from mujoco_utils.observables import ConfinedObservable
 from scipy.interpolate import RegularGridInterpolator
 
+from brb import brb_random_state
 from brb.brittle_star.arena.hilly_light_aquarium import HillyLightAquarium
 from brb.brittle_star.morphology.morphology import MJCBrittleStarMorphology
 from brb.brittle_star.morphology.specification.default import default_brittle_star_morphology_specification
@@ -238,7 +239,7 @@ class LightEvasionTask(composer.Task):
         disc_height = self._morphology.morphology_specification.disc_specification.height.value
         initial_position = np.array(self.config.starting_position + (2 * disc_height,))
 
-        random_rotation = np.random.uniform(0, 360)
+        random_rotation = brb_random_state.uniform(0, 360)
         initial_quaternion = euler2quat(0, 0, random_rotation)
 
         self._morphology.set_pose(
@@ -343,7 +344,7 @@ if __name__ == '__main__':
     def policy_fn(
             timestep
             ) -> np.ndarray:
-        return 0.1 * np.random.uniform(
+        return 0.1 * brb_random_state(
                 low=action_spec.minimum, high=action_spec.maximum, size=action_spec.shape
                 )
 
