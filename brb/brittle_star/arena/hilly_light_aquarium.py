@@ -344,10 +344,10 @@ class HillyLightAquarium(Arena):
         self._randomize_ground_friction(physics=physics)
         self._randomize_current(physics=physics)
 
-    def __del__(
-            self
-            ) -> None:
-        dynamic_assets = [self._light_map_asset_path, self._heightmap_asset_path]
-        for dynamic_asset_path in dynamic_assets:
-            if Path(dynamic_asset_path).exists():
-                os.remove(dynamic_asset_path)
+    # def __del__(
+    #         self
+    #         ) -> None:
+    #     dynamic_assets = [self._light_map_asset_path, self._heightmap_asset_path]
+    #     for dynamic_asset_path in dynamic_assets:
+    #         if Path(dynamic_asset_path).exists():
+    #             os.remove(dynamic_asset_path)
