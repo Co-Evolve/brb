@@ -164,7 +164,8 @@ class HillyLightAquarium(Arena):
                     'texture',
                     type='2d',
                     name='light_gradient_ground_plane',
-                    file=f"lightmap_{self._dynamic_assets_identifier}.png", )
+                    file=self._light_map_asset_path
+                    )
             ground_material = self._mjcf_root.asset.add(
                     'material', name='groundplane', reflectance=0.0, texture=self._ground_texture
                     )
@@ -189,7 +190,7 @@ class HillyLightAquarium(Arena):
         self._ground_hfield = self._mjcf_root.asset.add(
                 "hfield",
                 name="heightmap",
-                file=f"heightmap_{self._dynamic_assets_identifier}.png",
+                file=self._heightmap_asset_path,
                 size=tuple(self.size) + (self.MAX_ELEVATION, self.BASE_ELEVATION)
                 )
 
