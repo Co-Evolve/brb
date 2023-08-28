@@ -65,13 +65,13 @@ class HillyLightAquarium(Arena):
     def _light_map_asset_path(
             self
             ) -> str:
-        return f"{self.assets_directory}/lightmap_{self._dynamic_assets_identifier}.png"
+        return f"{self.assets_directory}/lightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
 
     @property
     def _heightmap_asset_path(
             self
             ) -> str:
-        return f"{self.assets_directory}/heightmap_{self._dynamic_assets_identifier}.png"
+        return f"{self.assets_directory}/heightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
 
     def _generate_random_height_and_light_maps(
             self,
@@ -344,10 +344,10 @@ class HillyLightAquarium(Arena):
         self._randomize_ground_friction(physics=physics)
         self._randomize_current(physics=physics)
 
-    # def __del__(
-    #         self
-    #         ) -> None:
-    #     dynamic_assets = [self._light_map_asset_path, self._heightmap_asset_path]
-    #     for dynamic_asset_path in dynamic_assets:
-    #         if Path(dynamic_asset_path).exists():
-    #             os.remove(dynamic_asset_path)
+    def __del__(
+            self
+            ) -> None:
+        dynamic_assets = [self._light_map_asset_path, self._heightmap_asset_path]
+        for dynamic_asset_path in dynamic_assets:
+            if Path(dynamic_asset_path).exists():
+                os.remove(dynamic_asset_path)
