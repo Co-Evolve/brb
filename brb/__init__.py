@@ -16,7 +16,7 @@ def set_random_state(
     fprs.set_random_state(seed)
 
 
-brb_tmp_directory = "/tmp/brb"
+brb_tmp_directory = ""
 
 
 def set_brb_tmp_directory(
@@ -25,3 +25,6 @@ def set_brb_tmp_directory(
     global brb_tmp_directory
     brb_tmp_directory = new_path
     Path(brb_tmp_directory).mkdir(parents=True, exist_ok=True)
+
+
+set_brb_tmp_directory("/tmp/brb")
