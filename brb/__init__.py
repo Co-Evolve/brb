@@ -1,3 +1,5 @@
+import atexit
+import os
 from pathlib import Path
 
 import fprs
@@ -28,3 +30,12 @@ def set_brb_tmp_directory(
 
 
 set_brb_tmp_directory("/tmp/brb")
+
+
+def exit_handler():
+    global brb_tmp_directory
+    if Path(brb_tmp_directory).exists():
+        os.rmdir(brb_tmp_directory)
+
+
+atexit.register(exit_handler)
