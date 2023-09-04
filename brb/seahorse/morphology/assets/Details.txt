@@ -1,0 +1,22 @@
+1) First Module: EPD LC (1) and EPD LC (3) are connected together as Dorsal Plates
+2) Second Module: EPD LC (2) and EPD LC (4) are connected together as Dorsal Plates
+3) EPV LC and EPV LC 2 are connected together as Ventral Plates for all modules
+
+Weights:
+dorsal-sinistral-odd - 9.26 gms
+dorsal-dextral-odd - 8.95 gms
+dorsal-sinistral-even - 7.83 gms
+dorsal-dextral-even - 8.21 gms
+plate-ventral-dextral     - 8.98 gms
+plate-ventral-sinistral   - 9.01 gms
+Central Vertebra PM - 4.53 gms
+Nut add - 0.07 gms
+Nut job - 0.14 gms
+Ball Bearings - 2.14 gms
+
+
+Gliding joints:
+Top part 11mm
+Left part 10.23mm
+Right Part 10.23mm
+Bottom 3.3 mm -> can go in both directions
