@@ -65,13 +65,13 @@ class HillyLightAquarium(Arena):
     def _light_map_asset_path(
             self
             ) -> str:
-        return f"{brb.brb_tmp_directory}/lightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
+        return f"{brb.brb_tmp_directory}/lightmap_{self._dynamic_assets_identifier}.png"
 
     @property
     def _heightmap_asset_path(
             self
             ) -> str:
-        return f"{brb.brb_tmp_directory}/heightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
+        return f"{brb.brb_tmp_directory}/heightmap_{self._dynamic_assets_identifier}.png"
 
     def _generate_random_height_and_light_maps(
             self,
