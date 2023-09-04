@@ -8,7 +8,7 @@ from dm_control.composer import Arena
 from dm_control.mujoco.wrapper import mjbindings
 from transforms3d.euler import euler2quat
 
-from brb import brb_random_state
+from brb import brb_random_state, brb_tmp_directory
 from brb.utils import colors
 from brb.utils.colors import rgba_sand
 from brb.utils.noise import generate_perlin_noise_map
@@ -65,13 +65,13 @@ class HillyLightAquarium(Arena):
     def _light_map_asset_path(
             self
             ) -> str:
-        return f"{self.assets_directory}/lightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
+        return f"{brb_tmp_directory}/lightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
 
     @property
     def _heightmap_asset_path(
             self
             ) -> str:
-        return f"{self.assets_directory}/heightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
+        return f"{brb_tmp_directory}/heightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
 
     def _generate_random_height_and_light_maps(
             self,
