@@ -8,7 +8,7 @@ from dm_control.composer import Arena
 from dm_control.mujoco.wrapper import mjbindings
 from transforms3d.euler import euler2quat
 
-from brb import brb_random_state, brb_tmp_directory
+import brb
 from brb.utils import colors
 from brb.utils.colors import rgba_sand
 from brb.utils.noise import generate_perlin_noise_map
@@ -65,13 +65,13 @@ class HillyLightAquarium(Arena):
     def _light_map_asset_path(
             self
             ) -> str:
-        return f"{brb_tmp_directory}/lightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
+        return f"{brb.brb_tmp_directory}/lightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
 
     @property
     def _heightmap_asset_path(
             self
             ) -> str:
-        return f"{brb_tmp_directory}/heightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
+        return f"{brb.brb_tmp_directory}/heightmap_{self._dynamic_assets_identifier}_{os.getpid()}.png"
 
     def _generate_random_height_and_light_maps(
             self,
@@ -161,10 +161,7 @@ class HillyLightAquarium(Arena):
             ) -> None:
         if self._light_texture:
             self._ground_texture = self._mjcf_root.asset.add(
-                    'texture',
-                    type='2d',
-                    name='light_gradient_ground_plane',
-                    file=self._light_map_asset_path
+                    'texture', type='2d', name='light_gradient_ground_plane', file=self._light_map_asset_path
                     )
             ground_material = self._mjcf_root.asset.add(
                     'material', name='groundplane', reflectance=0.0, texture=self._ground_texture
