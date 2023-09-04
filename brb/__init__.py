@@ -1,5 +1,5 @@
 import atexit
-import os
+import shutil
 from pathlib import Path
 
 import fprs
@@ -35,7 +35,7 @@ set_brb_tmp_directory("/tmp/brb")
 def exit_handler():
     global brb_tmp_directory
     if Path(brb_tmp_directory).exists():
-        os.rmdir(brb_tmp_directory)
+        shutil.rmtree(brb_tmp_directory, ignore_errors=True)
 
 
 atexit.register(exit_handler)
