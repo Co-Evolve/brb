@@ -314,7 +314,7 @@ class HillyLightAquarium(Arena):
             physics: mjcf.Physics
             ) -> None:
         if self._random_friction:
-            random_sliding_friction = brb_random_state.uniform(low=0.5, high=1.2)
+            random_sliding_friction = brb.brb_random_state.uniform(low=0.5, high=1.2)
             ground = physics.bind(self._ground_geom)
             ground.friction[0] = random_sliding_friction
 
@@ -323,7 +323,7 @@ class HillyLightAquarium(Arena):
             physics: mjcf.Physics
             ) -> None:
         if self._random_current:
-            angle = brb_random_state.uniform(0, 2 * np.pi)
+            angle = brb.brb_random_state.uniform(0, 2 * np.pi)
             direction = np.array([np.cos(angle), np.sin(angle), 0.0])
             strength = 0.5
             physics.model.opt.wind = strength * direction
