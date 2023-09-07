@@ -1,0 +1,20 @@
+<mujoco model="morphology">
+  <compiler angle="radian"/>
+  <option>
+    <flag contact="disable"/>
+  </option>
+  <default>
+    <default class="/"/>
+  </default>
+  <asset>
+    <mesh name="ventral_sinistral_plate" class="/" file="ventral_sinistral-d202f2076534d2c247034ff7242cfe565ed7840d.STL" scale="0.001 0.001 0.001"/>
+    <mesh name="ventral_dextral_plate" class="/" file="ventral_dextral-0ef639e87ecaf1aa4e6c30da507586c83529263b.STL" scale="0.001 0.001 0.001"/>
+    <mesh name="dorsal_dextral_even_plate" class="/" file="dorsal_dextral_even-b240390db3ce0547c2411c6ac77c43572a05e1d4.STL" scale="0.001 0.001 0.001"/>
+    <mesh name="dorsal_sinistral_even_plate" class="/" file="dorsal_sinistral_even-c647c8bc7efcef7225eb848ab556a2a10272cbe3.STL" scale="0.001 0.001 0.001"/>
+  </asset>
+  <worldbody>
+    <body name="//unnamed_body_0">
+      <geom name="ventral_sinistral_plate" class="/" type="mesh" pos="0 0 0" mesh="ventral_sinistral_plate"/>
+    </body>
+  </worldbody>
+</mujoco>

@@ -120,6 +120,6 @@ class MJCSeahorseMorphology(MJCMorphology):
 
 
 if __name__ == '__main__':
-    morphology_specification = default_seahorse_morphology_specification(num_segments=15)
+    morphology_specification = default_seahorse_morphology_specification(num_segments=5)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
     morphology.export_to_xml_with_assets("./mjcf")

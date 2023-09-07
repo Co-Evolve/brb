@@ -1,0 +1,25 @@
+<mujoco model="morphology">
+  <compiler angle="radian"/>
+  <option>
+    <flag contact="disable"/>
+  </option>
+  <default>
+    <default class="/"/>
+  </default>
+  <asset>
+    <mesh name="ventral_sinistral_plate" class="/" file="ventral_sinistral-d202f2076534d2c247034ff7242cfe565ed7840d.STL" scale="0.001 0.001 0.001"/>
+    <mesh name="ventral_dextral_plate" class="/" file="ventral_dextral-0ef639e87ecaf1aa4e6c30da507586c83529263b.STL" scale="0.001 0.001 0.001"/>
+    <mesh name="dorsal_dextral_even_plate" class="/" file="dorsal_dextral_even-b240390db3ce0547c2411c6ac77c43572a05e1d4.STL" scale="0.001 0.001 0.001"/>
+    <mesh name="dorsal_sinistral_even_plate" class="/" file="dorsal_sinistral_even-c647c8bc7efcef7225eb848ab556a2a10272cbe3.STL" scale="0.001 0.001 0.001"/>
+  </asset>
+  <worldbody>
+    <body name="//unnamed_body_0">
+      <geom name="ventral_sinistral_plate" class="/" type="mesh" pos="-0.051999999999999998 0 0" quat="0.70710678118654757 0.70710678118654746 0 0" mesh="ventral_sinistral_plate"/>
+      <geom name="ventral_dextral_plate" class="/" type="mesh" pos="0 0.056000000000000001 0" quat="0.50000000000000011 0.5 -0.5 -0.49999999999999989" mesh="ventral_dextral_plate"/>
+      <geom name="dorsal_dextral_even_plate" class="/" type="mesh" pos="0.056000000000000001 0 0" quat="4.329780281177467e-17 4.3297802811774658e-17 0.70710678118654746 0.70710678118654757" mesh="dorsal_dextral_even_plate"/>
+      <geom name="dorsal_sinistral_even_plate" class="/" type="mesh" pos="0 -0.055 0" quat="0.50000000000000011 0.5 0.49999999999999989 0.5" mesh="dorsal_sinistral_even_plate"/>
+      <geom name="//unnamed_geom_4" class="/" type="box" size="10 0.0001 0.0001" rgba="1 0 0 0.5"/>
+      <geom name="//unnamed_geom_5" class="/" type="box" size="0.0001 10 0.0001" rgba="0 1 0 0.5"/>
+    </body>
+  </worldbody>
+</mujoco>

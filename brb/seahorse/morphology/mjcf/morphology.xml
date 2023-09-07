@@ -1,0 +1,512 @@
+<mujoco model="morphology">
+  <compiler angle="radian"/>
+  <option>
+    <flag contact="disable"/>
+  </option>
+  <default>
+    <default class="/"/>
+  </default>
+  <asset>
+    <mesh name="segment_0_vertebrae_vertebrae" class="/" file="vertebrae-25cf2b07610deb60ef88d0e6b665cc61831d0bbc.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_vertebrae_ball_bearing" class="/" file="ball_bearing-82cd80c511924a6cc447691ead255c788d7333b0.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_vertebrae_connector" class="/" file="connector_vertebrae-2d8638b695ca1f84ac472fdfce7e747e1ca2dfe7.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_0_plate" class="/" file="ventral_sinistral-8006f933f0aca0cb183d69207d77bea70d619f3e.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_0_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_1_plate" class="/" file="ventral_dextral-0664475e60e3f8156662366424cbd47a781ce6f8.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_1_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_2_plate" class="/" file="dorsal_dextral_even-546ed29e5200d86f5f30e937cd5110a19d8a7674.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_2_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_3_plate" class="/" file="dorsal_sinistral_even-3b5f3c142b99d432489b835424aef7c172d5d99a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_3_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_vertebrae_vertebrae" class="/" file="vertebrae-25cf2b07610deb60ef88d0e6b665cc61831d0bbc.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_vertebrae_ball_bearing" class="/" file="ball_bearing-82cd80c511924a6cc447691ead255c788d7333b0.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_vertebrae_connector" class="/" file="connector_vertebrae-2d8638b695ca1f84ac472fdfce7e747e1ca2dfe7.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_plate_0_plate" class="/" file="ventral_sinistral-8006f933f0aca0cb183d69207d77bea70d619f3e.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_plate_0_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_plate_1_plate" class="/" file="ventral_dextral-0664475e60e3f8156662366424cbd47a781ce6f8.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_plate_1_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_plate_2_plate" class="/" file="dorsal_dextral_odd-1dad0ae20d9e072480daf2c3ef24eeda90e63269.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_plate_2_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_plate_3_plate" class="/" file="dorsal_sinistral_odd-a5f77ddbe7c028bf7db9b17534aff180a9d82d28.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_1_plate_3_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_vertebrae_vertebrae" class="/" file="vertebrae-25cf2b07610deb60ef88d0e6b665cc61831d0bbc.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_vertebrae_ball_bearing" class="/" file="ball_bearing-82cd80c511924a6cc447691ead255c788d7333b0.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_vertebrae_connector" class="/" file="connector_vertebrae-2d8638b695ca1f84ac472fdfce7e747e1ca2dfe7.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_plate_0_plate" class="/" file="ventral_sinistral-8006f933f0aca0cb183d69207d77bea70d619f3e.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_plate_0_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_plate_1_plate" class="/" file="ventral_dextral-0664475e60e3f8156662366424cbd47a781ce6f8.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_plate_1_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_plate_2_plate" class="/" file="dorsal_dextral_even-546ed29e5200d86f5f30e937cd5110a19d8a7674.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_plate_2_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_plate_3_plate" class="/" file="dorsal_sinistral_even-3b5f3c142b99d432489b835424aef7c172d5d99a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_2_plate_3_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_vertebrae_vertebrae" class="/" file="vertebrae-25cf2b07610deb60ef88d0e6b665cc61831d0bbc.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_vertebrae_ball_bearing" class="/" file="ball_bearing-82cd80c511924a6cc447691ead255c788d7333b0.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_vertebrae_connector" class="/" file="connector_vertebrae-2d8638b695ca1f84ac472fdfce7e747e1ca2dfe7.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_plate_0_plate" class="/" file="ventral_sinistral-8006f933f0aca0cb183d69207d77bea70d619f3e.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_plate_0_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_plate_1_plate" class="/" file="ventral_dextral-0664475e60e3f8156662366424cbd47a781ce6f8.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_plate_1_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_plate_2_plate" class="/" file="dorsal_dextral_odd-1dad0ae20d9e072480daf2c3ef24eeda90e63269.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_plate_2_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_plate_3_plate" class="/" file="dorsal_sinistral_odd-a5f77ddbe7c028bf7db9b17534aff180a9d82d28.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_3_plate_3_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_vertebrae_vertebrae" class="/" file="vertebrae-25cf2b07610deb60ef88d0e6b665cc61831d0bbc.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_vertebrae_ball_bearing" class="/" file="ball_bearing-82cd80c511924a6cc447691ead255c788d7333b0.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_vertebrae_connector" class="/" file="connector_vertebrae-2d8638b695ca1f84ac472fdfce7e747e1ca2dfe7.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_plate_0_plate" class="/" file="ventral_sinistral-8006f933f0aca0cb183d69207d77bea70d619f3e.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_plate_0_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_plate_1_plate" class="/" file="ventral_dextral-0664475e60e3f8156662366424cbd47a781ce6f8.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_plate_1_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_plate_2_plate" class="/" file="dorsal_dextral_even-546ed29e5200d86f5f30e937cd5110a19d8a7674.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_plate_2_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_plate_3_plate" class="/" file="dorsal_sinistral_even-3b5f3c142b99d432489b835424aef7c172d5d99a.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_4_plate_3_connector" class="/" file="connector_plate-d09c5eb60bcff5f07d3df710cbc22f9eca3981d3.stl" scale="0.001 0.001 0.001"/>
+  </asset>
+  <worldbody>
+    <body name="//unnamed_body_0">
+      <body name="segment_0" pos="0 0 0" euler="0 0 0">
+        <body name="segment_0_vertebrae" pos="0 0 0" euler="0 0 0">
+          <geom name="segment_0_vertebrae_vertebrae" class="/" type="mesh" group="1" rgba="0.61960784313725492 0.14901960784313725 0.83137254901960789 1" mass="0.0045300000000000002" pos="0 0 0" mesh="segment_0_vertebrae_vertebrae"/>
+          <geom name="segment_0_vertebrae_ball_bearing" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00214" pos="0 0 0.014" mesh="segment_0_vertebrae_ball_bearing"/>
+          <geom name="segment_0_vertebrae_connector_ventral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="0.014999999999999999 0 0" euler="0 0 0" mesh="segment_0_vertebrae_connector"/>
+          <geom name="segment_0_vertebrae_connector_dextral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="9.184850993605148e-19 0.014999999999999999 0" euler="0 0 1.5707963267948966" mesh="segment_0_vertebrae_connector"/>
+          <geom name="segment_0_vertebrae_connector_dorsal" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-0.014999999999999999 1.8369701987210296e-18 0" euler="0 0 3.1415926535897931" mesh="segment_0_vertebrae_connector"/>
+          <geom name="segment_0_vertebrae_connector_sinistral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-2.7554552980815444e-18 -0.014999999999999999 0" euler="0 0 4.7123889803846897" mesh="segment_0_vertebrae_connector"/>
+          <site name="segment_0_vertebrae_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.014999999999999999 0 0"/>
+          <site name="segment_0_vertebrae_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="9.184850993605148e-19 0.014999999999999999 0"/>
+          <site name="segment_0_vertebrae_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.014999999999999999 1.8369701987210296e-18 0"/>
+          <site name="segment_0_vertebrae_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-2.7554552980815444e-18 -0.014999999999999999 0"/>
+          <joint name="segment_0_vertebrae_vertebrae_joint_coronal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 1 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+          <joint name="segment_0_vertebrae_vertebrae_joint_sagittal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="1 0 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+          <joint name="segment_0_vertebrae_vertebrae_joint_twist" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 0 1" limited="true" stiffness="1" range="-0.052359877559829883 0.052359877559829883" damping="0.10000000000000001" frictionloss="10"/>
+          <body name="segment_0_plate_0" pos="0.04649934193082738 -0.046499341930827373 0" euler="0 0 0">
+            <geom name="segment_0_plate_0_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0090100000000000006" pos="0 0 0" mesh="segment_0_plate_0_plate"/>
+            <joint name="segment_0_plate_0_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+            <joint name="segment_0_plate_0_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+            <site name="segment_0_plate_0_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+            <site name="segment_0_plate_0_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+          </body>
+          <body name="segment_0_plate_1" pos="0.045983153980561194 0.045983153980561187 0" euler="0 0 0">
+            <geom name="segment_0_plate_1_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0089800000000000001" pos="0 0 0" mesh="segment_0_plate_1_plate"/>
+            <geom name="segment_0_plate_1_connector_ventral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="-0.0099831539805611963 -0.045983153980561187 0" mesh="segment_0_plate_1_connector"/>
+            <joint name="segment_0_plate_1_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+            <joint name="segment_0_plate_1_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+            <site name="segment_0_plate_1_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+            <site name="segment_0_plate_1_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+            <site name="segment_0_plate_1_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.0099831539805611963 -0.045983153980561187 0"/>
+          </body>
+          <body name="segment_0_plate_2" pos="-0.04589830116681879 0.045898301166818797 0" euler="0 0 0">
+            <geom name="segment_0_plate_2_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0082100000000000003" pos="0 0 0" mesh="segment_0_plate_2_plate"/>
+            <geom name="segment_0_plate_2_connector_dextral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.04589830116681879 -0.0098983011668188001 0" euler="0 0 1.5707963267948966" mesh="segment_0_plate_2_connector"/>
+            <joint name="segment_0_plate_2_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+            <joint name="segment_0_plate_2_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.0054999999999999997 0" damping="0.10000000000000001"/>
+            <site name="segment_0_plate_2_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+            <site name="segment_0_plate_2_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+            <site name="segment_0_plate_2_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.04589830116681879 -0.0098983011668188001 0"/>
+          </body>
+          <body name="segment_0_plate_3" pos="-0.045841732624323887 -0.045841732624323873 0" euler="0 0 0">
+            <geom name="segment_0_plate_3_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0088299999999999993" pos="0 0 0" mesh="segment_0_plate_3_plate"/>
+            <geom name="segment_0_plate_3_connector_dorsal" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.0098417326243238901 0.045841732624323873 0" euler="0 0 0" mesh="segment_0_plate_3_connector"/>
+            <geom name="segment_0_plate_3_connector_sinistral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.045841732624323887 0.0098417326243238762 0" euler="0 0 1.5707963267948966" mesh="segment_0_plate_3_connector"/>
+            <joint name="segment_0_plate_3_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+            <joint name="segment_0_plate_3_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="0 0.0054999999999999997" damping="0.10000000000000001"/>
+            <site name="segment_0_plate_3_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+            <site name="segment_0_plate_3_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+            <site name="segment_0_plate_3_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.0098417326243238901 0.045841732624323873 0"/>
+            <site name="segment_0_plate_3_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.045841732624323887 0.0098417326243238762 0"/>
+          </body>
+          <body name="segment_1" pos="0 0 0.031" euler="0 0 0">
+            <body name="segment_1_vertebrae" pos="0 0 0" euler="0 0 0">
+              <geom name="segment_1_vertebrae_vertebrae" class="/" type="mesh" group="1" rgba="0.61960784313725492 0.14901960784313725 0.83137254901960789 1" mass="0.0045300000000000002" pos="0 0 0" mesh="segment_1_vertebrae_vertebrae"/>
+              <geom name="segment_1_vertebrae_ball_bearing" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00214" pos="0 0 0.014" mesh="segment_1_vertebrae_ball_bearing"/>
+              <geom name="segment_1_vertebrae_connector_ventral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="0.014999999999999999 0 0" euler="0 0 0" mesh="segment_1_vertebrae_connector"/>
+              <geom name="segment_1_vertebrae_connector_dextral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="9.184850993605148e-19 0.014999999999999999 0" euler="0 0 1.5707963267948966" mesh="segment_1_vertebrae_connector"/>
+              <geom name="segment_1_vertebrae_connector_dorsal" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-0.014999999999999999 1.8369701987210296e-18 0" euler="0 0 3.1415926535897931" mesh="segment_1_vertebrae_connector"/>
+              <geom name="segment_1_vertebrae_connector_sinistral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-2.7554552980815444e-18 -0.014999999999999999 0" euler="0 0 4.7123889803846897" mesh="segment_1_vertebrae_connector"/>
+              <site name="segment_1_vertebrae_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.014999999999999999 0 0"/>
+              <site name="segment_1_vertebrae_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="9.184850993605148e-19 0.014999999999999999 0"/>
+              <site name="segment_1_vertebrae_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.014999999999999999 1.8369701987210296e-18 0"/>
+              <site name="segment_1_vertebrae_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-2.7554552980815444e-18 -0.014999999999999999 0"/>
+              <joint name="segment_1_vertebrae_vertebrae_joint_coronal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 1 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+              <joint name="segment_1_vertebrae_vertebrae_joint_sagittal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="1 0 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+              <joint name="segment_1_vertebrae_vertebrae_joint_twist" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 0 1" limited="true" stiffness="1" range="-0.052359877559829883 0.052359877559829883" damping="0.10000000000000001" frictionloss="10"/>
+              <body name="segment_1_plate_0" pos="0.04649934193082738 -0.046499341930827373 0" euler="0 0 0">
+                <geom name="segment_1_plate_0_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0090100000000000006" pos="0 0 0" mesh="segment_1_plate_0_plate"/>
+                <joint name="segment_1_plate_0_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+                <joint name="segment_1_plate_0_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+                <site name="segment_1_plate_0_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                <site name="segment_1_plate_0_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+              </body>
+              <body name="segment_1_plate_1" pos="0.045983153980561194 0.045983153980561187 0" euler="0 0 0">
+                <geom name="segment_1_plate_1_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0089800000000000001" pos="0 0 0" mesh="segment_1_plate_1_plate"/>
+                <geom name="segment_1_plate_1_connector_ventral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="-0.0099831539805611963 -0.045983153980561187 0" mesh="segment_1_plate_1_connector"/>
+                <joint name="segment_1_plate_1_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+                <joint name="segment_1_plate_1_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+                <site name="segment_1_plate_1_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                <site name="segment_1_plate_1_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                <site name="segment_1_plate_1_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.0099831539805611963 -0.045983153980561187 0"/>
+              </body>
+              <body name="segment_1_plate_2" pos="-0.04589830116681879 0.045898301166818797 0" euler="0 0 0">
+                <geom name="segment_1_plate_2_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0089499999999999996" pos="0 0 0" mesh="segment_1_plate_2_plate"/>
+                <geom name="segment_1_plate_2_connector_dextral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.04589830116681879 -0.0098983011668188001 0" euler="0 0 1.5707963267948966" mesh="segment_1_plate_2_connector"/>
+                <geom name="segment_1_plate_2_connector_dorsal" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.0098983011668187931 -0.045898301166818797 0" euler="0 0 0" mesh="segment_1_plate_2_connector"/>
+                <joint name="segment_1_plate_2_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+                <joint name="segment_1_plate_2_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.0054999999999999997 0" damping="0.10000000000000001"/>
+                <site name="segment_1_plate_2_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                <site name="segment_1_plate_2_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                <site name="segment_1_plate_2_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.04589830116681879 -0.0098983011668188001 0"/>
+                <site name="segment_1_plate_2_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.0098983011668187931 -0.045898301166818797 0"/>
+              </body>
+              <body name="segment_1_plate_3" pos="-0.045841732624323887 -0.045841732624323873 0" euler="0 0 0">
+                <geom name="segment_1_plate_3_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0092599999999999991" pos="0 0 0" mesh="segment_1_plate_3_plate"/>
+                <geom name="segment_1_plate_3_connector_sinistral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.045841732624323887 0.0098417326243238762 0" euler="0 0 1.5707963267948966" mesh="segment_1_plate_3_connector"/>
+                <joint name="segment_1_plate_3_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+                <joint name="segment_1_plate_3_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="0 0.0054999999999999997" damping="0.10000000000000001"/>
+                <site name="segment_1_plate_3_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                <site name="segment_1_plate_3_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                <site name="segment_1_plate_3_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.045841732624323887 0.0098417326243238762 0"/>
+              </body>
+              <body name="segment_2" pos="0 0 0.031" euler="0 0 0">
+                <body name="segment_2_vertebrae" pos="0 0 0" euler="0 0 0">
+                  <geom name="segment_2_vertebrae_vertebrae" class="/" type="mesh" group="1" rgba="0.61960784313725492 0.14901960784313725 0.83137254901960789 1" mass="0.0045300000000000002" pos="0 0 0" mesh="segment_2_vertebrae_vertebrae"/>
+                  <geom name="segment_2_vertebrae_ball_bearing" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00214" pos="0 0 0.014" mesh="segment_2_vertebrae_ball_bearing"/>
+                  <geom name="segment_2_vertebrae_connector_ventral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="0.014999999999999999 0 0" euler="0 0 0" mesh="segment_2_vertebrae_connector"/>
+                  <geom name="segment_2_vertebrae_connector_dextral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="9.184850993605148e-19 0.014999999999999999 0" euler="0 0 1.5707963267948966" mesh="segment_2_vertebrae_connector"/>
+                  <geom name="segment_2_vertebrae_connector_dorsal" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-0.014999999999999999 1.8369701987210296e-18 0" euler="0 0 3.1415926535897931" mesh="segment_2_vertebrae_connector"/>
+                  <geom name="segment_2_vertebrae_connector_sinistral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-2.7554552980815444e-18 -0.014999999999999999 0" euler="0 0 4.7123889803846897" mesh="segment_2_vertebrae_connector"/>
+                  <site name="segment_2_vertebrae_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.014999999999999999 0 0"/>
+                  <site name="segment_2_vertebrae_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="9.184850993605148e-19 0.014999999999999999 0"/>
+                  <site name="segment_2_vertebrae_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.014999999999999999 1.8369701987210296e-18 0"/>
+                  <site name="segment_2_vertebrae_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-2.7554552980815444e-18 -0.014999999999999999 0"/>
+                  <joint name="segment_2_vertebrae_vertebrae_joint_coronal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 1 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+                  <joint name="segment_2_vertebrae_vertebrae_joint_sagittal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="1 0 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+                  <joint name="segment_2_vertebrae_vertebrae_joint_twist" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 0 1" limited="true" stiffness="1" range="-0.052359877559829883 0.052359877559829883" damping="0.10000000000000001" frictionloss="10"/>
+                  <body name="segment_2_plate_0" pos="0.04649934193082738 -0.046499341930827373 0" euler="0 0 0">
+                    <geom name="segment_2_plate_0_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0090100000000000006" pos="0 0 0" mesh="segment_2_plate_0_plate"/>
+                    <joint name="segment_2_plate_0_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+                    <joint name="segment_2_plate_0_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+                    <site name="segment_2_plate_0_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                    <site name="segment_2_plate_0_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                  </body>
+                  <body name="segment_2_plate_1" pos="0.045983153980561194 0.045983153980561187 0" euler="0 0 0">
+                    <geom name="segment_2_plate_1_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0089800000000000001" pos="0 0 0" mesh="segment_2_plate_1_plate"/>
+                    <geom name="segment_2_plate_1_connector_ventral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="-0.0099831539805611963 -0.045983153980561187 0" mesh="segment_2_plate_1_connector"/>
+                    <joint name="segment_2_plate_1_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+                    <joint name="segment_2_plate_1_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+                    <site name="segment_2_plate_1_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                    <site name="segment_2_plate_1_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                    <site name="segment_2_plate_1_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.0099831539805611963 -0.045983153980561187 0"/>
+                  </body>
+                  <body name="segment_2_plate_2" pos="-0.04589830116681879 0.045898301166818797 0" euler="0 0 0">
+                    <geom name="segment_2_plate_2_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0082100000000000003" pos="0 0 0" mesh="segment_2_plate_2_plate"/>
+                    <geom name="segment_2_plate_2_connector_dextral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.04589830116681879 -0.0098983011668188001 0" euler="0 0 1.5707963267948966" mesh="segment_2_plate_2_connector"/>
+                    <joint name="segment_2_plate_2_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+                    <joint name="segment_2_plate_2_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.0054999999999999997 0" damping="0.10000000000000001"/>
+                    <site name="segment_2_plate_2_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                    <site name="segment_2_plate_2_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                    <site name="segment_2_plate_2_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.04589830116681879 -0.0098983011668188001 0"/>
+                  </body>
+                  <body name="segment_2_plate_3" pos="-0.045841732624323887 -0.045841732624323873 0" euler="0 0 0">
+                    <geom name="segment_2_plate_3_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0088299999999999993" pos="0 0 0" mesh="segment_2_plate_3_plate"/>
+                    <geom name="segment_2_plate_3_connector_dorsal" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.0098417326243238901 0.045841732624323873 0" euler="0 0 0" mesh="segment_2_plate_3_connector"/>
+                    <geom name="segment_2_plate_3_connector_sinistral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.045841732624323887 0.0098417326243238762 0" euler="0 0 1.5707963267948966" mesh="segment_2_plate_3_connector"/>
+                    <joint name="segment_2_plate_3_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+                    <joint name="segment_2_plate_3_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="0 0.0054999999999999997" damping="0.10000000000000001"/>
+                    <site name="segment_2_plate_3_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                    <site name="segment_2_plate_3_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                    <site name="segment_2_plate_3_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.0098417326243238901 0.045841732624323873 0"/>
+                    <site name="segment_2_plate_3_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.045841732624323887 0.0098417326243238762 0"/>
+                  </body>
+                  <body name="segment_3" pos="0 0 0.031" euler="0 0 0">
+                    <body name="segment_3_vertebrae" pos="0 0 0" euler="0 0 0">
+                      <geom name="segment_3_vertebrae_vertebrae" class="/" type="mesh" group="1" rgba="0.61960784313725492 0.14901960784313725 0.83137254901960789 1" mass="0.0045300000000000002" pos="0 0 0" mesh="segment_3_vertebrae_vertebrae"/>
+                      <geom name="segment_3_vertebrae_ball_bearing" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00214" pos="0 0 0.014" mesh="segment_3_vertebrae_ball_bearing"/>
+                      <geom name="segment_3_vertebrae_connector_ventral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="0.014999999999999999 0 0" euler="0 0 0" mesh="segment_3_vertebrae_connector"/>
+                      <geom name="segment_3_vertebrae_connector_dextral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="9.184850993605148e-19 0.014999999999999999 0" euler="0 0 1.5707963267948966" mesh="segment_3_vertebrae_connector"/>
+                      <geom name="segment_3_vertebrae_connector_dorsal" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-0.014999999999999999 1.8369701987210296e-18 0" euler="0 0 3.1415926535897931" mesh="segment_3_vertebrae_connector"/>
+                      <geom name="segment_3_vertebrae_connector_sinistral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-2.7554552980815444e-18 -0.014999999999999999 0" euler="0 0 4.7123889803846897" mesh="segment_3_vertebrae_connector"/>
+                      <site name="segment_3_vertebrae_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.014999999999999999 0 0"/>
+                      <site name="segment_3_vertebrae_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="9.184850993605148e-19 0.014999999999999999 0"/>
+                      <site name="segment_3_vertebrae_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.014999999999999999 1.8369701987210296e-18 0"/>
+                      <site name="segment_3_vertebrae_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-2.7554552980815444e-18 -0.014999999999999999 0"/>
+                      <joint name="segment_3_vertebrae_vertebrae_joint_coronal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 1 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+                      <joint name="segment_3_vertebrae_vertebrae_joint_sagittal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="1 0 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+                      <joint name="segment_3_vertebrae_vertebrae_joint_twist" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 0 1" limited="true" stiffness="1" range="-0.052359877559829883 0.052359877559829883" damping="0.10000000000000001" frictionloss="10"/>
+                      <body name="segment_3_plate_0" pos="0.04649934193082738 -0.046499341930827373 0" euler="0 0 0">
+                        <geom name="segment_3_plate_0_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0090100000000000006" pos="0 0 0" mesh="segment_3_plate_0_plate"/>
+                        <joint name="segment_3_plate_0_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+                        <joint name="segment_3_plate_0_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+                        <site name="segment_3_plate_0_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                        <site name="segment_3_plate_0_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                      </body>
+                      <body name="segment_3_plate_1" pos="0.045983153980561194 0.045983153980561187 0" euler="0 0 0">
+                        <geom name="segment_3_plate_1_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0089800000000000001" pos="0 0 0" mesh="segment_3_plate_1_plate"/>
+                        <geom name="segment_3_plate_1_connector_ventral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="-0.0099831539805611963 -0.045983153980561187 0" mesh="segment_3_plate_1_connector"/>
+                        <joint name="segment_3_plate_1_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+                        <joint name="segment_3_plate_1_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+                        <site name="segment_3_plate_1_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                        <site name="segment_3_plate_1_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                        <site name="segment_3_plate_1_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.0099831539805611963 -0.045983153980561187 0"/>
+                      </body>
+                      <body name="segment_3_plate_2" pos="-0.04589830116681879 0.045898301166818797 0" euler="0 0 0">
+                        <geom name="segment_3_plate_2_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0089499999999999996" pos="0 0 0" mesh="segment_3_plate_2_plate"/>
+                        <geom name="segment_3_plate_2_connector_dextral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.04589830116681879 -0.0098983011668188001 0" euler="0 0 1.5707963267948966" mesh="segment_3_plate_2_connector"/>
+                        <geom name="segment_3_plate_2_connector_dorsal" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.0098983011668187931 -0.045898301166818797 0" euler="0 0 0" mesh="segment_3_plate_2_connector"/>
+                        <joint name="segment_3_plate_2_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+                        <joint name="segment_3_plate_2_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.0054999999999999997 0" damping="0.10000000000000001"/>
+                        <site name="segment_3_plate_2_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                        <site name="segment_3_plate_2_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                        <site name="segment_3_plate_2_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.04589830116681879 -0.0098983011668188001 0"/>
+                        <site name="segment_3_plate_2_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.0098983011668187931 -0.045898301166818797 0"/>
+                      </body>
+                      <body name="segment_3_plate_3" pos="-0.045841732624323887 -0.045841732624323873 0" euler="0 0 0">
+                        <geom name="segment_3_plate_3_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0092599999999999991" pos="0 0 0" mesh="segment_3_plate_3_plate"/>
+                        <geom name="segment_3_plate_3_connector_sinistral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.045841732624323887 0.0098417326243238762 0" euler="0 0 1.5707963267948966" mesh="segment_3_plate_3_connector"/>
+                        <joint name="segment_3_plate_3_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+                        <joint name="segment_3_plate_3_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="0 0.0054999999999999997" damping="0.10000000000000001"/>
+                        <site name="segment_3_plate_3_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                        <site name="segment_3_plate_3_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                        <site name="segment_3_plate_3_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.045841732624323887 0.0098417326243238762 0"/>
+                      </body>
+                      <body name="segment_4" pos="0 0 0.031" euler="0 0 0">
+                        <body name="segment_4_vertebrae" pos="0 0 0" euler="0 0 0">
+                          <geom name="segment_4_vertebrae_vertebrae" class="/" type="mesh" group="1" rgba="0.61960784313725492 0.14901960784313725 0.83137254901960789 1" mass="0.0045300000000000002" pos="0 0 0" mesh="segment_4_vertebrae_vertebrae"/>
+                          <geom name="segment_4_vertebrae_connector_ventral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="0.014999999999999999 0 0" euler="0 0 0" mesh="segment_4_vertebrae_connector"/>
+                          <geom name="segment_4_vertebrae_connector_dextral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="9.184850993605148e-19 0.014999999999999999 0" euler="0 0 1.5707963267948966" mesh="segment_4_vertebrae_connector"/>
+                          <geom name="segment_4_vertebrae_connector_dorsal" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-0.014999999999999999 1.8369701987210296e-18 0" euler="0 0 3.1415926535897931" mesh="segment_4_vertebrae_connector"/>
+                          <geom name="segment_4_vertebrae_connector_sinistral" class="/" type="mesh" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="6.9999999999999994e-05" pos="-2.7554552980815444e-18 -0.014999999999999999 0" euler="0 0 4.7123889803846897" mesh="segment_4_vertebrae_connector"/>
+                          <site name="segment_4_vertebrae_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.014999999999999999 0 0"/>
+                          <site name="segment_4_vertebrae_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="9.184850993605148e-19 0.014999999999999999 0"/>
+                          <site name="segment_4_vertebrae_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.014999999999999999 1.8369701987210296e-18 0"/>
+                          <site name="segment_4_vertebrae_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-2.7554552980815444e-18 -0.014999999999999999 0"/>
+                          <joint name="segment_4_vertebrae_vertebrae_joint_coronal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 1 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+                          <joint name="segment_4_vertebrae_vertebrae_joint_sagittal" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="1 0 0" limited="true" stiffness="1" range="-0.17453292519943295 0.17453292519943295" damping="0.10000000000000001" frictionloss="10"/>
+                          <joint name="segment_4_vertebrae_vertebrae_joint_twist" class="/" type="hinge" pos="0 0 -0.014999999999999999" axis="0 0 1" limited="true" stiffness="1" range="-0.052359877559829883 0.052359877559829883" damping="0.10000000000000001" frictionloss="10"/>
+                          <body name="segment_4_plate_0" pos="0.04649934193082738 -0.046499341930827373 0" euler="0 0 0">
+                            <geom name="segment_4_plate_0_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0090100000000000006" pos="0 0 0" mesh="segment_4_plate_0_plate"/>
+                            <joint name="segment_4_plate_0_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+                            <joint name="segment_4_plate_0_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+                            <site name="segment_4_plate_0_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                            <site name="segment_4_plate_0_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                          </body>
+                          <body name="segment_4_plate_1" pos="0.045983153980561194 0.045983153980561187 0" euler="0 0 0">
+                            <geom name="segment_4_plate_1_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0089800000000000001" pos="0 0 0" mesh="segment_4_plate_1_plate"/>
+                            <geom name="segment_4_plate_1_connector_ventral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="-0.0099831539805611963 -0.045983153980561187 0" mesh="segment_4_plate_1_connector"/>
+                            <joint name="segment_4_plate_1_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="-0.0051150000000000006 0" damping="0.10000000000000001"/>
+                            <joint name="segment_4_plate_1_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.000825 0.000825" damping="0.10000000000000001"/>
+                            <site name="segment_4_plate_1_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                            <site name="segment_4_plate_1_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                            <site name="segment_4_plate_1_connector_ventral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="-0.0099831539805611963 -0.045983153980561187 0"/>
+                          </body>
+                          <body name="segment_4_plate_2" pos="-0.04589830116681879 0.045898301166818797 0" euler="0 0 0">
+                            <geom name="segment_4_plate_2_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0082100000000000003" pos="0 0 0" mesh="segment_4_plate_2_plate"/>
+                            <geom name="segment_4_plate_2_connector_dextral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.04589830116681879 -0.0098983011668188001 0" euler="0 0 1.5707963267948966" mesh="segment_4_plate_2_connector"/>
+                            <joint name="segment_4_plate_2_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+                            <joint name="segment_4_plate_2_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="-0.0054999999999999997 0" damping="0.10000000000000001"/>
+                            <site name="segment_4_plate_2_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                            <site name="segment_4_plate_2_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                            <site name="segment_4_plate_2_connector_dextral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.04589830116681879 -0.0098983011668188001 0"/>
+                          </body>
+                          <body name="segment_4_plate_3" pos="-0.045841732624323887 -0.045841732624323873 0" euler="0 0 0">
+                            <geom name="segment_4_plate_3_plate" class="/" type="mesh" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mass="0.0088299999999999993" pos="0 0 0" mesh="segment_4_plate_3_plate"/>
+                            <geom name="segment_4_plate_3_connector_dorsal" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.0098417326243238901 0.045841732624323873 0" euler="0 0 0" mesh="segment_4_plate_3_connector"/>
+                            <geom name="segment_4_plate_3_connector_sinistral" class="/" type="mesh" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mass="0.00013999999999999999" pos="0.045841732624323887 0.0098417326243238762 0" euler="0 0 1.5707963267948966" mesh="segment_4_plate_3_connector"/>
+                            <joint name="segment_4_plate_3_x_axis" class="/" type="slide" pos="0 0 0" axis="1 0 0" limited="true" stiffness="1" range="0 0.0051150000000000006" damping="0.10000000000000001"/>
+                            <joint name="segment_4_plate_3_y_axis" class="/" type="slide" pos="0 0 0" axis="0 1 0" limited="true" stiffness="1" range="0 0.0054999999999999997" damping="0.10000000000000001"/>
+                            <site name="segment_4_plate_3_a_tap_bottom" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 -0.0074999999999999997"/>
+                            <site name="segment_4_plate_3_a_tap_top" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0 0 0.0074999999999999997"/>
+                            <site name="segment_4_plate_3_connector_dorsal_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.0098417326243238901 0.045841732624323873 0"/>
+                            <site name="segment_4_plate_3_connector_sinistral_s_tap" class="/" type="sphere" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" size="0.001" pos="0.045841732624323887 0.0098417326243238762 0"/>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <equality>
+    <joint name="//unnamed_equality_0" class="/" joint1="segment_0_plate_0_x_axis" joint2="segment_0_plate_1_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_1" class="/" joint1="segment_0_plate_0_y_axis" joint2="segment_0_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_2" class="/" joint1="segment_0_plate_2_x_axis" joint2="segment_0_plate_3_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_3" class="/" joint1="segment_0_plate_2_y_axis" joint2="segment_0_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_4" class="/" joint1="segment_0_plate_0_x_axis" joint2="segment_0_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_5" class="/" joint1="segment_0_plate_0_y_axis" joint2="segment_0_plate_3_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_6" class="/" joint1="segment_0_plate_1_x_axis" joint2="segment_0_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_7" class="/" joint1="segment_0_plate_1_y_axis" joint2="segment_0_plate_2_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_8" class="/" joint1="segment_1_plate_0_x_axis" joint2="segment_1_plate_1_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_9" class="/" joint1="segment_1_plate_0_y_axis" joint2="segment_1_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_10" class="/" joint1="segment_1_plate_2_x_axis" joint2="segment_1_plate_3_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_11" class="/" joint1="segment_1_plate_2_y_axis" joint2="segment_1_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_12" class="/" joint1="segment_1_plate_0_x_axis" joint2="segment_1_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_13" class="/" joint1="segment_1_plate_0_y_axis" joint2="segment_1_plate_3_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_14" class="/" joint1="segment_1_plate_1_x_axis" joint2="segment_1_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_15" class="/" joint1="segment_1_plate_1_y_axis" joint2="segment_1_plate_2_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_16" class="/" joint1="segment_2_plate_0_x_axis" joint2="segment_2_plate_1_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_17" class="/" joint1="segment_2_plate_0_y_axis" joint2="segment_2_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_18" class="/" joint1="segment_2_plate_2_x_axis" joint2="segment_2_plate_3_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_19" class="/" joint1="segment_2_plate_2_y_axis" joint2="segment_2_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_20" class="/" joint1="segment_2_plate_0_x_axis" joint2="segment_2_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_21" class="/" joint1="segment_2_plate_0_y_axis" joint2="segment_2_plate_3_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_22" class="/" joint1="segment_2_plate_1_x_axis" joint2="segment_2_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_23" class="/" joint1="segment_2_plate_1_y_axis" joint2="segment_2_plate_2_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_24" class="/" joint1="segment_3_plate_0_x_axis" joint2="segment_3_plate_1_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_25" class="/" joint1="segment_3_plate_0_y_axis" joint2="segment_3_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_26" class="/" joint1="segment_3_plate_2_x_axis" joint2="segment_3_plate_3_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_27" class="/" joint1="segment_3_plate_2_y_axis" joint2="segment_3_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_28" class="/" joint1="segment_3_plate_0_x_axis" joint2="segment_3_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_29" class="/" joint1="segment_3_plate_0_y_axis" joint2="segment_3_plate_3_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_30" class="/" joint1="segment_3_plate_1_x_axis" joint2="segment_3_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_31" class="/" joint1="segment_3_plate_1_y_axis" joint2="segment_3_plate_2_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_32" class="/" joint1="segment_4_plate_0_x_axis" joint2="segment_4_plate_1_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_33" class="/" joint1="segment_4_plate_0_y_axis" joint2="segment_4_plate_1_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_34" class="/" joint1="segment_4_plate_2_x_axis" joint2="segment_4_plate_3_x_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_35" class="/" joint1="segment_4_plate_2_y_axis" joint2="segment_4_plate_3_y_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_36" class="/" joint1="segment_4_plate_0_x_axis" joint2="segment_4_plate_3_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_37" class="/" joint1="segment_4_plate_0_y_axis" joint2="segment_4_plate_3_y_axis" polycoef="0 1 0 0 0"/>
+    <joint name="//unnamed_equality_38" class="/" joint1="segment_4_plate_1_x_axis" joint2="segment_4_plate_2_x_axis" polycoef="0 -1 0 0 0"/>
+    <joint name="//unnamed_equality_39" class="/" joint1="segment_4_plate_1_y_axis" joint2="segment_4_plate_2_y_axis" polycoef="0 1 0 0 0"/>
+  </equality>
+  <tendon>
+    <spatial name="segment_0_vertebral_spine_ventral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_0_vertebrae_connector_ventral_s_tap"/>
+      <site site="segment_0_plate_1_connector_ventral_s_tap"/>
+    </spatial>
+    <spatial name="segment_0_vertebral_spine_dextral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_0_vertebrae_connector_dextral_s_tap"/>
+      <site site="segment_0_plate_2_connector_dextral_s_tap"/>
+    </spatial>
+    <spatial name="segment_0_vertebral_spine_dorsal" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_0_vertebrae_connector_dorsal_s_tap"/>
+      <site site="segment_0_plate_3_connector_dorsal_s_tap"/>
+    </spatial>
+    <spatial name="segment_0_vertebral_spine_sinistral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_0_vertebrae_connector_sinistral_s_tap"/>
+      <site site="segment_0_plate_3_connector_sinistral_s_tap"/>
+    </spatial>
+    <spatial name="segment_1_vertebral_spine_ventral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_1_vertebrae_connector_ventral_s_tap"/>
+      <site site="segment_1_plate_1_connector_ventral_s_tap"/>
+    </spatial>
+    <spatial name="segment_1_vertebral_spine_dextral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_1_vertebrae_connector_dextral_s_tap"/>
+      <site site="segment_1_plate_2_connector_dextral_s_tap"/>
+    </spatial>
+    <spatial name="segment_1_vertebral_spine_dorsal" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_1_vertebrae_connector_dorsal_s_tap"/>
+      <site site="segment_1_plate_2_connector_dorsal_s_tap"/>
+    </spatial>
+    <spatial name="segment_1_vertebral_spine_sinistral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_1_vertebrae_connector_sinistral_s_tap"/>
+      <site site="segment_1_plate_3_connector_sinistral_s_tap"/>
+    </spatial>
+    <spatial name="segment_2_vertebral_spine_ventral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_2_vertebrae_connector_ventral_s_tap"/>
+      <site site="segment_2_plate_1_connector_ventral_s_tap"/>
+    </spatial>
+    <spatial name="segment_2_vertebral_spine_dextral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_2_vertebrae_connector_dextral_s_tap"/>
+      <site site="segment_2_plate_2_connector_dextral_s_tap"/>
+    </spatial>
+    <spatial name="segment_2_vertebral_spine_dorsal" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_2_vertebrae_connector_dorsal_s_tap"/>
+      <site site="segment_2_plate_3_connector_dorsal_s_tap"/>
+    </spatial>
+    <spatial name="segment_2_vertebral_spine_sinistral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_2_vertebrae_connector_sinistral_s_tap"/>
+      <site site="segment_2_plate_3_connector_sinistral_s_tap"/>
+    </spatial>
+    <spatial name="segment_3_vertebral_spine_ventral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_3_vertebrae_connector_ventral_s_tap"/>
+      <site site="segment_3_plate_1_connector_ventral_s_tap"/>
+    </spatial>
+    <spatial name="segment_3_vertebral_spine_dextral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_3_vertebrae_connector_dextral_s_tap"/>
+      <site site="segment_3_plate_2_connector_dextral_s_tap"/>
+    </spatial>
+    <spatial name="segment_3_vertebral_spine_dorsal" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_3_vertebrae_connector_dorsal_s_tap"/>
+      <site site="segment_3_plate_2_connector_dorsal_s_tap"/>
+    </spatial>
+    <spatial name="segment_3_vertebral_spine_sinistral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_3_vertebrae_connector_sinistral_s_tap"/>
+      <site site="segment_3_plate_3_connector_sinistral_s_tap"/>
+    </spatial>
+    <spatial name="segment_4_vertebral_spine_ventral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_4_vertebrae_connector_ventral_s_tap"/>
+      <site site="segment_4_plate_1_connector_ventral_s_tap"/>
+    </spatial>
+    <spatial name="segment_4_vertebral_spine_dextral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_4_vertebrae_connector_dextral_s_tap"/>
+      <site site="segment_4_plate_2_connector_dextral_s_tap"/>
+    </spatial>
+    <spatial name="segment_4_vertebral_spine_dorsal" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_4_vertebrae_connector_dorsal_s_tap"/>
+      <site site="segment_4_plate_3_connector_dorsal_s_tap"/>
+    </spatial>
+    <spatial name="segment_4_vertebral_spine_sinistral" class="/" width="0.002" rgba="0.71764705882352942 0.33725490196078434 0.34901960784313724 1" stiffness="1" damping="0.10000000000000001">
+      <site site="segment_4_vertebrae_connector_sinistral_s_tap"/>
+      <site site="segment_4_plate_3_connector_sinistral_s_tap"/>
+    </spatial>
+    <spatial name="tendon_ventral" class="/" limited="true" range="0.069500000000000006 0.20850000000000002" width="0.00050000000000000001" rgba="0.45098039215686275 0.76078431372549016 0.98431372549019602 1">
+      <site site="segment_0_plate_0_a_tap_bottom"/>
+      <site site="segment_0_plate_0_a_tap_top"/>
+      <site site="segment_1_plate_0_a_tap_bottom"/>
+      <site site="segment_1_plate_0_a_tap_top"/>
+      <site site="segment_2_plate_0_a_tap_bottom"/>
+      <site site="segment_2_plate_0_a_tap_top"/>
+      <site site="segment_3_plate_0_a_tap_bottom"/>
+      <site site="segment_3_plate_0_a_tap_top"/>
+      <site site="segment_4_plate_0_a_tap_bottom"/>
+      <site site="segment_4_plate_0_a_tap_top"/>
+    </spatial>
+    <spatial name="tendon_dextral" class="/" limited="true" range="0.069500000000000006 0.20850000000000002" width="0.00050000000000000001" rgba="0.45098039215686275 0.76078431372549016 0.98431372549019602 1">
+      <site site="segment_0_plate_1_a_tap_bottom"/>
+      <site site="segment_0_plate_1_a_tap_top"/>
+      <site site="segment_1_plate_1_a_tap_bottom"/>
+      <site site="segment_1_plate_1_a_tap_top"/>
+      <site site="segment_2_plate_1_a_tap_bottom"/>
+      <site site="segment_2_plate_1_a_tap_top"/>
+      <site site="segment_3_plate_1_a_tap_bottom"/>
+      <site site="segment_3_plate_1_a_tap_top"/>
+      <site site="segment_4_plate_1_a_tap_bottom"/>
+      <site site="segment_4_plate_1_a_tap_top"/>
+    </spatial>
+    <spatial name="tendon_dorsal" class="/" limited="true" range="0.069500000000000006 0.20850000000000002" width="0.00050000000000000001" rgba="0.45098039215686275 0.76078431372549016 0.98431372549019602 1">
+      <site site="segment_0_plate_2_a_tap_bottom"/>
+      <site site="segment_0_plate_2_a_tap_top"/>
+      <site site="segment_1_plate_2_a_tap_bottom"/>
+      <site site="segment_1_plate_2_a_tap_top"/>
+      <site site="segment_2_plate_2_a_tap_bottom"/>
+      <site site="segment_2_plate_2_a_tap_top"/>
+      <site site="segment_3_plate_2_a_tap_bottom"/>
+      <site site="segment_3_plate_2_a_tap_top"/>
+      <site site="segment_4_plate_2_a_tap_bottom"/>
+      <site site="segment_4_plate_2_a_tap_top"/>
+    </spatial>
+    <spatial name="tendon_sinistral" class="/" limited="true" range="0.069500000000000006 0.20850000000000002" width="0.00050000000000000001" rgba="0.45098039215686275 0.76078431372549016 0.98431372549019602 1">
+      <site site="segment_0_plate_3_a_tap_bottom"/>
+      <site site="segment_0_plate_3_a_tap_top"/>
+      <site site="segment_1_plate_3_a_tap_bottom"/>
+      <site site="segment_1_plate_3_a_tap_top"/>
+      <site site="segment_2_plate_3_a_tap_bottom"/>
+      <site site="segment_2_plate_3_a_tap_top"/>
+      <site site="segment_3_plate_3_a_tap_bottom"/>
+      <site site="segment_3_plate_3_a_tap_top"/>
+      <site site="segment_4_plate_3_a_tap_bottom"/>
+      <site site="segment_4_plate_3_a_tap_top"/>
+    </spatial>
+  </tendon>
+  <actuator>
+    <position name="tendon_ventral" class="/" ctrllimited="true" forcelimited="true" ctrlrange="0.069500000000000006 0.20850000000000002" forcerange="-50 0" tendon="tendon_ventral" kp="50"/>
+    <position name="tendon_dextral" class="/" ctrllimited="true" forcelimited="true" ctrlrange="0.069500000000000006 0.20850000000000002" forcerange="-50 0" tendon="tendon_dextral" kp="50"/>
+    <position name="tendon_dorsal" class="/" ctrllimited="true" forcelimited="true" ctrlrange="0.069500000000000006 0.20850000000000002" forcerange="-50 0" tendon="tendon_dorsal" kp="50"/>
+    <position name="tendon_sinistral" class="/" ctrllimited="true" forcelimited="true" ctrlrange="0.069500000000000006 0.20850000000000002" forcerange="-50 0" tendon="tendon_sinistral" kp="50"/>
+  </actuator>
+</mujoco>
