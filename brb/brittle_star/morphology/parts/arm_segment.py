@@ -252,18 +252,25 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
     def _configure_touch_sensors(
             self
             ) -> None:
-        for tendon_plate in self._tendon_plates:
+        num_touch_sensors_per_plate = 12
+        angles = np.linspace(0, 2 * np.pi, num_touch_sensors_per_plate + 1)[:-1]
+        circumference = 2 * np.pi * self.tendon_plate_radius
+        sensor_height = 0.9 * circumference / num_touch_sensors_per_plate / 2
+
+        x_distance_between_tendon_plates = abs(self._tendon_plates[0].pos[0] - self._tendon_plates[1].pos[1])
+        sensor_depth = x_distance_between_tendon_plates + self._tendon_plate_thickness
+        for sensor_index, angle in enumerate(angles):
             tendon_plate_touch_site = self.mjcf_body.add(
                     "site",
-                    name=f"{tendon_plate.name}_touch_site",
-                    type="cylinder",
-                    pos=tendon_plate.pos,
-                    euler=tendon_plate.euler,
-                    rgba=colors.rgba_green,
-                    size=tendon_plate.size
+                    name=f"{self.base_name}_touch_site_{angle}",
+                    type="box",
+                    pos=self.center_of_capsule + self.tendon_plate_radius * np.array([0, np.cos(angle), np.sin(angle)]),
+                    euler=[angle, 0, 0],
+                    rgba=colors.rgba_red * [1, 1, 1, 0.1],
+                    size=[sensor_depth, 0.001, sensor_height]
                     )
             self.mjcf_model.sensor.add(
-                    "touch", name=f"{tendon_plate.name}_touch_sensor", site=tendon_plate_touch_site
+                    "touch", name=f"{self.base_name}_touch_sensor_{sensor_index}", site=tendon_plate_touch_site
                     )
 
     def _configure_position_sensor(

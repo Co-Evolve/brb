@@ -314,8 +314,8 @@ class LightEvasionTaskConfiguration(
 
 if __name__ == '__main__':
     env_config = LightEvasionTaskConfiguration(
-            touch_coloring=False,
-            light_coloring=True,
+            touch_coloring=True,
+            light_coloring=False,
             hilly_terrain=True,
             light_noise=True,
             random_current=True,
@@ -325,12 +325,12 @@ if __name__ == '__main__':
     print(f"Steps per episode: {env_config.total_num_timesteps}")
 
     morphology_specification = default_brittle_star_morphology_specification(
-            num_arms=5, num_segments_per_arm=5, use_p_control=True
+            num_arms=5, num_segments_per_arm=12, use_p_control=True
             )
     morphology = MJCBrittleStarMorphology(
             specification=morphology_specification
             )
-
+    morphology.export_to_xml_with_assets("./test")
     dm_env = env_config.environment(
             morphology=morphology, wrap2gym=False
             )
@@ -344,7 +344,7 @@ if __name__ == '__main__':
     def policy_fn(
             timestep
             ) -> np.ndarray:
-        return 0.1 * brb.brb_random_state(
+        return 0.1 * brb.brb_random_state.uniform(
                 low=action_spec.minimum, high=action_spec.maximum, size=action_spec.shape
                 )
 

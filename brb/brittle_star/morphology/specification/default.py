@@ -34,7 +34,7 @@ def default_arm_segment_specification(alpha: float) -> BrittleStarArmSegmentSpec
 
     radius = linear_interpolation(alpha=alpha, start=START_SEGMENT_RADIUS, stop=STOP_SEGMENT_RADIUS)
     length = linear_interpolation(alpha=alpha, start=START_SEGMENT_LENGTH, stop=STOP_SEGMENT_RADIUS)
-    tendon_offset = 1.3
+    tendon_offset = 1.2
 
     segment_specification = BrittleStarArmSegmentSpecification(
         radius=radius, length=length, tendon_offset=tendon_offset,

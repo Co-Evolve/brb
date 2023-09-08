@@ -35,7 +35,6 @@ class MJCBrittleStarArm(MJCMorphologyPart):
             try:
                 parent = self._segments[-1]
                 position = 2 * self._segments[-1].center_of_capsule
-                # position[0] -= self._segments[-1]._segment_specification.radius.value
             except IndexError:
                 position = np.zeros(3)
                 parent = self

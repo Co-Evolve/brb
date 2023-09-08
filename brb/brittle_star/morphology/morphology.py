@@ -50,8 +50,8 @@ class MJCBrittleStarMorphology(MJCMorphology):
             self
             ) -> None:
         self._disc = MJCBrittleStarDisc(
-            parent=self, name="central_disc", pos=np.zeros(3), euler=np.zeros(3)
-            )
+                parent=self, name="central_disc", pos=np.zeros(3), euler=np.zeros(3)
+                )
 
     def _build_arms(
             self
@@ -67,8 +67,8 @@ class MJCBrittleStarMorphology(MJCMorphology):
             angle = arm_angles[arm_index]
             position = disc_radius * np.array([np.cos(angle), np.sin(angle), 0])
             arm = MJCBrittleStarArm(
-                parent=self._disc, name=f"arm_{arm_index}", pos=position, euler=[0, 0, angle], arm_index=arm_index
-                )
+                    parent=self._disc, name=f"arm_{arm_index}", pos=position, euler=[0, 0, angle], arm_index=arm_index
+                    )
             self.arms.append(arm)
 
     def _prepare_tendon_coloring(
@@ -76,12 +76,11 @@ class MJCBrittleStarMorphology(MJCMorphology):
             ) -> None:
         if self.morphology_specification.actuation_specification.use_tendons.value:
             self._tendon_actuators = list(
-                filter(
-                    lambda
-                        actuator: actuator.tendon is not None,
-                    self.actuators
+                    filter(
+                            lambda
+                                actuator: actuator.tendon is not None, self.actuators
+                            )
                     )
-                )
             self._tendons = [actuator.tendon for actuator in self._tendon_actuators]
 
             self._contracted_rgbas = np.ones((len(self._tendons), 4))
@@ -108,27 +107,27 @@ class MJCBrittleStarMorphology(MJCMorphology):
             self
             ) -> None:
         self._segment_capsules = list(
-            filter(
-                lambda
-                    geom: "_segment_" in geom.name and geom.name.endswith("capsule"), self.mjcf_model.find_all('geom')
+                filter(
+                        lambda
+                            geom: "_segment_" in geom.name and geom.name.endswith("capsule"),
+                        self.mjcf_model.find_all('geom')
+                        )
                 )
-            )
         self._tendon_plates = list(
-            filter(
-                lambda
-                    geom: "_tendon_plate" in geom.name and geom.name.endswith("capsule"),
-                self.mjcf_model.find_all('geom')
+                filter(
+                        lambda
+                            geom: "_tendon_plate" in geom.name and geom.name.endswith("capsule"),
+                        self.mjcf_model.find_all('geom')
+                        )
                 )
-            )
 
         sensors = self.mjcf_model.find_all('sensor')
         self.touch_sensors = list(
-            filter(
-                lambda
-                    sensor: sensor.tag == "touch",
-                sensors
+                filter(
+                        lambda
+                            sensor: sensor.tag == "touch", sensors
+                        )
                 )
-            )
 
         self._prepare_tendon_coloring()
 
@@ -138,12 +137,11 @@ class MJCBrittleStarMorphology(MJCMorphology):
             ) -> None:
         if self.touch_coloring:
             # Get values
-            touch_per_tendon_plate = np.array(physics.bind(self.touch_sensors).sensordata)
+            touch_values = np.array(physics.bind(self.touch_sensors).sensordata)
 
-            touch_per_tendon_plate[touch_per_tendon_plate > 0.0] = 1
-            touch_per_tendon_plate[touch_per_tendon_plate == 0.0] = -1
+            touch_values[touch_values > 0.0] = 1
 
-            touch_per_segment = touch_per_tendon_plate.reshape(-1, 2)
+            touch_per_segment = touch_values.reshape(self.morphology_specification.total_number_of_segments, -1)
 
             aggregated_touch_per_segment = np.sum(touch_per_segment, axis=1)
 
@@ -151,8 +149,6 @@ class MJCBrittleStarMorphology(MJCMorphology):
                 segment_physics = physics.bind(segment)
                 if touch_value > 0:
                     segment_physics.rgba = colors.rgba_red
-                elif touch_value == 0.0:
-                    segment_physics.rgba = colors.rgba_orange
                 else:
                     segment_physics.rgba = colors.rgba_green
 
