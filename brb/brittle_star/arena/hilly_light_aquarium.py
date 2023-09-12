@@ -434,7 +434,7 @@ class HillyLightAquarium(Arena):
         if self._random_current:
             angle = brb.brb_random_state.uniform(0, 2 * np.pi)
             direction = np.array([np.cos(angle), np.sin(angle), 0.0])
-            strength = 0.5
+            strength = 0.1
             physics.model.opt.wind = strength * direction
 
             current_arrow = physics.bind(self._current_arrow)
