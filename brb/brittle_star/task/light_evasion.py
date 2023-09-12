@@ -38,7 +38,7 @@ class LightEvasionTask(composer.Task):
         self._segment_position_sensors = None
         self._previous_normalised_light_income = None
 
-        self._randomized = False
+        self._targeted_segment_position_sensor = None
 
     @property
     def root_entity(
@@ -56,13 +56,15 @@ class LightEvasionTask(composer.Task):
             self
             ) -> HillyLightAquarium:
         arena = HillyLightAquarium(
+                initial_morphology_position=self.config.starting_position,
                 size=self.config.arena_size,
                 env_id=self.config.env_id,
                 light_noise=self.config.light_noise,
                 targeted_light=self.config.targeted_light,
                 hilly_terrain=self.config.hilly_terrain,
                 random_current=self.config.random_current,
-                random_friction=self.config.random_friction
+                random_friction=self.config.random_friction,
+                random_obstacles=self.config.random_obstacles
                 )
         return arena
 
@@ -92,7 +94,10 @@ class LightEvasionTask(composer.Task):
     def _configure_memory(
             self
             ) -> None:
-        self.root_entity.mjcf_model.size.memory = "64M"
+        if self.config.random_obstacles:
+            self.root_entity.mjcf_model.size.memory = "512M"
+        else:
+            self.root_entity.mjcf_model.size.memory = "64M"
 
     def _attach_morphology(
             self,
@@ -289,6 +294,7 @@ class LightEvasionTask(composer.Task):
         self._light_extractor = self._create_light_extractor()
         self._initialize_morphology_pose(physics)
         self._previous_normalised_light_income = self._get_normalised_light_income(physics=physics)
+        self._targeted_segment_position_sensor = None
 
     def before_step(
             self,
@@ -312,6 +318,25 @@ class LightEvasionTask(composer.Task):
             shifted = self._arena.shift_lightmap(physics=physics)
             if shifted:
                 self._light_extractor = self._create_light_extractor()
+        elif self.config.targeted_light:
+            if self._targeted_segment_position_sensor is None:
+                # get a segment to target
+                num_segments_per_arm = self._morphology.morphology_specification.number_of_segments_per_arm
+                #   select a non-empty arm
+                non_empty_arms = [arm_index for arm_index, num_segments in enumerate(num_segments_per_arm) if
+                                  num_segments > 0]
+                arm_index = brb.brb_random_state.choice(non_empty_arms, size=1)[0]
+                segment_index = num_segments_per_arm[arm_index] - 1
+                print(f"Arm index: {arm_index}  segment index: {segment_index}")
+                self._targeted_segment_position_sensor = \
+                [sensor for sensor in self.segment_position_sensors if sensor.name.startswith(
+                        f"arm_{arm_index}_segment_{segment_index}"
+                        )][0]
+
+            targeted_segment_xy = np.array(physics.bind(self._targeted_segment_position_sensor).sensordata)[:2]
+            self._arena.targeted_lightmap(physics=physics, target_xy_world=targeted_segment_xy)
+            self._light_extractor = self._create_light_extractor()
+
 
 class LightEvasionTaskConfiguration(
         MJCEnvironmentConfig
@@ -324,6 +349,7 @@ class LightEvasionTaskConfiguration(
             dynamic_light: bool = True,
             targeted_light: bool = False,
             hilly_terrain: bool = True,
+            random_obstacles: bool = False,
             random_current: bool = True,
             random_friction: bool = True,
             starting_position: Tuple[int, int] = (-8.0, 0.0),
@@ -353,14 +379,16 @@ class LightEvasionTaskConfiguration(
         self.light_coloring = light_coloring
         self.damage_fn = damage_fn
 
+        self.random_obstacles = random_obstacles
         self.targeted_light = targeted_light
 
 
 if __name__ == '__main__':
     env_config = LightEvasionTaskConfiguration(
-            touch_coloring=False,
-            light_coloring=True,
+            touch_coloring=True,
+            light_coloring=False,
             hilly_terrain=False,
+            random_obstacles=True,
             light_noise=False,
             dynamic_light=False,
             targeted_light=True,
@@ -390,6 +418,9 @@ if __name__ == '__main__':
             cv2.imshow("frame", frame)
             cv2.waitKey(1)
 
+    dm_env = env_config.environment(
+            morphology=morphology, wrap2gym=False
+            )
     observation_spec = dm_env.observation_spec()
     action_spec = dm_env.action_spec()
 

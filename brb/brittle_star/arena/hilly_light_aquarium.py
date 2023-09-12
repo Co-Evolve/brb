@@ -10,6 +10,7 @@ from scipy.ndimage import gaussian_filter
 from transforms3d.euler import euler2quat
 
 import brb
+from brb.brittle_star.arena.obstacle import Obstacle
 from brb.utils import colors
 from brb.utils.colors import rgba_sand
 from brb.utils.noise import generate_perlin_noise_map
@@ -26,6 +27,7 @@ class HillyLightAquarium(Arena):
 
     def _build(
             self,
+            initial_morphology_position: tuple[int, int] = (0, 0),
             name='hilly_light_aquarium',
             env_id: int = 0,
             size=(10, 5),
@@ -34,10 +36,11 @@ class HillyLightAquarium(Arena):
             targeted_light: bool = False,
             hilly_terrain: bool = True,
             random_current: bool = True,
-            random_friction: bool = True
+            random_friction: bool = True,
+            random_obstacles: bool = False
             ) -> None:
         super()._build(name=name)
-
+        self._initial_morphology_position = np.array(initial_morphology_position)
         self._dynamic_assets_identifier = env_id
         self.size = np.array(size)
         self._light_texture = light_texture
@@ -46,6 +49,7 @@ class HillyLightAquarium(Arena):
         self._hilly_terrain = hilly_terrain
         self._random_current = random_current
         self._random_friction = random_friction
+        self._random_obstacles = random_obstacles
 
         self._configure_assets_directory()
         self._generate_random_height_and_light_maps()
@@ -54,6 +58,7 @@ class HillyLightAquarium(Arena):
         self._configure_sky()
         self._build_ground()
         self._build_walls()
+        self._build_obstacles()
         self._build_current_arrow()
         self._configure_water()
 
@@ -257,6 +262,57 @@ class HillyLightAquarium(Arena):
                         )
                 )
 
+    def _get_obstacle_positions(
+            self
+            ) -> np.ndarray:
+        offset_between_obstacles = 2
+
+        positions = []
+        arena_width, arena_height = self.size
+        for x in range(-arena_width + 1, arena_width, offset_between_obstacles):
+            for y in range(-arena_height + 1, arena_height, offset_between_obstacles):
+                positions.append([x, y, 0])
+
+        positions = np.stack(positions).astype(float)
+        return positions
+
+    def _build_obstacles(
+            self
+            ) -> None:
+        if self._random_obstacles:
+            num_obstacles = int(self._get_obstacle_positions().size // 3)
+            self._obstacles = [Obstacle(size=[0.2, 0.75]) for _ in range(num_obstacles)]
+            for obstacle in self._obstacles:
+                self.attach(obstacle)
+
+    def _randomize_obstacles(
+            self,
+            physics: mjcf.Physics
+            ) -> None:
+        if self._random_obstacles:
+            positions = self._get_obstacle_positions()
+            positions[:, 1] += brb.brb_random_state.uniform(-0.8, 0.8, len(positions))
+
+            # Remove positions that are too close to morphology position
+            mask = np.linalg.norm(
+                    positions[:, :2] - self._initial_morphology_position,
+                    axis=1
+                    ) > 2
+
+            # Remove positions that are too close to arena bounds
+            min_x, max_x = -self.size[0] + 1, self.size[0] - 1
+            min_y, max_y = -self.size[1] + 1, self.size[1] - 1
+            mask &= ((min_x <= positions[:, 0]) & (positions[:, 0] <= max_x) &
+                     (min_y <= positions[:, 1]) & (positions[:, 1] <= max_y))
+            # Removal means placing them out of bounds
+            positions[~mask] = [100, 100, 100]
+
+            for pos, obstacle in zip(positions, self._obstacles):
+                y_shift = brb.brb_random_state.uniform(-0.8, 0.8)
+                pos[1] += y_shift
+                obstacle.set_pose(physics=physics,
+                                  position=pos)
+
     def _build_current_arrow(
             self
             ) -> None:
@@ -303,7 +359,7 @@ class HillyLightAquarium(Arena):
             self,
             physics: mjcf.Physics
             ) -> None:
-        if self._light_noise and self._light_texture:
+        if (self._light_noise and self._light_texture) or self._targeted_light:
             texture = physics.bind(self._ground_texture)
             h, w, adr = texture.height, texture.width, texture.adr
             size = h * w * 3
@@ -319,7 +375,10 @@ class HillyLightAquarium(Arena):
                             texture.element_id
                             )
 
-    def shift_lightmap(self, physics: mjcf.Physics) -> bool:
+    def shift_lightmap(
+            self,
+            physics: mjcf.Physics
+            ) -> bool:
         if physics.time() - self._previous_light_shift_time > 0.5:
             self.lightmap = np.roll(self.lightmap, shift=1, axis=0)
             self._color_lightmap = np.roll(self._color_lightmap, shift=1, axis=0)
@@ -327,6 +386,37 @@ class HillyLightAquarium(Arena):
             self._previous_light_shift_time = physics.time()
             return True
         return False
+
+    def targeted_lightmap(
+            self,
+            physics: mjcf.Physics,
+            target_xy_world: np.ndarray
+            ) -> None:
+        # Transform world coordinates to normalized coordinates in [0, 1] based on arena size
+        target_xy_normalized = (target_xy_world + self.size) / (2 * self.size)
+        # Flip y axis
+        target_xy_normalized[1] = 1 - target_xy_normalized[1]
+
+        # Transform normalized coordinates to lightmap pixel coordinates
+        lightmap_size = self.lightmap.shape
+        target_yx_normalized = target_xy_normalized[::-1]
+        target_yx_lightmap = lightmap_size * target_yx_normalized
+
+        # Get a circular mask
+        center = target_yx_lightmap
+        radius = 4
+        y, x = np.ogrid[:self.lightmap.shape[0], :self.lightmap.shape[1]]
+        mask = (y - center[0]) ** 2 + (x - center[1]) ** 2 <= radius ** 2
+
+        self.lightmap[:] = self.BASE_LIGHT
+        self.lightmap[mask] = 1.0
+
+        self.lightmap = gaussian_filter(self.lightmap, mode="reflect", sigma=3)
+
+        lightmap = np.stack((self.lightmap,) * 3, axis=-1)
+        light_color_map = lightmap * rgba_sand[:3]
+        self._color_lightmap = (light_color_map * 255).astype(np.uint8)
+        self._update_ground_texture(physics=physics)
 
     def _randomize_ground_friction(
             self,
@@ -360,8 +450,13 @@ class HillyLightAquarium(Arena):
         self._update_ground_texture(physics=physics)
         self._randomize_ground_friction(physics=physics)
         self._randomize_current(physics=physics)
+        self._randomize_obstacles(physics=physics)
 
-    def initialize_episode(self, physics: mjcf.Physics, random_state: np.random.RandomState) -> None:
+    def initialize_episode(
+            self,
+            physics: mjcf.Physics,
+            random_state: np.random.RandomState
+            ) -> None:
         self._previous_light_shift_time = 0
 
     def __del__(
