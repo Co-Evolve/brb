@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Tuple
+from typing import Callable, Dict, List, Tuple
 
 import numpy as np
 from dm_control import composer
@@ -16,6 +16,7 @@ import brb
 from brb.brittle_star.arena.hilly_light_aquarium import HillyLightAquarium
 from brb.brittle_star.morphology.morphology import MJCBrittleStarMorphology
 from brb.brittle_star.morphology.specification.default import default_brittle_star_morphology_specification
+from brb.brittle_star.morphology.specification.specification import BrittleStarMorphologySpecification
 
 
 class LightEvasionTask(composer.Task):
@@ -28,6 +29,7 @@ class LightEvasionTask(composer.Task):
         self._arena = self._build_arena()
         self._light_extractor = self._create_light_extractor()
         self._morphology = self._attach_morphology(morphology=morphology)
+        self._base_specification = morphology.morphology_specification
         self._task_observables = self._configure_observables()
 
         self._configure_contacts()
@@ -246,6 +248,35 @@ class LightEvasionTask(composer.Task):
                 physics=physics, position=initial_position, quaternion=initial_quaternion
                 )
 
+    def _apply_damage_to_morphology(
+            self
+            ) -> None:
+        if not self.config.damage_fn:
+            return
+
+        # Detach morphology
+        self._morphology.detach()
+
+        # Create a new one with random damage
+        morphology_specification = self.config.damage_fn(self._base_specification)
+        morphology = MJCBrittleStarMorphology(
+                morphology_specification
+                )
+
+        # Attach the morphology
+        self._morphology = self._attach_morphology(morphology)
+
+        # Configure observables
+        self._segment_position_sensors = None
+        self._configure_morphology_observables()
+        self._task_observables = self._configure_task_observables()
+
+    def initialize_episode_mjcf(
+            self,
+            random_state
+            ) -> None:
+        self._apply_damage_to_morphology()
+
     def initialize_episode(
             self,
             physics: mjcf.Physics,
@@ -292,8 +323,9 @@ class LightEvasionTaskConfiguration(
             light_coloring: bool = False,
             time_scale: float = 0.5,
             control_substeps: int = 1,
-            simulation_time: int = 20
-            ) -> None:
+            simulation_time: int = 20,
+            damage_fn: Callable[[
+                    BrittleStarMorphologySpecification], BrittleStarMorphologySpecification] | None = None, ) -> None:
         super().__init__(
                 task=LightEvasionTask,
                 time_scale=time_scale,
@@ -310,6 +342,7 @@ class LightEvasionTaskConfiguration(
         self.starting_position = starting_position
         self.touch_coloring = touch_coloring
         self.light_coloring = light_coloring
+        self.damage_fn = damage_fn
 
 
 if __name__ == '__main__':
