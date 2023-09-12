@@ -38,6 +38,8 @@ class LightEvasionTask(composer.Task):
         self._segment_position_sensors = None
         self._previous_normalised_light_income = None
 
+        self._randomized = False
+
     @property
     def root_entity(
             self
@@ -57,6 +59,7 @@ class LightEvasionTask(composer.Task):
                 size=self.config.arena_size,
                 env_id=self.config.env_id,
                 light_noise=self.config.light_noise,
+                targeted_light=self.config.targeted_light,
                 hilly_terrain=self.config.hilly_terrain,
                 random_current=self.config.random_current,
                 random_friction=self.config.random_friction
@@ -289,10 +292,10 @@ class LightEvasionTask(composer.Task):
 
     def before_step(
             self,
-            physics,
-            action,
-            random_state
-            ):
+            physics: mjcf.Physics,
+            action: np.ndarray,
+            random_state: np.random.RandomState
+            ) -> None:
         super().before_step(
                 physics=physics, action=action, random_state=random_state
                 )
@@ -304,8 +307,11 @@ class LightEvasionTask(composer.Task):
             ) -> None:
         if self.config.light_coloring:
             self._morphology.color_light(physics=physics, light_value_per_segment=self._get_light_per_segment(physics))
-        super().after_step(physics=physics, random_state=random_state)
 
+        if self.config.dynamic_light:
+            shifted = self._arena.shift_lightmap(physics=physics)
+            if shifted:
+                self._light_extractor = self._create_light_extractor()
 
 class LightEvasionTaskConfiguration(
         MJCEnvironmentConfig
@@ -315,6 +321,8 @@ class LightEvasionTaskConfiguration(
             env_id: int = 0,
             arena_size: Tuple[int, int] = (10, 5),
             light_noise: bool = True,
+            dynamic_light: bool = True,
+            targeted_light: bool = False,
             hilly_terrain: bool = True,
             random_current: bool = True,
             random_friction: bool = True,
@@ -324,8 +332,8 @@ class LightEvasionTaskConfiguration(
             time_scale: float = 0.5,
             control_substeps: int = 1,
             simulation_time: int = 20,
-            damage_fn: Callable[[
-                    BrittleStarMorphologySpecification], BrittleStarMorphologySpecification] | None = None, ) -> None:
+            damage_fn: Callable[[BrittleStarMorphologySpecification], BrittleStarMorphologySpecification] | None = None
+            ) -> None:
         super().__init__(
                 task=LightEvasionTask,
                 time_scale=time_scale,
@@ -336,6 +344,7 @@ class LightEvasionTaskConfiguration(
         self.env_id = env_id
         self.arena_size = arena_size
         self.light_noise = light_noise
+        self.dynamic_light = dynamic_light
         self.hilly_terrain = hilly_terrain
         self.random_current = random_current
         self.random_friction = random_friction
@@ -344,18 +353,21 @@ class LightEvasionTaskConfiguration(
         self.light_coloring = light_coloring
         self.damage_fn = damage_fn
 
+        self.targeted_light = targeted_light
+
 
 if __name__ == '__main__':
     env_config = LightEvasionTaskConfiguration(
-            touch_coloring=True,
-            light_coloring=False,
-            hilly_terrain=True,
-            light_noise=True,
-            random_current=True,
-            random_friction=True
+            touch_coloring=False,
+            light_coloring=True,
+            hilly_terrain=False,
+            light_noise=False,
+            dynamic_light=False,
+            targeted_light=True,
+            random_current=False,
+            random_friction=False,
+            starting_position=(0, 0)
             )
-
-    print(f"Steps per episode: {env_config.total_num_timesteps}")
 
     morphology_specification = default_brittle_star_morphology_specification(
             num_arms=5, num_segments_per_arm=12, use_p_control=True
@@ -363,10 +375,20 @@ if __name__ == '__main__':
     morphology = MJCBrittleStarMorphology(
             specification=morphology_specification
             )
-    morphology.export_to_xml_with_assets("./test")
+
     dm_env = env_config.environment(
-            morphology=morphology, wrap2gym=False
+            morphology=morphology, wrap2gym=True
             )
+
+    dm_env.reset()
+    import cv2
+
+    for step_index in range(env_config.total_num_timesteps):
+        dm_env.step(dm_env.action_space.sample())
+        if step_index % 30 == 0:
+            frame = dm_env.render()
+            cv2.imshow("frame", frame)
+            cv2.waitKey(1)
 
     observation_spec = dm_env.observation_spec()
     action_spec = dm_env.action_spec()

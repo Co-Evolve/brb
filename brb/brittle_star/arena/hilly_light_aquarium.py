@@ -6,6 +6,7 @@ from PIL import Image
 from dm_control import mjcf
 from dm_control.composer import Arena
 from dm_control.mujoco.wrapper import mjbindings
+from scipy.ndimage import gaussian_filter
 from transforms3d.euler import euler2quat
 
 import brb
@@ -30,16 +31,18 @@ class HillyLightAquarium(Arena):
             size=(10, 5),
             light_texture: bool = True,
             light_noise: bool = True,
+            targeted_light: bool = False,
             hilly_terrain: bool = True,
             random_current: bool = True,
             random_friction: bool = True
-            ):
+            ) -> None:
         super()._build(name=name)
 
         self._dynamic_assets_identifier = env_id
         self.size = np.array(size)
         self._light_texture = light_texture
         self._light_noise = light_noise
+        self._targeted_light = targeted_light
         self._hilly_terrain = hilly_terrain
         self._random_current = random_current
         self._random_friction = random_friction
@@ -53,6 +56,8 @@ class HillyLightAquarium(Arena):
         self._build_walls()
         self._build_current_arrow()
         self._configure_water()
+
+        self._previous_light_shift_time = 0
 
     def _configure_assets_directory(
             self
@@ -94,10 +99,13 @@ class HillyLightAquarium(Arena):
         else:
             self._heightmap = np.zeros((height, width))
 
-        # Linear transition from bright to dark
-        lightmap = np.zeros_like(self._heightmap)
-        for x, brightness in enumerate(np.linspace(1, 0, width)):
-            lightmap[:, x] = brightness
+        if self._targeted_light:
+            lightmap = np.zeros_like(self._heightmap)
+        else:
+            # Linear transition from bright to dark
+            lightmap = np.zeros_like(self._heightmap)
+            for x, brightness in enumerate(np.linspace(1, 0, width)):
+                lightmap[:, x] = brightness
 
         if self._light_noise:
             if self._hilly_terrain:
@@ -119,6 +127,9 @@ class HillyLightAquarium(Arena):
             # Light noise interval from [0, 1] to [1 - noise, 1 + noise]
             light_noise = 1 + light_noise_weights * light_noise
             lightmap *= light_noise
+
+            lightmap = gaussian_filter(lightmap, mode="wrap", sigma=3)
+
             # normalize light map
             lightmap = (lightmap - np.min(lightmap)) / (np.max(lightmap) - np.min(lightmap))
 
@@ -260,7 +271,6 @@ class HillyLightAquarium(Arena):
                     type="mesh",
                     mesh=f"direction_arrow",
                     pos=[0.0, self.size[1], 6.0],
-                    # euler=np.array([np.pi / 2, 0.0, 0.0]),
                     rgba=colors.rgba_red, )
 
     def _configure_water(
@@ -309,6 +319,15 @@ class HillyLightAquarium(Arena):
                             texture.element_id
                             )
 
+    def shift_lightmap(self, physics: mjcf.Physics) -> bool:
+        if physics.time() - self._previous_light_shift_time > 0.5:
+            self.lightmap = np.roll(self.lightmap, shift=1, axis=0)
+            self._color_lightmap = np.roll(self._color_lightmap, shift=1, axis=0)
+            self._update_ground_texture(physics=physics)
+            self._previous_light_shift_time = physics.time()
+            return True
+        return False
+
     def _randomize_ground_friction(
             self,
             physics: mjcf.Physics
@@ -341,6 +360,9 @@ class HillyLightAquarium(Arena):
         self._update_ground_texture(physics=physics)
         self._randomize_ground_friction(physics=physics)
         self._randomize_current(physics=physics)
+
+    def initialize_episode(self, physics: mjcf.Physics, random_state: np.random.RandomState) -> None:
+        self._previous_light_shift_time = 0
 
     def __del__(
             self
