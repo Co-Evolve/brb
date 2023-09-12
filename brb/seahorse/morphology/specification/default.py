@@ -6,7 +6,7 @@ from brb.seahorse.morphology.specification.specification import JointSpecificati
     SeahorseMorphologySpecification, SeahorsePlateSpecification, SeahorseSegmentSpecification, \
     SeahorseTendonActuationSpecification, SeahorseTendonSpineSpecification, SeahorseVertebraeSpecification
 
-BASE_MESH_PATH = Path(__file__).parent.parent / "assets"
+BASE_MESH_PATH = Path(__file__).parent.parent / "assets" / "v0"
 PLATE_INDEX_TO_SIDE = ["ventral_sinistral", "ventral_dextral", "dorsal_dextral", "dorsal_sinistral"]
 MESH_NAME_TO_MASS = {
         # in kilograms
