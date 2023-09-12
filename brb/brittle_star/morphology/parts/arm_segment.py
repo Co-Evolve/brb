@@ -252,10 +252,10 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
     def _configure_touch_sensors(
             self
             ) -> None:
-        num_touch_sensors_per_plate = 12
-        angles = np.linspace(0, 2 * np.pi, num_touch_sensors_per_plate + 1)[:-1]
+        num_touch_sensors = self._segment_specification.num_touch_sensors.value
+        angles = np.linspace(0, 2 * np.pi, num_touch_sensors + 1)[:-1]
         circumference = 2 * np.pi * self.tendon_plate_radius
-        sensor_height = 0.9 * circumference / num_touch_sensors_per_plate / 2
+        sensor_height = 0.9 * circumference / num_touch_sensors / 2
 
         x_distance_between_tendon_plates = abs(self._tendon_plates[0].pos[0] - self._tendon_plates[1].pos[1])
         sensor_depth = x_distance_between_tendon_plates + self._tendon_plate_thickness

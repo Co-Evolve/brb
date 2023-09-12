@@ -30,6 +30,7 @@ class BrittleStarArmSegmentSpecification(Specification):
             radius: float,
             length: float,
             tendon_offset: float,
+            num_touch_sensors: int,
             in_plane_joint_specification: BrittleStarJointSpecification,
             out_of_plane_joint_specification: BrittleStarJointSpecification
             ) -> None:
@@ -37,6 +38,7 @@ class BrittleStarArmSegmentSpecification(Specification):
         self.radius = FixedParameter(radius)
         self.length = FixedParameter(length)
         self.tendon_offset = FixedParameter(tendon_offset)
+        self.num_touch_sensors = FixedParameter(num_touch_sensors)
         self.in_plane_joint_specification = in_plane_joint_specification
         self.out_of_plane_joint_specification = out_of_plane_joint_specification
 
