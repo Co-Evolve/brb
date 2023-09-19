@@ -7,6 +7,7 @@ from brb.seahorse.morphology.parts.plate import SeahorsePlate
 from brb.seahorse.morphology.parts.vertebrae import SeahorseVertebrae
 from brb.seahorse.morphology.specification.specification import SeahorseMorphologySpecification, \
     SeahorseSegmentSpecification, SeahorseTendonSpineSpecification, SeahorseVertebraeSpecification
+from brb.seahorse.morphology.utils import get_inner_and_outer_plate_indices_per_side
 from brb.utils import colors
 
 
@@ -61,7 +62,7 @@ class SeahorseSegment(MJCMorphologyPart):
     def _build(
             self,
             segment_index: int
-            ):
+            ) -> None:
         self.segment_index = segment_index
 
         self._build_vertebrae()
@@ -86,15 +87,10 @@ class SeahorseSegment(MJCMorphologyPart):
         self.plates: List[SeahorsePlate] = []
 
         for plate_index in range(4):
-            angle = -np.pi / 4 + (plate_index * np.pi / 2)
-            offset_from_vertebrae = self.segment_specification.plate_specifications[plate_index].offset_from_vertebrae
-            x = offset_from_vertebrae * np.cos(angle)
-            y = offset_from_vertebrae * np.sin(angle)
-
             plate = SeahorsePlate(
                     parent=self.vertebrae,
                     name=f"{self.base_name}_plate_{plate_index}",
-                    pos=np.array([x, y, 0.0]),
+                    pos=np.zeros(3),
                     euler=np.zeros(3),
                     segment_index=self.segment_index,
                     plate_index=plate_index
@@ -107,29 +103,42 @@ class SeahorseSegment(MJCMorphologyPart):
         sides = self.morphology_specification.sides
 
         self.spines = []
-        vertebrae_s_taps = self.vertebrae.s_taps
-        if self.segment_index % 2 == 0:
-            plate_s_taps = [self.plates[1].s_taps[0], self.plates[2].s_taps[0], self.plates[3].s_taps[0],
-                            self.plates[3].s_taps[1]]
-        else:
-            plate_s_taps = [self.plates[1].s_taps[0], self.plates[2].s_taps[0], self.plates[2].s_taps[1],
-                            self.plates[3].s_taps[0]]
 
-        for side, vertebrae_s_tap, plate_s_tap in zip(sides, vertebrae_s_taps, plate_s_taps):
+        for side, vertebrae_s_tap in zip(sides, self.vertebrae.s_taps):
+            inner_plate_index, outer_plate_index = get_inner_and_outer_plate_indices_per_side(
+                    segment_index=self.segment_index,
+                    side=side)
+            inner_plate = self.plates[inner_plate_index]
+            outer_plate = self.plates[outer_plate_index]
+            if side == "ventral" or side == "dorsal":
+                axis = "x"
+            else:
+                axis = "y"
+
+            inner_plate_s_tap = inner_plate.s_taps[f"plate-{axis}"]
+            outer_plate_s_tap = outer_plate.s_taps[f"plate-{axis}"]
+            connector_s_tap = inner_plate.s_taps[f"connector-{axis}"]
+
             tendon = self.mjcf_model.tendon.add(
                     'spatial',
                     name=f"{self.base_name}_vertebral_spine_{side}",
                     width=self.tendon_spine_specification.tendon_width,
-                    rgba=colors.rgba_red,
+                    rgba=colors.rgba_gray,
                     stiffness=self.tendon_spine_specification.stiffness,
                     damping=self.tendon_spine_specification.damping
                     )
             tendon.add(
-                'site', site=vertebrae_s_tap
-                )
+                    'site', site=vertebrae_s_tap
+                    )
             tendon.add(
-                'site', site=plate_s_tap
-                )
+                    'site', site=connector_s_tap
+                    )
+            tendon.add(
+                    'site', site=inner_plate_s_tap
+                    )
+            tendon.add(
+                    'site', site=outer_plate_s_tap
+                    )
 
     def _configure_plate_gliding_joints_equality_constraints(
             self
@@ -165,8 +174,3 @@ class SeahorseSegment(MJCMorphologyPart):
                     joint2=self.plates[plate_index_2].y_axis_gliding_joint,
                     polycoef=[0, 1, 0, 0, 0]
                     )
-
-    def get_next_segment_position(
-            self
-            ) -> np.ndarray:
-        return np.array([0.0, 0.0, 2 * self.vertebrae_specification.vertebrae_half_height + 0.001])
