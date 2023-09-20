@@ -28,13 +28,15 @@ class JointSpecification(Specification):
             stiffness: float,
             damping: float,
             friction_loss: float,
-            range: float
+            range: float,
+            armature: float
             ) -> None:
         super().__init__()
         self.stiffness = FixedParameter(stiffness)
         self.damping = FixedParameter(damping)
         self.friction_loss = FixedParameter(friction_loss)
         self.range = FixedParameter(range)
+        self.armature = FixedParameter(armature)
 
 
 class SeahorsePlateSpecification(Specification):
@@ -125,16 +127,14 @@ class SeahorseTendonActuationSpecification(Specification):
     def __init__(
             self,
             *,
-            contraction_factor: float,
-            relaxation_factor: float,
+            tendon_strain: float,
             p_control_kp: float,
             tendon_width: float,
             segment_span: int,
             damping: float
             ) -> None:
         super().__init__()
-        self.contraction_factor = FixedParameter(contraction_factor)
-        self.relaxation_factor = FixedParameter(relaxation_factor)
+        self.tendon_strain = FixedParameter(tendon_strain)
         self.p_control_kp = FixedParameter(p_control_kp)
         self.tendon_width = FixedParameter(tendon_width)
         self.segment_span = FixedParameter(segment_span)

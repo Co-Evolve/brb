@@ -148,29 +148,41 @@ class SeahorseSegment(MJCMorphologyPart):
 
         for x_aligned_plates in x_aligned_plate_neighbours:
             plate_index_1, plate_index_2 = x_aligned_plates
-            self.mjcf_model.equality.add(
-                    'joint',
-                    joint1=self.plates[plate_index_1].x_axis_gliding_joint,
-                    joint2=self.plates[plate_index_2].x_axis_gliding_joint,
-                    polycoef=[0, 1, 0, 0, 0]
-                    )
-            self.mjcf_model.equality.add(
-                    'joint',
-                    joint1=self.plates[plate_index_1].y_axis_gliding_joint,
-                    joint2=self.plates[plate_index_2].y_axis_gliding_joint,
-                    polycoef=[0, -1, 0, 0, 0]
-                    )
+            try:
+                self.mjcf_model.equality.add(
+                        'joint',
+                        joint1=self.plates[plate_index_1].x_axis_gliding_joint,
+                        joint2=self.plates[plate_index_2].x_axis_gliding_joint,
+                        polycoef=[0, 1, 0, 0, 0]
+                        )
+            except AttributeError:
+                pass
+            try:
+                self.mjcf_model.equality.add(
+                        'joint',
+                        joint1=self.plates[plate_index_1].y_axis_gliding_joint,
+                        joint2=self.plates[plate_index_2].y_axis_gliding_joint,
+                        polycoef=[0, -1, 0, 0, 0]
+                        )
+            except AttributeError:
+                pass
         for y_aligned_plates in y_aligned_plate_neighbours:
             plate_index_1, plate_index_2 = y_aligned_plates
-            self.mjcf_model.equality.add(
-                    'joint',
-                    joint1=self.plates[plate_index_1].x_axis_gliding_joint,
-                    joint2=self.plates[plate_index_2].x_axis_gliding_joint,
-                    polycoef=[0, -1, 0, 0, 0]
-                    )
-            self.mjcf_model.equality.add(
-                    'joint',
-                    joint1=self.plates[plate_index_1].y_axis_gliding_joint,
-                    joint2=self.plates[plate_index_2].y_axis_gliding_joint,
-                    polycoef=[0, 1, 0, 0, 0]
-                    )
+            try:
+                self.mjcf_model.equality.add(
+                        'joint',
+                        joint1=self.plates[plate_index_1].x_axis_gliding_joint,
+                        joint2=self.plates[plate_index_2].x_axis_gliding_joint,
+                        polycoef=[0, -1, 0, 0, 0]
+                        )
+            except AttributeError:
+                pass
+            try:
+                self.mjcf_model.equality.add(
+                        'joint',
+                        joint1=self.plates[plate_index_1].y_axis_gliding_joint,
+                        joint2=self.plates[plate_index_2].y_axis_gliding_joint,
+                        polycoef=[0, 1, 0, 0, 0]
+                        )
+            except AttributeError:
+                pass

@@ -81,10 +81,11 @@ class GraspingTask(composer.Task):
     def _attach_grasping_object(
             self
             ) -> GraspingCylinder:
-        grasping_cylinder = GraspingCylinder()
-        self._arena.attach(entity=grasping_cylinder)
-        # todo: add x and z plane joints
-        return grasping_cylinder
+        if self.config.with_object:
+            grasping_cylinder = GraspingCylinder()
+            self._arena.attach(entity=grasping_cylinder)
+            # todo: add x and z plane joints
+            return grasping_cylinder
 
     def _configure_morphology_observables(
             self
@@ -140,9 +141,10 @@ class GraspingTask(composer.Task):
             self,
             physics: mjcf.Physics
             ) -> None:
-        self._grasping_object.set_pose(
-                physics=physics, position=np.array([0.3, 0.0, 0.6]), quaternion=euler2quat(*[0.0, 0.0, 0.0])
-                )
+        if self.config.with_object:
+            self._grasping_object.set_pose(
+                    physics=physics, position=np.array([0.3, 0.0, 0.6]), quaternion=euler2quat(*[0.0, 0.0, 0.0])
+                    )
 
     def initialize_episode(
             self,
@@ -162,7 +164,8 @@ class GraspingTaskConfiguration(
             arena_size: Tuple[int, int] = (10, 5, 0),
             time_scale: float = 1.0,
             control_substeps: int = 1,
-            simulation_time: int = 10
+            simulation_time: int = 5,
+            with_object: bool = True
             ) -> None:
         super().__init__(
                 task=GraspingTask,
@@ -173,20 +176,21 @@ class GraspingTaskConfiguration(
                 )
         self.env_id = env_id
         self.arena_size = arena_size
+        self.with_object = with_object
 
 
 if __name__ == '__main__':
-    env_config = GraspingTaskConfiguration()
+    env_config = GraspingTaskConfiguration(with_object=False)
 
-    morphology_specification = default_seahorse_morphology_specification(num_segments=15)
+    morphology_specification = default_seahorse_morphology_specification(num_segments=30)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
-    morphology.export_to_xml_with_assets("test")
     dm_env = env_config.environment(
             morphology=morphology, wrap2gym=False
             )
     action_spec = dm_env.action_spec()
     num_tendons_per_side = int(action_spec.shape[0] / 2)
     num_tendons_per_corner = int(num_tendons_per_side / 2)
+
 
     def alternating_policy_fn(
             timestep: TimeStep
@@ -217,11 +221,12 @@ if __name__ == '__main__':
             # dorsal bending
             return dorsal_bending
 
+
     def grasping_policy_fn(
             timestep: TimeStep
             ) -> np.ndarray:
         global action_spec
-        SECONDS_TO_FULL_CONTRACTION = 3
+        SECONDS_TO_FULL_CONTRACTION = 4
         time = timestep.observation["task/time"][0][0]
 
         rel_time = np.clip(time / SECONDS_TO_FULL_CONTRACTION, 0, 1)
@@ -234,5 +239,6 @@ if __name__ == '__main__':
                                                            :num_tendons_per_corner_to_contract]
 
         return actions.flatten()
+
 
     viewer.launch(dm_env, grasping_policy_fn)

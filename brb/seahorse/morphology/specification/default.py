@@ -15,19 +15,16 @@ PLATE_MESH_NAMES = ["ventral_dextral", "ventral_sinistral", "dorsal_sinistral_ev
 VERTEBRAE_MESH_NAME = "vertebrae.stl"
 BALL_BEARING_MESH_NAME = "ball_bearing.stl"
 VERTEBRAE_CONNECTOR_MESH_NAME = "connector_vertebrae.stl"
-VERTEBRAE_OFFSET_TO_BAR_END = 0.013 + 0.002  # todo: update
+VERTEBRAE_OFFSET_TO_BAR_END = 0.013 + 0.003  # todo: update
 VERTEBRAE_CONNECTOR_LENGTH = 0.0036
 
 PLATE_MESH_NAME_TO_OFFSET_FROM_VERTEBRAE = {
         "ventral_dextral.stl": 0.05098, "ventral_sinistral.stl": 0.05119, "dorsal_sinistral_even.stl": 0.0512,
         "dorsal_sinistral_odd.stl": 0.0512, "dorsal_dextral_even.stl": 0.05145, "dorsal_dextral_odd.stl": 0.0512}
 PLATE_MESH_NAME_TO_A_TAP_OFFSET = {
-        "ventral_sinistral.stl": [0.00219, -0.02981],
-        "ventral_dextral.stl": [0.00235, 0.0304],
-        "dorsal_sinistral_even.stl": [-0.00224, -0.02986],
-        "dorsal_dextral_even.stl": [-0.00202, 0.03072],
-        "dorsal_sinistral_odd.stl": [-0.00219, -0.03061],
-        "dorsal_dextral_odd.stl": [-0.00219, 0.0298]}
+        "ventral_sinistral.stl": [0.00219, -0.02981], "ventral_dextral.stl": [0.00235, 0.0304],
+        "dorsal_sinistral_even.stl": [-0.00224, -0.02986], "dorsal_dextral_even.stl": [-0.00202, 0.03072],
+        "dorsal_sinistral_odd.stl": [-0.00219, -0.03061], "dorsal_dextral_odd.stl": [-0.00219, 0.0298]}
 
 OUTER_PLATE_S_TAP_OFFSET_FROM_VERTEBRAE = 0.052
 INNER_PLATE_S_TAP_OFFSET_FROM_VERTEBRAE = 0.048
@@ -63,7 +60,8 @@ def default_gliding_joint_specification(
         axis: str
         ) -> JointSpecification:
     return JointSpecification(
-            stiffness=500, damping=10, friction_loss=10, range=PLATE_GLIDING_JOINT_RANGE / 2
+            stiffness=0, damping=1, friction_loss=0.03,
+            armature=0.045, range=PLATE_GLIDING_JOINT_RANGE / 2
             )
 
 
@@ -119,10 +117,10 @@ def default_seahorse_plate_specification(
 def default_seahorse_vertebrae_specification() -> SeahorseVertebraeSpecification:
 
     bend_joint_specification = JointSpecification(
-            stiffness=0.0, damping=0.5, friction_loss=0.0, range=6 / 180 * np.pi
+            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=6 / 180 * np.pi
             )
     twist_joint_specification = JointSpecification(
-            stiffness=2.0, damping=2, friction_loss=0.0, range=3 / 180 * np.pi
+            stiffness=0.0, damping=1, friction_loss=0.3, armature=0.045, range=0 / 180 * np.pi  # 5
             )
 
     vertebrae_specification = SeahorseVertebraeSpecification(
@@ -141,7 +139,7 @@ def default_seahorse_vertebrae_specification() -> SeahorseVertebraeSpecification
 
 def default_seahorse_tendon_spine_specification() -> SeahorseTendonSpineSpecification:
     return SeahorseTendonSpineSpecification(
-            stiffness=0.0, damping=10.0, tendon_width=0.0005
+            stiffness=0.0, damping=1.0, tendon_width=0.0005
             )
 
 
@@ -169,12 +167,11 @@ def default_seahorse_segment_specification(
 
 def default_tendon_actuation_specification() -> SeahorseTendonActuationSpecification:
     segment_span = 5
-    kp_per_segment_span = 5
-    kp = segment_span * kp_per_segment_span
+    kp = 30
 
     return SeahorseTendonActuationSpecification(
-            contraction_factor=0.75, relaxation_factor=1.25, p_control_kp=kp, tendon_width=0.0005,
-            segment_span=segment_span, damping=10)
+            tendon_strain=0.01, p_control_kp=kp, tendon_width=0.0005, segment_span=segment_span, damping=10
+            )
 
 
 def default_seahorse_morphology_specification(

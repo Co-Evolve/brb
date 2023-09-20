@@ -183,7 +183,8 @@ class SeahorseVertebrae(MJCMorphologyPart):
                 range=(-bend_joint_specification.range.value, bend_joint_specification.range.value),
                 damping=bend_joint_specification.damping.value,
                 stiffness=bend_joint_specification.stiffness.value,
-                frictionloss=bend_joint_specification.friction_loss.value
+                frictionloss=bend_joint_specification.friction_loss.value,
+                armature=bend_joint_specification.armature.value
                 )
         self.mjcf_body.add(
                 'joint',
@@ -195,20 +196,22 @@ class SeahorseVertebrae(MJCMorphologyPart):
                 range=(-bend_joint_specification.range.value, bend_joint_specification.range.value),
                 damping=bend_joint_specification.damping.value,
                 stiffness=bend_joint_specification.stiffness.value,
-                frictionloss=bend_joint_specification.friction_loss.value
+                frictionloss=bend_joint_specification.friction_loss.value,
+                armature=bend_joint_specification.armature.value
                 )
-        self.mjcf_body.add(
-                'joint',
-                name=f'{self.base_name}_vertebrae_joint_twist',
-                type='hinge',
-                pos=joint_pos,
-                limited=True,
-                axis=[0, 0, 1],
-                range=(-twist_joint_specification.range.value, twist_joint_specification.range.value),
-                damping=twist_joint_specification.damping.value,
-                stiffness=twist_joint_specification.stiffness.value,
-                frictionloss=twist_joint_specification.friction_loss.value
-                )
+        if twist_joint_specification.range.value != 0:
+            self.mjcf_body.add(
+                    'joint',
+                    name=f'{self.base_name}_vertebrae_joint_twist',
+                    type='hinge',
+                    pos=joint_pos,
+                    limited=True,
+                    axis=[0, 0, 1],
+                    range=(-twist_joint_specification.range.value, twist_joint_specification.range.value),
+                    damping=twist_joint_specification.damping.value,
+                    stiffness=twist_joint_specification.stiffness.value,
+                    frictionloss=twist_joint_specification.friction_loss.value
+                    )
 
     def add_intermediate_a_tap(
             self,

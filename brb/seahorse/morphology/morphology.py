@@ -129,14 +129,17 @@ class MJCSeahorseMorphology(MJCMorphology):
                                 )
                     base_length = start_and_stop_indices_to_length[(start_index, stop_index)]
 
+                    num_outer_tendons = min(start_index, self.tendon_actuation_specification.segment_span.value)
+
                     tendon = self.mjcf_model.tendon.add(
                             'spatial',
                             name=f"tendon_{x_side}_{y_side}_{start_index}-{stop_index}",
                             width=self.tendon_actuation_specification.tendon_width.value,
                             rgba=colors.rgba_blue,
                             limited=True,
-                            range=[base_length * self.tendon_actuation_specification.contraction_factor.value,
-                                   base_length * self.tendon_actuation_specification.relaxation_factor.value],
+                            range=[base_length - num_outer_tendons *
+                                   self.tendon_actuation_specification.tendon_strain.value,
+                                   base_length * 10],
                             damping=self.tendon_actuation_specification.damping.value
                             )
                     self._tendon_to_base_length[tendon.name] = base_length
@@ -145,7 +148,6 @@ class MJCSeahorseMorphology(MJCMorphology):
                         tendon.add('site', site=tap)
 
                     self._tendons.append(tendon)
-                    print(f"Tendon {tendon.name}\t->\tlength: {base_length}")
 
     def _configure_actuators(
             self

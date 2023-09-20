@@ -21,14 +21,13 @@ class GraspingArena(Arena):
         self._configure_cameras()
         self._configure_lights()
         self._configure_sky()
-        self._build_ground()
         self._configure_water()
 
     def _configure_cameras(
             self
             ):
         self._mjcf_root.worldbody.add(
-                'camera', name='top_camera', pos=[0, 0, 20], quat=[1, 0, 0, 0], )
+                'camera', name='side_camera', pos=[0, -1.5, 0], zaxis=[0, -1, 0])
         # Always initialize the free camera so that it points at the origin.
         self.mjcf_model.statistic.center = (0., 0., 0.)
 

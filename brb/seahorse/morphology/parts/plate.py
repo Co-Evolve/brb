@@ -250,25 +250,27 @@ class SeahorsePlate(MJCMorphologyPart):
         else:
             y_axis_range = (-y_axis_joint_specification.range.value, 0)
 
-        self.x_axis_gliding_joint = self.mjcf_body.add(
-                'joint',
-                name=f'{self.base_name}_x_axis',
-                type='slide',
-                pos=np.zeros(3),
-                limited=True,
-                axis=[1, 0, 0],
-                range=x_axis_range,
-                damping=x_axis_joint_specification.damping.value,
-                stiffness=x_axis_joint_specification.stiffness.value
-                )
-        self.y_axis_gliding_joint = self.mjcf_body.add(
-                'joint',
-                name=f'{self.base_name}_y_axis',
-                type='slide',
-                pos=np.zeros(3),
-                limited=True,
-                axis=[0, 1, 0],
-                range=y_axis_range,
-                damping=y_axis_joint_specification.damping.value,
-                stiffness=y_axis_joint_specification.stiffness.value
-                )
+        if x_axis_joint_specification.range.value != 0:
+            self.x_axis_gliding_joint = self.mjcf_body.add(
+                    'joint',
+                    name=f'{self.base_name}_x_axis',
+                    type='slide',
+                    pos=np.zeros(3),
+                    limited=True,
+                    axis=[1, 0, 0],
+                    range=x_axis_range,
+                    damping=x_axis_joint_specification.damping.value,
+                    stiffness=x_axis_joint_specification.stiffness.value
+                    )
+        if y_axis_joint_specification.range.value != 0:
+            self.y_axis_gliding_joint = self.mjcf_body.add(
+                    'joint',
+                    name=f'{self.base_name}_y_axis',
+                    type='slide',
+                    pos=np.zeros(3),
+                    limited=True,
+                    axis=[0, 1, 0],
+                    range=y_axis_range,
+                    damping=y_axis_joint_specification.damping.value,
+                    stiffness=y_axis_joint_specification.stiffness.value
+                    )
