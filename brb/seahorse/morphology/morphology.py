@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 import numpy as np
 from dm_control import mjcf
 from mujoco_utils.robot import MJCMorphology
@@ -40,6 +38,7 @@ class MJCSeahorseMorphology(MJCMorphology):
         self._configure_compiler()
         self._build_tail()
         self._build_tendons()
+        self._build_mvm_tendons()
         self._configure_actuators()
         self._prepare_tendon_coloring()
 
@@ -52,7 +51,7 @@ class MJCSeahorseMorphology(MJCMorphology):
     def _build_tail(
             self
             ) -> None:
-        self._segments: List[SeahorseSegment] = []
+        self._segments = []
         num_segments = self.morphology_specification.num_segments
         next_parent = self
         for segment_index in range(num_segments):
@@ -133,13 +132,14 @@ class MJCSeahorseMorphology(MJCMorphology):
 
                     tendon = self.mjcf_model.tendon.add(
                             'spatial',
-                            name=f"tendon_{x_side}_{y_side}_{start_index}-{stop_index}",
+                            name=f"hmm_tendon_{x_side}_{y_side}_{start_index}-{stop_index}",
                             width=self.tendon_actuation_specification.tendon_width.value,
                             rgba=colors.rgba_blue,
                             limited=True,
-                            range=[base_length - num_outer_tendons *
-                                   self.tendon_actuation_specification.tendon_strain.value,
-                                   base_length * 10],
+                            range=[
+                                    base_length - num_outer_tendons *
+                                    self.tendon_actuation_specification.tendon_strain.value,
+                                    base_length * 10],
                             damping=self.tendon_actuation_specification.damping.value
                             )
                     self._tendon_to_base_length[tendon.name] = base_length
@@ -148,6 +148,36 @@ class MJCSeahorseMorphology(MJCMorphology):
                         tendon.add('site', site=tap)
 
                     self._tendons.append(tendon)
+
+    def _build_mvm_tendons(
+            self
+            ) -> None:
+        for segment, next_segment in zip(self._segments, self._segments[1:]):
+            start_plate = segment.plates[0]
+            end_plate = next_segment.plates[0]
+
+            start_tap = start_plate.mvm_a_taps[1]
+            end_tap = end_plate.mvm_a_taps[0]
+            taps = [start_tap, end_tap]
+
+            base_length = calculate_relaxed_tendon_length(
+                    morphology_parts=[start_plate, end_plate], attachment_points=taps
+                    )
+
+            tendon = self.mjcf_model.tendon.add(
+                    'spatial',
+                    name=f"mvm_tendon_{segment.segment_index, next_segment.segment_index}",
+                    width=self.tendon_actuation_specification.tendon_width.value,
+                    rgba=colors.rgba_blue,
+                    limited=True,
+                    range=[0.5 * base_length, 1.5 * base_length],
+                    # todo: specification
+                    damping=self.tendon_actuation_specification.damping.value
+                    )
+            for tap in taps:
+                tendon.add('site', site=tap)
+
+            self._tendons.append(tendon)
 
     def _configure_actuators(
             self
@@ -161,7 +191,8 @@ class MJCSeahorseMorphology(MJCMorphology):
                             tendon=tendon,
                             name=tendon.name,
                             forcelimited=True,
-                            forcerange=[-kp, 0],    # only allow contraction forces
+                            forcerange=[-kp, 0],
+                            # only allow contraction forces
                             ctrllimited=True,
                             ctrlrange=tendon.range,
                             kp=kp
@@ -199,6 +230,6 @@ class MJCSeahorseMorphology(MJCMorphology):
 
 
 if __name__ == '__main__':
-    morphology_specification = default_seahorse_morphology_specification(num_segments=15)
+    morphology_specification = default_seahorse_morphology_specification(num_segments=1)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
     morphology.export_to_xml_with_assets("./mjcf")

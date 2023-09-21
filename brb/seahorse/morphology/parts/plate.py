@@ -49,6 +49,7 @@ class SeahorsePlate(MJCMorphologyPart):
         self._build_connectors()
         self._configure_gliding_joints()
         self._configure_actuator_tendon_attachment_points()
+        self._configure_mvm_tendon_attachment_points()
         self._configure_spine_tendon_attachment_points()
 
     def _configure_mesh_assets(
@@ -194,6 +195,40 @@ class SeahorsePlate(MJCMorphologyPart):
                 self.a_taps_dextral = self._add_actuator_tendon_attachment_points(
                         side=f"{side}_dextral", plate_index=dextral_plate_index
                         )
+
+    def _configure_mvm_tendon_attachment_points(
+            self
+            ) -> None:
+        if self.plate_index == 0:
+            self.mvm_a_taps = []
+
+            # todo: move to specification
+            x = 0.0435
+            y = 0
+            z = -self.plate_specification.depth.value / 2 + 0.004
+            self.mvm_a_taps.append(
+                    self.mjcf_body.add(
+                            'site',
+                            name=f"{self.base_name}_mvm_a_tap_proximal",
+                            type="sphere",
+                            rgba=colors.rgba_red,
+                            pos=[x, y, z],
+                            size=[0.001]
+                            )
+                    )
+            x = 0.0435
+            y = 0
+            z = self.plate_specification.depth.value / 2 - 0.004
+            self.mvm_a_taps.append(
+                    self.mjcf_body.add(
+                            'site',
+                            name=f"{self.base_name}_mvm_a_tap_distal",
+                            type="sphere",
+                            rgba=colors.rgba_red,
+                            pos=[x, y, z],
+                            size=[0.001]
+                            )
+                    )
 
     def _configure_spine_tendon_attachment_points(
             self

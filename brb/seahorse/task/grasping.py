@@ -181,45 +181,20 @@ class GraspingTaskConfiguration(
 
 if __name__ == '__main__':
     env_config = GraspingTaskConfiguration(with_object=False)
-
-    morphology_specification = default_seahorse_morphology_specification(num_segments=30)
+    num_segments = 30
+    morphology_specification = default_seahorse_morphology_specification(num_segments=num_segments)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
     dm_env = env_config.environment(
             morphology=morphology, wrap2gym=False
             )
     action_spec = dm_env.action_spec()
-    num_tendons_per_side = int(action_spec.shape[0] / 2)
-    num_tendons_per_corner = int(num_tendons_per_side / 2)
+    num_mvm_tendons = num_segments - 1
+    num_hmm_tendons = action_spec.shape[0] - num_mvm_tendons
+    num_hmm_tendons_per_side = int(num_hmm_tendons / 2)
+    num_hmm_tendons_per_corner = int(num_hmm_tendons_per_side / 2)
 
-
-    def alternating_policy_fn(
-            timestep: TimeStep
-            ) -> np.ndarray:
-        global action_spec
-        time = timestep.observation["task/time"][0][0]
-
-        # ventral_actions = [np.sin(time)] * num_tendons_per_side
-        # dorsal_actions = [np.cos(time)] * num_tendons_per_side
-        # actions = np.array(ventral_actions + dorsal_actions)
-        # actions = (actions + 1) / 2
-        #
-        # actions = actions * (action_spec.maximum - action_spec.minimum) + action_spec.minimum
-        ventral_bending = np.concatenate(
-                (action_spec.minimum[:num_tendons_per_side], action_spec.maximum[-num_tendons_per_side:])
-                )
-        dorsal_bending = np.concatenate(
-                (action_spec.maximum[:num_tendons_per_side], action_spec.minimum[-num_tendons_per_side:])
-                )
-        if time < 4.75:
-            print("ventral")
-            # Ventral bending
-            return ventral_bending
-        elif time < 5.25:
-            return ventral_bending + ((time - 2) / 0.5) * (dorsal_bending - ventral_bending)
-        else:
-            print("dorsal")
-            # dorsal bending
-            return dorsal_bending
+    hmm_minimum, hmm_maximum = action_spec.minimum[:num_hmm_tendons], action_spec.maximum[:num_hmm_tendons]
+    mvm_minimum, mvm_maximum = action_spec.minimum[-num_mvm_tendons:], action_spec.maximum[-num_mvm_tendons:]
 
 
     def grasping_policy_fn(
@@ -232,13 +207,18 @@ if __name__ == '__main__':
         rel_time = np.clip(time / SECONDS_TO_FULL_CONTRACTION, 0, 1)
 
         # ventral-dorsal, dextral-sinistral
-        actions = copy.deepcopy(action_spec.maximum.reshape(4, num_tendons_per_corner))
+        hmm_actions = copy.deepcopy(hmm_maximum.reshape(4, num_hmm_tendons_per_corner))
 
-        num_tendons_per_corner_to_contract = int(num_tendons_per_corner * rel_time)
-        actions[:2, :num_tendons_per_corner_to_contract] = action_spec.minimum.reshape(4, num_tendons_per_corner)[:2,
-                                                           :num_tendons_per_corner_to_contract]
+        num_hmm_tendons_per_corner_to_contract = int(num_hmm_tendons_per_corner * rel_time)
+        hmm_actions[:2, :num_hmm_tendons_per_corner_to_contract] = hmm_minimum.reshape(
+            4, num_hmm_tendons_per_corner
+            )[:2, :num_hmm_tendons_per_corner_to_contract]
+        hmm_actions = hmm_actions.flatten()
 
-        return actions.flatten()
-
+        num_mvm_tendons_to_contract = int(num_mvm_tendons * rel_time)
+        mvm_actions = np.concatenate((mvm_maximum[:-num_mvm_tendons_to_contract], mvm_minimum[
+                                                                                  -num_mvm_tendons_to_contract:]))
+        actions = np.concatenate((hmm_actions, mvm_actions))
+        return actions
 
     viewer.launch(dm_env, grasping_policy_fn)
