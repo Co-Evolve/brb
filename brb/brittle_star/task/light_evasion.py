@@ -23,7 +23,8 @@ class LightEvasionTask(composer.Task):
     def __init__(
             self,
             config: LightEvasionTaskConfiguration,
-            morphology: MJCBrittleStarMorphology, ) -> None:
+            morphology: MJCBrittleStarMorphology
+            ) -> None:
         self.config = config
 
         self._arena = self._build_arena()
@@ -37,7 +38,6 @@ class LightEvasionTask(composer.Task):
 
         self._segment_position_sensors = None
         self._previous_normalised_light_income = None
-
         self._targeted_segment_position_sensor = None
 
     @property
@@ -249,8 +249,11 @@ class LightEvasionTask(composer.Task):
         disc_height = self._morphology.morphology_specification.disc_specification.height.value
         initial_position = np.array(self.config.starting_position + (2 * disc_height,))
 
-        random_rotation = brb.brb_random_state.uniform(0, 360)
-        initial_quaternion = euler2quat(0, 0, random_rotation)
+        if self.config.random_initial_rotation:
+            rotation = brb.brb_random_state.uniform(0, 360)
+        else:
+            rotation = 0
+        initial_quaternion = euler2quat(0, 0, rotation)
 
         self._morphology.set_pose(
                 physics=physics, position=initial_position, quaternion=initial_quaternion
@@ -327,7 +330,6 @@ class LightEvasionTask(composer.Task):
                                   num_segments > 0]
                 arm_index = brb.brb_random_state.choice(non_empty_arms, size=1)[0]
                 segment_index = num_segments_per_arm[arm_index] - 1
-                print(f"Arm index: {arm_index}  segment index: {segment_index}")
                 self._targeted_segment_position_sensor = \
                 [sensor for sensor in self.segment_position_sensors if sensor.name.startswith(
                         f"arm_{arm_index}_segment_{segment_index}"
@@ -352,6 +354,7 @@ class LightEvasionTaskConfiguration(
             random_obstacles: bool = False,
             random_current: bool = False,
             random_friction: bool = False,
+            random_initial_rotation: bool = False,
             starting_position: Tuple[int, int] = (-8.0, 0.0),
             touch_coloring: bool = False,
             light_coloring: bool = False,
@@ -374,6 +377,7 @@ class LightEvasionTaskConfiguration(
         self.hilly_terrain = hilly_terrain
         self.random_current = random_current
         self.random_friction = random_friction
+        self.random_initial_rotation = random_initial_rotation
         self.starting_position = starting_position
         self.touch_coloring = touch_coloring
         self.light_coloring = light_coloring
