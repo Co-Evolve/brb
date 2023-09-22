@@ -56,6 +56,8 @@ class SeahorsePlateSpecification(Specification):
             s_tap_y_offset_from_vertebrae: float,
             hmm_tap_x_offset_from_plate_origin: float,
             hmm_tap_y_offset_from_plate_origin: float,
+            mvm_tap_x_offset: float,
+            mvm_tap_z_offset: float,
             x_axis_gliding_joint_specification: JointSpecification,
             y_axis_gliding_joint_specification: JointSpecification, ) -> None:
         super().__init__()
@@ -64,6 +66,8 @@ class SeahorsePlateSpecification(Specification):
         self.offset_from_vertebrae = FixedParameter(offset_from_vertebrae)
         self.hmm_tap_x_offset_from_plate_origin = FixedParameter(hmm_tap_x_offset_from_plate_origin)
         self.hmm_tap_y_offset_from_plate_origin = FixedParameter(hmm_tap_y_offset_from_plate_origin)
+        self.mvm_tap_x_offset = FixedParameter(mvm_tap_x_offset)
+        self.mvm_tap_z_offset = FixedParameter(mvm_tap_z_offset)
         self.connector_offset_from_vertebrae = FixedParameter(connector_offset_from_vertebrae)
         self.s_tap_x_offset_from_vertebrae = FixedParameter(s_tap_x_offset_from_vertebrae)
         self.s_tap_y_offset_from_vertebrae = FixedParameter(s_tap_y_offset_from_vertebrae)

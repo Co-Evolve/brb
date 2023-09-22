@@ -201,30 +201,27 @@ class SeahorsePlate(MJCMorphologyPart):
         if self.plate_index == 0:
             self.mvm_taps = []
 
-            # todo: move to specification
-            x = 0.0435
-            y = 0
-            z = -self.plate_specification.depth.value / 2 + 0.004
+            x = self.plate_specification.mvm_tap_x_offset.value
+            z = -self.plate_specification.depth.value / 2 + self.plate_specification.mvm_tap_z_offset.value
             self.mvm_taps.append(
                     self.mjcf_body.add(
                             'site',
                             name=f"{self.base_name}_mvm_tap_proximal",
                             type="sphere",
                             rgba=colors.rgba_red,
-                            pos=[x, y, z],
+                            pos=[x, 0, z],
                             size=[0.001]
                             )
                     )
-            x = 0.0435
-            y = 0
-            z = self.plate_specification.depth.value / 2 - 0.004
+
+            z = self.plate_specification.depth.value / 2 - self.plate_specification.mvm_tap_z_offset.value
             self.mvm_taps.append(
                     self.mjcf_body.add(
                             'site',
                             name=f"{self.base_name}_mvm_tap_distal",
                             type="sphere",
                             rgba=colors.rgba_red,
-                            pos=[x, y, z],
+                            pos=[x, 0, z],
                             size=[0.001]
                             )
                     )

@@ -27,7 +27,7 @@ PLATE_MESH_NAME_TO_HMM_TAP_OFFSET = {
         "ventral_sinistral.stl": [0.00219, -0.02981], "ventral_dextral.stl": [0.00235, 0.0304],
         "dorsal_sinistral_even.stl": [-0.00224, -0.02986], "dorsal_dextral_even.stl": [-0.00202, 0.03072],
         "dorsal_sinistral_odd.stl": [-0.00219, -0.03061], "dorsal_dextral_odd.stl": [-0.00219, 0.0298]}
-
+MVM_TAP_OFFSET = [0.0435, 0.004]
 OUTER_PLATE_S_TAP_OFFSET_FROM_VERTEBRAE = 0.052
 INNER_PLATE_S_TAP_OFFSET_FROM_VERTEBRAE = 0.048
 
@@ -112,6 +112,8 @@ def default_seahorse_plate_specification(
             s_tap_y_offset_from_vertebrae=s_tap_y_offset,
             hmm_tap_x_offset_from_plate_origin=hmm_tap_x_offset,
             hmm_tap_y_offset_from_plate_origin=hmm_tap_y_offset,
+            mvm_tap_x_offset=MVM_TAP_OFFSET[0],
+            mvm_tap_z_offset=MVM_TAP_OFFSET[1],
             connector_offset_from_vertebrae=connector_offset_from_vertebrae,
             x_axis_gliding_joint_specification=x_axis_gliding_joint_specification,
             y_axis_gliding_joint_specification=y_axis_gliding_joint_specification
