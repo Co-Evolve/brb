@@ -37,7 +37,7 @@ class MJCSeahorseMorphology(MJCMorphology):
             ) -> None:
         self._configure_compiler()
         self._build_tail()
-        self._build_tendons()
+        self._build_hmm_tendons()
         self._build_mvm_tendons()
         self._configure_actuators()
         self._prepare_tendon_coloring()
@@ -70,48 +70,50 @@ class MJCSeahorseMorphology(MJCMorphology):
 
             next_parent = segment.vertebrae
 
-    def _build_tendons(
+    def _build_hmm_tendons(
             self
             ) -> None:
         self._tendons = []
         self._tendon_to_base_length = {}
 
+        hmm_tendon_actuation_specification = self.tendon_actuation_specification.hmm_tendon_actuation_specification
+
         start_and_stop_indices = get_all_tendon_start_and_stop_segment_indices(
                 total_num_segments=self.morphology_specification.num_segments,
-                segment_span=self.tendon_actuation_specification.segment_span.value
+                segment_span=hmm_tendon_actuation_specification.segment_span.value
                 )
 
         start_and_stop_indices_to_length = {}
         for x_side in ["ventral", "dorsal"]:
             for y_side in ["dextral", "sinistral"]:
                 for start_index, stop_index in start_and_stop_indices:
-                    a_taps = []
+                    taps = []
                     morphology_parts = []
 
-                    # todo: add a start a_tap that is outside of manipulator (i.e. at motor position)
+                    # todo: add a start tap that is outside of manipulator (i.e. at motor position)
                     # Route through previous segments
                     for segment_index in range(start_index + 1):
                         plate_index, _ = get_actuator_tendon_plate_indices(side=x_side, segment_index=segment_index)
                         plate = self._segments[segment_index].plates[plate_index]
                         if y_side == "sinistral":
-                            a_taps += plate.a_taps_sinistral
+                            taps += plate.hmm_taps_sinistral
                         else:
-                            a_taps += plate.a_taps_dextral
+                            taps += plate.hmm_taps_dextral
                         morphology_parts.append(plate)
                         morphology_parts.append(plate)
 
-                    start_world_pos = plate.world_coordinates_of_point(a_taps[-1].pos)
+                    start_world_pos = plate.world_coordinates_of_point(taps[-1].pos)
 
                     end_plate_index = self.morphology_specification.corners.index(f"{x_side}_{y_side}")
                     end_plate = self._segments[stop_index].plates[end_plate_index]
-                    end_a_tap = end_plate.a_tap_end
-                    end_world_pos = end_plate.world_coordinates_of_point(end_a_tap.pos)
+                    end_tap = end_plate.hmm_tap_end
+                    end_world_pos = end_plate.world_coordinates_of_point(end_tap.pos)
 
                     # Route through intermediate segments
                     for segment_index in range(start_index + 1, stop_index):
                         vertebrae = self._segments[segment_index].vertebrae
-                        a_taps.append(
-                                vertebrae.add_intermediate_a_tap(
+                        taps.append(
+                                vertebrae.add_intermediate_hmm_tap(
                                         identifier=f"{x_side}-{y_side}_{start_index}-{stop_index}",
                                         start_world_pos=start_world_pos,
                                         stop_world_pos=end_world_pos
@@ -120,31 +122,31 @@ class MJCSeahorseMorphology(MJCMorphology):
                         morphology_parts.append(vertebrae)
 
                     # Set end point
-                    a_taps.append(end_plate.a_tap_end)
+                    taps.append(end_plate.hmm_tap_end)
                     morphology_parts.append(end_plate)
                     if (start_index, stop_index) not in start_and_stop_indices_to_length:
                         start_and_stop_indices_to_length[(start_index, stop_index)] = calculate_relaxed_tendon_length(
-                                morphology_parts=morphology_parts, attachment_points=a_taps
+                                morphology_parts=morphology_parts, attachment_points=taps
                                 )
                     base_length = start_and_stop_indices_to_length[(start_index, stop_index)]
 
-                    num_outer_tendons = min(start_index, self.tendon_actuation_specification.segment_span.value)
+                    num_outer_tendons = min(start_index, hmm_tendon_actuation_specification.segment_span.value)
 
                     tendon = self.mjcf_model.tendon.add(
                             'spatial',
                             name=f"hmm_tendon_{x_side}_{y_side}_{start_index}-{stop_index}",
-                            width=self.tendon_actuation_specification.tendon_width.value,
+                            width=hmm_tendon_actuation_specification.tendon_width.value,
                             rgba=colors.rgba_blue,
                             limited=True,
                             range=[
                                     base_length - num_outer_tendons *
-                                    self.tendon_actuation_specification.tendon_strain.value,
+                                    hmm_tendon_actuation_specification.tendon_strain.value,
                                     base_length * 10],
-                            damping=self.tendon_actuation_specification.damping.value
+                            damping=hmm_tendon_actuation_specification.damping.value
                             )
                     self._tendon_to_base_length[tendon.name] = base_length
 
-                    for i, tap in enumerate(a_taps):
+                    for i, tap in enumerate(taps):
                         tendon.add('site', site=tap)
 
                     self._tendons.append(tendon)
@@ -152,12 +154,13 @@ class MJCSeahorseMorphology(MJCMorphology):
     def _build_mvm_tendons(
             self
             ) -> None:
+        mvm_tendon_actuation_specification = self.tendon_actuation_specification.mvm_tendon_actuation_specification
         for segment, next_segment in zip(self._segments, self._segments[1:]):
             start_plate = segment.plates[0]
             end_plate = next_segment.plates[0]
 
-            start_tap = start_plate.mvm_a_taps[1]
-            end_tap = end_plate.mvm_a_taps[0]
+            start_tap = start_plate.mvm_taps[1]
+            end_tap = end_plate.mvm_taps[0]
             taps = [start_tap, end_tap]
 
             base_length = calculate_relaxed_tendon_length(
@@ -167,12 +170,12 @@ class MJCSeahorseMorphology(MJCMorphology):
             tendon = self.mjcf_model.tendon.add(
                     'spatial',
                     name=f"mvm_tendon_{segment.segment_index, next_segment.segment_index}",
-                    width=self.tendon_actuation_specification.tendon_width.value,
+                    width=mvm_tendon_actuation_specification.tendon_width.value,
                     rgba=colors.rgba_blue,
                     limited=True,
-                    range=[0.5 * base_length, 1.5 * base_length],
-                    # todo: specification
-                    damping=self.tendon_actuation_specification.damping.value
+                    range=[base_length * mvm_tendon_actuation_specification.contraction_factor.value,
+                           base_length * mvm_tendon_actuation_specification.relaxation_factor.value],
+                    damping=mvm_tendon_actuation_specification.damping.value
                     )
             for tap in taps:
                 tendon.add('site', site=tap)
@@ -184,17 +187,18 @@ class MJCSeahorseMorphology(MJCMorphology):
             ) -> None:
         self._tendon_actuators = []
         for tendon in self._tendons:
-            kp = self.tendon_actuation_specification.p_control_kp.value
             if "mvm" in tendon.name:
-                kp = 100    # todo: move to spec
+                kp = self.tendon_actuation_specification.mvm_tendon_actuation_specification.p_control_kp.value
+            else:
+                kp = self.tendon_actuation_specification.hmm_tendon_actuation_specification.p_control_kp.value
             self._tendon_actuators.append(
                     self.mjcf_model.actuator.add(
                             'position',
                             tendon=tendon,
                             name=tendon.name,
                             forcelimited=True,
-                            forcerange=[-kp, 0],
                             # only allow contraction forces
+                            forcerange=[-kp, 0],
                             ctrllimited=True,
                             ctrlrange=tendon.range,
                             kp=kp
@@ -235,5 +239,4 @@ if __name__ == '__main__':
     morphology_specification = default_seahorse_morphology_specification(num_segments=30)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
     # morphology.mjcf_body.euler = [np.pi, 0.0, 0.0]
-
     morphology.export_to_xml_with_assets("./mjcf")

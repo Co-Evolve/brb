@@ -142,23 +142,23 @@ class SeahorsePlate(MJCMorphologyPart):
 
         bottom_site = self.mjcf_body.add(
                 'site',
-                name=f"{self.base_name}_a_tap_{side}_bottom",
+                name=f"{self.base_name}_tap_{side}_bottom",
                 type="sphere",
                 rgba=colors.rgba_red,
                 pos=plate_position + np.array(
-                        [plate_specification.a_tap_x_offset_from_plate_origin.value,
-                         plate_specification.a_tap_y_offset_from_plate_origin.value, -plate_specification.depth.value]
+                        [plate_specification.hmm_tap_x_offset_from_plate_origin.value,
+                         plate_specification.hmm_tap_y_offset_from_plate_origin.value, -plate_specification.depth.value]
                         ),
                 size=[0.001]
                 )
         top_site = self.mjcf_body.add(
                 'site',
-                name=f"{self.base_name}_a_tap_{side}_top",
+                name=f"{self.base_name}_hmm_tap_{side}_top",
                 type="sphere",
                 rgba=colors.rgba_red,
                 pos=plate_position + np.array(
-                        [plate_specification.a_tap_x_offset_from_plate_origin.value,
-                         plate_specification.a_tap_y_offset_from_plate_origin.value, 0.0]
+                        [plate_specification.hmm_tap_x_offset_from_plate_origin.value,
+                         plate_specification.hmm_tap_y_offset_from_plate_origin.value, 0.0]
                         ),
                 size=[0.001]
                 )
@@ -167,9 +167,9 @@ class SeahorsePlate(MJCMorphologyPart):
     def _configure_actuator_tendon_attachment_points(
             self
             ) -> None:
-        self.a_tap_end = self.mjcf_body.add(
+        self.hmm_tap_end = self.mjcf_body.add(
                 'site',
-                name=f"{self.base_name}_a_tap_end",
+                name=f"{self.base_name}_hmm_tap_end",
                 type="sphere",
                 rgba=colors.rgba_red,
                 pos=self.plate.pos,
@@ -188,10 +188,10 @@ class SeahorsePlate(MJCMorphologyPart):
                     sinistral_plate_index = other_plate_index
                     dextral_plate_index = main_plate_index
 
-                self.a_taps_sinistral = self._add_actuator_tendon_attachment_points(
+                self.hmm_taps_sinistral = self._add_actuator_tendon_attachment_points(
                         side=f"{side}_sinistral", plate_index=sinistral_plate_index
                         )
-                self.a_taps_dextral = self._add_actuator_tendon_attachment_points(
+                self.hmm_taps_dextral = self._add_actuator_tendon_attachment_points(
                         side=f"{side}_dextral", plate_index=dextral_plate_index
                         )
 
@@ -199,16 +199,16 @@ class SeahorsePlate(MJCMorphologyPart):
             self
             ) -> None:
         if self.plate_index == 0:
-            self.mvm_a_taps = []
+            self.mvm_taps = []
 
             # todo: move to specification
             x = 0.0435
             y = 0
             z = -self.plate_specification.depth.value / 2 + 0.004
-            self.mvm_a_taps.append(
+            self.mvm_taps.append(
                     self.mjcf_body.add(
                             'site',
-                            name=f"{self.base_name}_mvm_a_tap_proximal",
+                            name=f"{self.base_name}_mvm_tap_proximal",
                             type="sphere",
                             rgba=colors.rgba_red,
                             pos=[x, y, z],
@@ -218,10 +218,10 @@ class SeahorsePlate(MJCMorphologyPart):
             x = 0.0435
             y = 0
             z = self.plate_specification.depth.value / 2 - 0.004
-            self.mvm_a_taps.append(
+            self.mvm_taps.append(
                     self.mjcf_body.add(
                             'site',
-                            name=f"{self.base_name}_mvm_a_tap_distal",
+                            name=f"{self.base_name}_mvm_tap_distal",
                             type="sphere",
                             rgba=colors.rgba_red,
                             pos=[x, y, z],

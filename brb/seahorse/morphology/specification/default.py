@@ -4,8 +4,9 @@ from pathlib import Path
 import numpy as np
 
 from brb.seahorse.morphology.specification.specification import JointSpecification, MeshSpecification, \
-    SeahorseMorphologySpecification, SeahorsePlateSpecification, SeahorseSegmentSpecification, \
-    SeahorseTendonActuationSpecification, SeahorseTendonSpineSpecification, SeahorseVertebraeSpecification
+    SeahorseHMMTendonActuationSpecification, SeahorseMVMTendonActuationSpecification, SeahorseMorphologySpecification, \
+    SeahorsePlateSpecification, SeahorseSegmentSpecification, SeahorseTendonActuationSpecification, \
+    SeahorseTendonSpineSpecification, SeahorseVertebraeSpecification
 from brb.seahorse.morphology.utils import is_inner_plate_x_axis, is_inner_plate_y_axis
 
 PLATE_INDEX_TO_SIDE = ["ventral_dextral", "ventral_sinistral", "dorsal_sinistral", "dorsal_dextral"]
@@ -22,7 +23,7 @@ VERTEBRAE_CONNECTOR_LENGTH = 0.0036
 PLATE_MESH_NAME_TO_OFFSET_FROM_VERTEBRAE = {
         "ventral_dextral.stl": 0.05098, "ventral_sinistral.stl": 0.05119, "dorsal_sinistral_even.stl": 0.0512,
         "dorsal_sinistral_odd.stl": 0.0512, "dorsal_dextral_even.stl": 0.05145, "dorsal_dextral_odd.stl": 0.0512}
-PLATE_MESH_NAME_TO_A_TAP_OFFSET = {
+PLATE_MESH_NAME_TO_HMM_TAP_OFFSET = {
         "ventral_sinistral.stl": [0.00219, -0.02981], "ventral_dextral.stl": [0.00235, 0.0304],
         "dorsal_sinistral_even.stl": [-0.00224, -0.02986], "dorsal_dextral_even.stl": [-0.00202, 0.03072],
         "dorsal_sinistral_odd.stl": [-0.00219, -0.03061], "dorsal_dextral_odd.stl": [-0.00219, 0.0298]}
@@ -53,9 +54,9 @@ def default_mesh_specification(
     for x, y in indices:
         fullinertia.append(inertia_values["inertia_matrix"][x][y])
     return MeshSpecification(
-            mesh_path=str(BASE_MESH_PATH / mesh_name), scale=0.001 * np.ones(3), # gram to kg
-            mass=inertia_values["mass"] / 1000, # mm to meter
-            center_of_mass=np.array(inertia_values["center_of_mass"]) / 1000, # (g*m^2) to (kg*m^2)
+            mesh_path=str(BASE_MESH_PATH / mesh_name), scale=0.001 * np.ones(3),  # gram to kg
+            mass=inertia_values["mass"] / 1000,  # mm to meter
+            center_of_mass=np.array(inertia_values["center_of_mass"]) / 1000,  # (g*m^2) to (kg*m^2)
             fullinertia=np.array(fullinertia) / 1e9, )
 
 
@@ -100,7 +101,7 @@ def default_seahorse_plate_specification(
     else:
         s_tap_y_offset = OUTER_PLATE_S_TAP_OFFSET_FROM_VERTEBRAE
 
-    a_tap_x_offset, a_tap_y_offset = PLATE_MESH_NAME_TO_A_TAP_OFFSET[plate_mesh_name]
+    hmm_tap_x_offset, hmm_tap_y_offset = PLATE_MESH_NAME_TO_HMM_TAP_OFFSET[plate_mesh_name]
 
     plate_specification = SeahorsePlateSpecification(
             plate_mesh_specification=plate_mesh_specification,
@@ -109,8 +110,8 @@ def default_seahorse_plate_specification(
             depth=PLATE_DEPTH,
             s_tap_x_offset_from_vertebrae=s_tap_x_offset,
             s_tap_y_offset_from_vertebrae=s_tap_y_offset,
-            a_tap_x_offset_from_plate_origin=a_tap_x_offset,
-            a_tap_y_offset_from_plate_origin=a_tap_y_offset,
+            hmm_tap_x_offset_from_plate_origin=hmm_tap_x_offset,
+            hmm_tap_y_offset_from_plate_origin=hmm_tap_y_offset,
             connector_offset_from_vertebrae=connector_offset_from_vertebrae,
             x_axis_gliding_joint_specification=x_axis_gliding_joint_specification,
             y_axis_gliding_joint_specification=y_axis_gliding_joint_specification
@@ -169,22 +170,30 @@ def default_seahorse_segment_specification(
     return segment_specification
 
 
-def default_tendon_actuation_specification() -> SeahorseTendonActuationSpecification:
-    segment_span = 11
-    kp = 30
+def default_tendon_actuation_specification(
+        hmm_segment_span: int
+        ) -> SeahorseTendonActuationSpecification:
+    mvm_tendon_actuation_specification = SeahorseMVMTendonActuationSpecification(
+            contraction_factor=0.5, relaxation_factor=1.5, tendon_width=0.0005, p_control_kp=100, damping=1
+            )
+    hmm_tendon_actuation_specification = SeahorseHMMTendonActuationSpecification(
+            tendon_strain=0.01, p_control_kp=30, tendon_width=0.0005, segment_span=hmm_segment_span, damping=1
+            )
 
     return SeahorseTendonActuationSpecification(
-            tendon_strain=0.01, p_control_kp=kp, tendon_width=0.0005, segment_span=segment_span, damping=10
+            hmm_tendon_actuation_specification=hmm_tendon_actuation_specification,
+            mvm_tendon_actuation_specification=mvm_tendon_actuation_specification
             )
 
 
 def default_seahorse_morphology_specification(
         *,
-        num_segments: int
+        num_segments: int,
+        hmm_segment_span: int
         ) -> SeahorseMorphologySpecification:
     segment_specifications = [default_seahorse_segment_specification(segment_index=segment_index) for segment_index in
                               range(num_segments)]
-    tendon_actuation_specification = default_tendon_actuation_specification()
+    tendon_actuation_specification = default_tendon_actuation_specification(hmm_segment_span=hmm_segment_span)
 
     morphology_specification = SeahorseMorphologySpecification(
             segment_specifications=segment_specifications, tendon_actuation_specification=tendon_actuation_specification

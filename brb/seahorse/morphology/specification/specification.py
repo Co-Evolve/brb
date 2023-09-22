@@ -54,16 +54,16 @@ class SeahorsePlateSpecification(Specification):
             connector_offset_from_vertebrae: float,
             s_tap_x_offset_from_vertebrae: float,
             s_tap_y_offset_from_vertebrae: float,
-            a_tap_x_offset_from_plate_origin: float,
-            a_tap_y_offset_from_plate_origin: float,
+            hmm_tap_x_offset_from_plate_origin: float,
+            hmm_tap_y_offset_from_plate_origin: float,
             x_axis_gliding_joint_specification: JointSpecification,
             y_axis_gliding_joint_specification: JointSpecification, ) -> None:
         super().__init__()
         self.plate_mesh_specification = plate_mesh_specification
         self.connector_mesh_specification = connector_mesh_specification
         self.offset_from_vertebrae = FixedParameter(offset_from_vertebrae)
-        self.a_tap_x_offset_from_plate_origin = FixedParameter(a_tap_x_offset_from_plate_origin)
-        self.a_tap_y_offset_from_plate_origin = FixedParameter(a_tap_y_offset_from_plate_origin)
+        self.hmm_tap_x_offset_from_plate_origin = FixedParameter(hmm_tap_x_offset_from_plate_origin)
+        self.hmm_tap_y_offset_from_plate_origin = FixedParameter(hmm_tap_y_offset_from_plate_origin)
         self.connector_offset_from_vertebrae = FixedParameter(connector_offset_from_vertebrae)
         self.s_tap_x_offset_from_vertebrae = FixedParameter(s_tap_x_offset_from_vertebrae)
         self.s_tap_y_offset_from_vertebrae = FixedParameter(s_tap_y_offset_from_vertebrae)
@@ -127,7 +127,7 @@ class SeahorseSegmentSpecification(Specification):
         self.plate_specifications = plate_specifications
 
 
-class SeahorseTendonActuationSpecification(Specification):
+class SeahorseHMMTendonActuationSpecification(Specification):
     def __init__(
             self,
             *,
@@ -145,6 +145,36 @@ class SeahorseTendonActuationSpecification(Specification):
         self.damping = FixedParameter(damping)
 
 
+class SeahorseMVMTendonActuationSpecification(Specification):
+    def __init__(
+            self,
+            *,
+            contraction_factor: float,
+            relaxation_factor: float,
+            p_control_kp: float,
+            tendon_width: float,
+            damping: float
+            ) -> None:
+        super().__init__()
+        self.contraction_factor = FixedParameter(contraction_factor)
+        self.relaxation_factor = FixedParameter(relaxation_factor)
+        self.p_control_kp = FixedParameter(p_control_kp)
+        self.tendon_width = FixedParameter(tendon_width)
+        self.damping = FixedParameter(damping)
+
+
+class SeahorseTendonActuationSpecification(Specification):
+    def __init__(
+            self,
+            *,
+            hmm_tendon_actuation_specification: SeahorseHMMTendonActuationSpecification,
+            mvm_tendon_actuation_specification: SeahorseMVMTendonActuationSpecification
+            ) -> None:
+        super().__init__()
+        self.hmm_tendon_actuation_specification = hmm_tendon_actuation_specification
+        self.mvm_tendon_actuation_specification = mvm_tendon_actuation_specification
+
+
 class SeahorseMorphologySpecification(MorphologySpecification):
     sides = ["ventral", "sinistral", "dorsal", "dextral"]
     corners = ["ventral_dextral", "ventral_sinistral", "dorsal_sinistral", "dorsal_dextral"]
@@ -153,7 +183,8 @@ class SeahorseMorphologySpecification(MorphologySpecification):
             self,
             *,
             segment_specifications: List[SeahorseSegmentSpecification],
-            tendon_actuation_specification: SeahorseTendonActuationSpecification, ) -> None:
+            tendon_actuation_specification: SeahorseTendonActuationSpecification
+            ) -> None:
         super().__init__()
         self.segment_specifications = segment_specifications
         self.tendon_actuation_specification = tendon_actuation_specification

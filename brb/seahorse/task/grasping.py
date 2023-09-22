@@ -177,7 +177,8 @@ class GraspingTaskConfiguration(
 if __name__ == '__main__':
     env_config = GraspingTaskConfiguration(with_object=False)
     num_segments = 30
-    morphology_specification = default_seahorse_morphology_specification(num_segments=num_segments)
+    morphology_specification = default_seahorse_morphology_specification(num_segments=num_segments,
+                                                                         hmm_segment_span=11)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
     dm_env = env_config.environment(
             morphology=morphology, wrap2gym=False
@@ -206,16 +207,18 @@ if __name__ == '__main__':
 
         num_hmm_tendons_per_corner_to_contract = int(num_hmm_tendons_per_corner * rel_time)
         hmm_actions[:2, -num_hmm_tendons_per_corner_to_contract:] = hmm_minimum.reshape(
-            4, num_hmm_tendons_per_corner
-            )[:2, -num_hmm_tendons_per_corner_to_contract:]
+                4, num_hmm_tendons_per_corner
+                )[:2, -num_hmm_tendons_per_corner_to_contract:]
 
         hmm_actions = hmm_actions.flatten()
 
         num_mvm_tendons_to_contract = int(num_mvm_tendons * rel_time)
-        mvm_actions = np.concatenate((mvm_maximum[:-num_mvm_tendons_to_contract], mvm_minimum[
-                                                                                  -num_mvm_tendons_to_contract:]))
+        mvm_actions = np.concatenate(
+                (mvm_maximum[:-num_mvm_tendons_to_contract], mvm_minimum[-num_mvm_tendons_to_contract:])
+                )
 
         actions = np.concatenate((hmm_actions, mvm_actions))
         return actions
+
 
     viewer.launch(dm_env, grasping_policy_fn)

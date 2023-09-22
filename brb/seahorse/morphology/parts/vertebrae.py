@@ -212,7 +212,7 @@ class SeahorseVertebrae(MJCMorphologyPart):
                     frictionloss=twist_joint_specification.friction_loss.value
                     )
 
-    def add_intermediate_a_tap(
+    def add_intermediate_hmm_tap(
             self,
             identifier: str,
             start_world_pos: np.ndarray,
@@ -229,7 +229,7 @@ class SeahorseVertebrae(MJCMorphologyPart):
 
         return self.mjcf_body.add(
                 'site',
-                name=f"{self.base_name}_a_tap_intermediate_{identifier}",
+                name=f"{self.base_name}_hmm_tap_intermediate_{identifier}",
                 type="sphere",
                 rgba=colors.rgba_orange,
                 pos=np.array(intermediate_pos),
