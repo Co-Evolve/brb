@@ -11,6 +11,7 @@ from fprs.parameters import FixedParameter
 from brb.seahorse.morphology.morphology import MJCSeahorseMorphology
 from brb.seahorse.morphology.specification.default import default_seahorse_morphology_specification
 from brb.seahorse.task.grasping import GraspingTaskConfiguration
+from brb.utils.video import create_video
 
 
 def create_env(
@@ -26,21 +27,6 @@ def create_env(
             morphology=morphology, wrap2gym=True
             )
     return env
-
-
-def create_video(
-        frames: List[np.ndarray],
-        framerate: float,
-        out_path: str
-        ) -> None:
-    height, width, _ = frames[0].shape
-    size = (width, height)
-
-    writer = cv2.VideoWriter(out_path, cv2.VideoWriter_fourcc(*'mp4v'), framerate, size)
-    for frame in frames:
-        writer.write(frame)
-    writer.release()
-
 
 def grasping_policy_fn(
         time: float,
@@ -64,9 +50,9 @@ def grasping_policy_fn(
     hmm_actions = copy.deepcopy(hmm_maximum.reshape(4, num_hmm_tendons_per_corner))
 
     num_hmm_tendons_per_corner_to_contract = int(num_hmm_tendons_per_corner * rel_time)
-    hmm_actions[:2, :num_hmm_tendons_per_corner_to_contract] = hmm_minimum.reshape(
+    hmm_actions[:2, -num_hmm_tendons_per_corner_to_contract:] = hmm_minimum.reshape(
             4, num_hmm_tendons_per_corner
-            )[:2, :num_hmm_tendons_per_corner_to_contract]
+            )[:2, -num_hmm_tendons_per_corner_to_contract:]
     hmm_actions = hmm_actions.flatten()
 
     if use_mvm:

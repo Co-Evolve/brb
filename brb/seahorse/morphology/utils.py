@@ -102,9 +102,8 @@ def get_all_tendon_start_and_stop_segment_indices(
         ) -> List[Tuple[int, int]]:
     start_and_stop_indices = []
 
-    for segment_index in reversed(range(total_num_segments)):
-        if segment_index - segment_span >= 0:
-            start_and_stop_indices.append((segment_index - segment_span, segment_index))
+    for segment_index in range(total_num_segments - segment_span):
+        start_and_stop_indices.append((segment_index, segment_index + segment_span))
 
     return start_and_stop_indices
 

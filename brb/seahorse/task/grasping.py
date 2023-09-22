@@ -127,11 +127,6 @@ class GraspingTask(composer.Task):
             self,
             physics: mjcf.Physics
             ) -> None:
-        # self._morphology.set_pose(
-        #         physics=physics, position=np.array([0.0, 0.0, 0.5]), quaternion=euler2quat(
-        #             *[np.pi, np.pi / 2, 0.0], axes="szyx"
-        #             )
-        #         )
         self._morphology.set_pose(
                 physics=physics, position=np.array([0.0, 0.0, 0.5]), quaternion=euler2quat(
                         *[np.pi, 0.0, 0.0], )
@@ -220,7 +215,6 @@ if __name__ == '__main__':
         mvm_actions = np.concatenate((mvm_maximum[:-num_mvm_tendons_to_contract], mvm_minimum[
                                                                                   -num_mvm_tendons_to_contract:]))
 
-        mvm_actions = mvm_maximum
         actions = np.concatenate((hmm_actions, mvm_actions))
         return actions
 
