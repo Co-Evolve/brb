@@ -13,12 +13,16 @@ class MeshSpecification(Specification):
             *,
             mesh_path: str,
             scale: np.ndarray,
-            mass: float
+            mass: float,
+            center_of_mass: np.ndarray,
+            fullinertia: np.ndarray
             ) -> None:
         super().__init__()
         self.mesh_path = FixedParameter(mesh_path)
         self.scale_ratio = FixedParameter(scale)
         self.mass = FixedParameter(mass)
+        self.center_of_mass = FixedParameter(center_of_mass)
+        self.fullinertia = FixedParameter(fullinertia)
 
 
 class JointSpecification(Specification):
@@ -139,6 +143,7 @@ class SeahorseTendonActuationSpecification(Specification):
         self.tendon_width = FixedParameter(tendon_width)
         self.segment_span = FixedParameter(segment_span)
         self.damping = FixedParameter(damping)
+
 
 class SeahorseMorphologySpecification(MorphologySpecification):
     sides = ["ventral", "sinistral", "dorsal", "dextral"]

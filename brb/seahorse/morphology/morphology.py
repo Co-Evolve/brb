@@ -182,9 +182,11 @@ class MJCSeahorseMorphology(MJCMorphology):
     def _configure_actuators(
             self
             ) -> None:
-        kp = self.tendon_actuation_specification.p_control_kp.value
         self._tendon_actuators = []
         for tendon in self._tendons:
+            kp = self.tendon_actuation_specification.p_control_kp.value
+            if "mvm" in tendon.name:
+                kp = 100    # todo: move to spec
             self._tendon_actuators.append(
                     self.mjcf_model.actuator.add(
                             'position',
@@ -230,6 +232,8 @@ class MJCSeahorseMorphology(MJCMorphology):
 
 
 if __name__ == '__main__':
-    morphology_specification = default_seahorse_morphology_specification(num_segments=1)
+    morphology_specification = default_seahorse_morphology_specification(num_segments=30)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
+    # morphology.mjcf_body.euler = [np.pi, 0.0, 0.0]
+
     morphology.export_to_xml_with_assets("./mjcf")

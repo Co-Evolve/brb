@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import numpy as np
@@ -34,11 +35,8 @@ PLATE_CONNECTOR_LENGTH = 0.010
 VERTEBRAE_TO_PLATE_CONNECTOR_HOLE = 0.04101
 VERTEBRAE_S_TAP_OFFSET = 0.015
 
-MESH_NAME_TO_MASS = {
-        "ventral_dextral.stl": 0.00918, "ventral_sinistral.stl": 0.00907, "dorsal_dextral_even.stl": 0.00907,
-        "dorsal_sinistral_even.stl": 0.00947, "dorsal_dextral_odd.stl": 0.00844, "dorsal_sinistral_odd.stl": 0.00803,
-        "ball_bearing.stl": 0.00214, "vertebrae.stl": 0.00453, "connector_plate.stl": 0.00014,
-        "connector_vertebrae.stl": 0.00007}
+MESH_NAME_TO_INERTIA_VALUES = json.load(open(f"{BASE_MESH_PATH}/inertia.json", "r"))
+
 PLATE_DEPTH = 0.015
 PLATE_GLIDING_JOINT_RANGE = 0.0098
 SEGMENT_Z_OFFSET = 0.032
@@ -49,9 +47,16 @@ def default_mesh_specification(
         *,
         mesh_name: str
         ) -> MeshSpecification:
+    inertia_values = MESH_NAME_TO_INERTIA_VALUES[mesh_name]
+    indices = [[0, 0], [1, 1], [2, 2], [0, 1], [0, 2], [1, 2]]
+    fullinertia = []
+    for x, y in indices:
+        fullinertia.append(inertia_values["inertia_matrix"][x][y])
     return MeshSpecification(
-            mesh_path=str(BASE_MESH_PATH / mesh_name), scale=0.001 * np.ones(3), mass=MESH_NAME_TO_MASS[mesh_name]
-            )
+            mesh_path=str(BASE_MESH_PATH / mesh_name), scale=0.001 * np.ones(3), # gram to kg
+            mass=inertia_values["mass"] / 1000, # mm to meter
+            center_of_mass=np.array(inertia_values["center_of_mass"]) / 1000, # (g*m^2) to (kg*m^2)
+            fullinertia=np.array(fullinertia) / 1e9, )
 
 
 def default_gliding_joint_specification(
@@ -60,8 +65,7 @@ def default_gliding_joint_specification(
         axis: str
         ) -> JointSpecification:
     return JointSpecification(
-            stiffness=0, damping=1, friction_loss=0.03,
-            armature=0.045, range=PLATE_GLIDING_JOINT_RANGE / 2
+            stiffness=0, damping=1, friction_loss=0.3, armature=0.045, range=PLATE_GLIDING_JOINT_RANGE / 2
             )
 
 
@@ -116,11 +120,8 @@ def default_seahorse_plate_specification(
 
 def default_seahorse_vertebrae_specification() -> SeahorseVertebraeSpecification:
 
-    # bend_joint_specification = JointSpecification(
-    #         stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=6 / 180 * np.pi
-    #         )
     bend_joint_specification = JointSpecification(
-            stiffness=0.0, damping=0, friction_loss=0.001, armature=0.000, range=6 / 180 * np.pi
+            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=15 / 180 * np.pi
             )
     twist_joint_specification = JointSpecification(
             stiffness=0.0, damping=1, friction_loss=0.3, armature=0.045, range=0 / 180 * np.pi  # 5
@@ -169,7 +170,7 @@ def default_seahorse_segment_specification(
 
 
 def default_tendon_actuation_specification() -> SeahorseTendonActuationSpecification:
-    segment_span = 40
+    segment_span = 11
     kp = 30
 
     return SeahorseTendonActuationSpecification(

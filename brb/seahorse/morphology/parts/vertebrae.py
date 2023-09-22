@@ -6,6 +6,7 @@ from mujoco_utils.robot import MJCMorphology, MJCMorphologyPart
 
 from brb.seahorse.morphology.specification.specification import SeahorseMorphologySpecification, \
     SeahorseVertebraeSpecification
+from brb.seahorse.morphology.utils import add_mesh_to_body
 from brb.utils import colors
 
 SEAHORSE_VERTEBRAE_COLOR = np.array([158, 38, 212, 255]) / 255
@@ -89,30 +90,29 @@ class SeahorseVertebrae(MJCMorphologyPart):
     def _build_vertebrae(
             self
             ) -> None:
-        self.vertebrae = self.mjcf_body.add(
-                'geom',
+        self.vertebrae = add_mesh_to_body(
+                body=self.mjcf_body,
                 name=f"{self.base_name}_vertebrae",
-                type="mesh",
-                mesh=f"{self.base_name}_vertebrae",
-                pos=np.zeros(3),
+                mesh_name=f"{self.base_name}_vertebrae",
+                position=np.zeros(3),
+                euler=np.zeros(3),
                 rgba=SEAHORSE_VERTEBRAE_COLOR,
                 group=1,
-                mass=self.vertebrae_specification.vertebral_mesh_specification.mass.value
-                )
+                mesh_specification=self.vertebrae_specification.vertebral_mesh_specification, )
 
     def _build_ball_bearing(
             self
             ) -> None:
         if not self.is_last_segment:
-            self.ball_bearing = self.mjcf_body.add(
-                    'geom',
+            self.ball_bearing = add_mesh_to_body(
+                    body=self.mjcf_body,
                     name=f"{self.base_name}_ball_bearing",
-                    type="mesh",
-                    mesh=f"{self.base_name}_ball_bearing",
-                    pos=np.array([0, 0, self.vertebrae_specification.z_offset_to_ball_bearing.value]),
+                    mesh_name=f"{self.base_name}_ball_bearing",
+                    position=np.array([0, 0, self.vertebrae_specification.z_offset_to_ball_bearing.value]),
+                    euler=np.zeros(3),
                     rgba=colors.rgba_gray,
                     group=1,
-                    mass=self.vertebrae_specification.ball_bearing_mesh_specification.mass.value
+                    mesh_specification=self.vertebrae_specification.ball_bearing_mesh_specification
                     )
 
     def _build_connectors(
@@ -120,8 +120,8 @@ class SeahorseVertebrae(MJCMorphologyPart):
             ) -> None:
         sides = ["ventral", "dextral", "dorsal", "sinistral"]
         radius = (
-                    self.vertebrae_specification.offset_to_bar_end.value +
-                    self.vertebrae_specification.connector_length.value / 2)
+                self.vertebrae_specification.offset_to_bar_end.value +
+                self.vertebrae_specification.connector_length.value / 2)
 
         angles = np.array([np.pi / 2 * side_index for side_index in range(4)])
         positions = radius * np.array([[np.cos(angle), np.sin(angle), 0.0] for angle in angles])
@@ -129,16 +129,15 @@ class SeahorseVertebrae(MJCMorphologyPart):
 
         self.connectors = []
         for side, position, euler in zip(sides, positions, eulers):
-            connector = self.mjcf_body.add(
-                    'geom',
+            connector = add_mesh_to_body(
+                    body=self.mjcf_body,
                     name=f"{self.base_name}_connector_{side}",
-                    type="mesh",
-                    mesh=f"{self.base_name}_connector",
-                    pos=position,
+                    mesh_name=f"{self.base_name}_connector",
+                    position=position,
                     euler=euler,
                     rgba=colors.rgba_gray,
                     group=1,
-                    mass=self.vertebrae_specification.connector_mesh_specification.mass.value
+                    mesh_specification=self.vertebrae_specification.connector_mesh_specification
                     )
             self.connectors.append(connector)
 
@@ -233,5 +232,6 @@ class SeahorseVertebrae(MJCMorphologyPart):
                 name=f"{self.base_name}_a_tap_intermediate_{identifier}",
                 type="sphere",
                 rgba=colors.rgba_orange,
-                pos=np.array(intermediate_pos), size=[0.001]
+                pos=np.array(intermediate_pos),
+                size=[0.001]
                 )

@@ -4,7 +4,7 @@ import numpy as np
 from dm_control import mjcf
 from mujoco_utils.robot import MJCMorphologyPart
 
-from brb.seahorse.morphology.specification.specification import SeahorsePlateSpecification
+from brb.seahorse.morphology.specification.specification import MeshSpecification, SeahorsePlateSpecification
 
 
 def is_inner_plate_x_axis(
@@ -109,8 +109,10 @@ def get_all_tendon_start_and_stop_segment_indices(
     return start_and_stop_indices
 
 
-def calculate_relaxed_tendon_length(morphology_parts: List[MJCMorphologyPart],
-                                    attachment_points: List[mjcf.Element]) -> float:
+def calculate_relaxed_tendon_length(
+        morphology_parts: List[MJCMorphologyPart],
+        attachment_points: List[mjcf.Element]
+        ) -> float:
     relaxed_tendon_length = 0
     for current_index in range(len(attachment_points) - 1):
         next_index = current_index + 1
@@ -127,3 +129,29 @@ def calculate_relaxed_tendon_length(morphology_parts: List[MJCMorphologyPart],
         relaxed_tendon_length += distance_between_points
 
     return relaxed_tendon_length
+
+
+def add_mesh_to_body(
+        body: mjcf.Element,
+        name: str,
+        mesh_name: str,
+        position: np.ndarray,
+        euler: np.ndarray,
+        rgba: np.ndarray,
+        group: int,
+        mesh_specification: MeshSpecification, ) -> mjcf.Element:
+    sub_body = body.add(
+            'body', name=f"{name}_body", pos=position, euler=euler
+            )
+
+    sub_body.add(
+            'inertial',
+            pos=mesh_specification.center_of_mass.value,
+            mass=mesh_specification.mass.value,
+            fullinertia=mesh_specification.fullinertia.value
+            )
+
+    sub_body.add(
+            'geom', name=f"{name}_geom", type="mesh", mesh=mesh_name, rgba=rgba, group=group
+            )
+    return sub_body

@@ -210,14 +210,17 @@ if __name__ == '__main__':
         hmm_actions = copy.deepcopy(hmm_maximum.reshape(4, num_hmm_tendons_per_corner))
 
         num_hmm_tendons_per_corner_to_contract = int(num_hmm_tendons_per_corner * rel_time)
-        hmm_actions[:2, :num_hmm_tendons_per_corner_to_contract] = hmm_minimum.reshape(
+        hmm_actions[:2, -num_hmm_tendons_per_corner_to_contract:] = hmm_minimum.reshape(
             4, num_hmm_tendons_per_corner
-            )[:2, :num_hmm_tendons_per_corner_to_contract]
+            )[:2, -num_hmm_tendons_per_corner_to_contract:]
+
         hmm_actions = hmm_actions.flatten()
 
         num_mvm_tendons_to_contract = int(num_mvm_tendons * rel_time)
         mvm_actions = np.concatenate((mvm_maximum[:-num_mvm_tendons_to_contract], mvm_minimum[
                                                                                   -num_mvm_tendons_to_contract:]))
+
+        mvm_actions = mvm_maximum
         actions = np.concatenate((hmm_actions, mvm_actions))
         return actions
 

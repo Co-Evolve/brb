@@ -115,6 +115,6 @@ def evaluate_segment_span(
 
 if __name__ == '__main__':
     ray.init(num_cpus=10)
-    num_segments = 30
+    num_segments = 15
     use_mvm = True
     ray.get([evaluate_segment_span.remote(num_segments, segment_span, use_mvm) for segment_span in range(1, 12)])

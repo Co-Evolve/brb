@@ -6,8 +6,8 @@ from mujoco_utils.robot import MJCMorphology, MJCMorphologyPart
 
 from brb.seahorse.morphology.specification.specification import SeahorseMorphologySpecification, \
     SeahorsePlateSpecification
-from brb.seahorse.morphology.utils import (get_actuator_tendon_plate_indices, get_plate_position, is_inner_plate_x_axis, \
-                                           is_inner_plate_y_axis)
+from brb.seahorse.morphology.utils import (add_mesh_to_body, get_actuator_tendon_plate_indices, get_plate_position,
+                                           is_inner_plate_x_axis, is_inner_plate_y_axis)
 from brb.utils import colors
 
 
@@ -75,15 +75,15 @@ class SeahorsePlate(MJCMorphologyPart):
             self
             ) -> None:
         position = get_plate_position(plate_index=self.plate_index, plate_specification=self.plate_specification)
-        self.plate = self.mjcf_body.add(
-                'geom',
+        self.plate = add_mesh_to_body(
+                body=self.mjcf_body,
                 name=f"{self.base_name}_plate",
-                type="mesh",
-                mesh=f"{self.base_name}_plate",
-                pos=position,
+                mesh_name=f"{self.base_name}_plate",
+                position=position,
+                euler=np.zeros(3),
                 rgba=colors.rgba_green,
                 group=0,
-                mass=self.plate_specification.plate_mesh_specification.mass.value
+                mesh_specification=self.plate_specification.plate_mesh_specification
                 )
 
     def _build_connectors(
@@ -98,37 +98,36 @@ class SeahorsePlate(MJCMorphologyPart):
                 segment_index=self.segment_index, plate_index=self.plate_index
                 )
 
-        connector_mass = self.plate_specification.connector_mesh_specification.mass.value
         offset_from_vertebrae = self.plate_specification.connector_offset_from_vertebrae.value
 
         if is_inner_plate_x:
             direction = 1 if self.plate_index < 2 else -1
             connector_pos = np.array([direction * offset_from_vertebrae, 0.0, 0.0])
-            self.connectors["x"] = self.mjcf_body.add(
-                    'geom',
+            self.connectors["x"] = add_mesh_to_body(
+                    body=self.mjcf_body,
                     name=f"{self.base_name}_connector_x",
-                    type="mesh",
-                    mesh=f"{self.base_name}_connector",
-                    pos=connector_pos,
+                    mesh_name=f"{self.base_name}_connector",
+                    position=connector_pos,
+                    euler=np.zeros(3),
                     rgba=colors.rgba_gray,
                     group=0,
-                    mass=connector_mass
+                    mesh_specification=self.plate_specification.connector_mesh_specification
                     )
 
         if is_inner_plate_y:
             direction = 1 if 1 <= self.plate_index <= 2 else -1
             connector_pos = np.array([0.0, direction * offset_from_vertebrae, 0.0])
             connector_euler = np.array([0.0, 0.0, np.pi / 2])
-            self.connectors["y"] = self.mjcf_body.add(
-                    'geom',
+
+            self.connectors["y"] = add_mesh_to_body(
+                    body=self.mjcf_body,
                     name=f"{self.base_name}_connector_y",
-                    type="mesh",
-                    mesh=f"{self.base_name}_connector",
-                    pos=connector_pos,
+                    mesh_name=f"{self.base_name}_connector",
+                    position=connector_pos,
                     euler=connector_euler,
                     rgba=colors.rgba_gray,
                     group=0,
-                    mass=connector_mass
+                    mesh_specification=self.plate_specification.connector_mesh_specification
                     )
 
     def _add_actuator_tendon_attachment_points(
