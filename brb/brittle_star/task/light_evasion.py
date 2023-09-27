@@ -17,6 +17,7 @@ from brb.brittle_star.arena.hilly_light_aquarium import HillyLightAquarium
 from brb.brittle_star.morphology.morphology import MJCBrittleStarMorphology
 from brb.brittle_star.morphology.specification.default import default_brittle_star_morphology_specification
 from brb.brittle_star.morphology.specification.specification import BrittleStarMorphologySpecification
+from brb.utils import colors
 
 
 class LightEvasionTask(composer.Task):
@@ -29,8 +30,8 @@ class LightEvasionTask(composer.Task):
 
         self._arena = self._build_arena()
         self._light_extractor = self._create_light_extractor()
-        self._morphology = self._attach_morphology(morphology=morphology)
         self._base_specification = morphology.morphology_specification
+        self._morphology = self._attach_morphology(morphology=morphology)
         self._task_observables = self._configure_observables()
 
         self._configure_contacts()
@@ -103,9 +104,23 @@ class LightEvasionTask(composer.Task):
             self,
             morphology: MJCBrittleStarMorphology
             ) -> MJCBrittleStarMorphology:
-        self._arena.add_free_entity(
-                entity=morphology
-                )
+        if self.config.touch_test:
+            pin_radius = self._base_specification.disc_specification.radius.value
+            self._arena.mjcf_model.worldbody.add('geom',
+                                                 name=f"pin",
+                                                 type=f"cylinder",
+                                                 pos=[0.0, 0.0, 1.0],
+                                                 euler=np.zeros(3),
+                                                 size=[pin_radius, 1.0],
+                                                 rgba=colors.rgba_gray,
+                                                 )
+            morphology_site = self._arena.mjcf_model.worldbody.add('site', pos=[0.0, 0.0, 2.0])
+            self._arena.attach(entity=morphology,
+                               attach_site=morphology_site)
+        else:
+            self._arena.add_free_entity(
+                    entity=morphology
+                    )
         morphology.touch_coloring = self.config.touch_coloring
         return morphology
 
@@ -246,6 +261,9 @@ class LightEvasionTask(composer.Task):
             self,
             physics: mjcf.Physics
             ) -> None:
+        if self.config.touch_test:
+            return
+
         disc_height = self._morphology.morphology_specification.disc_specification.height.value
         initial_position = np.array(self.config.starting_position + (2 * disc_height,))
 
@@ -355,6 +373,7 @@ class LightEvasionTaskConfiguration(
             random_current: bool = False,
             random_friction: bool = False,
             random_initial_rotation: bool = False,
+            touch_test: bool = False,
             starting_position: Tuple[int, int] = (-8.0, 0.0),
             touch_coloring: bool = False,
             light_coloring: bool = False,
@@ -378,6 +397,7 @@ class LightEvasionTaskConfiguration(
         self.random_current = random_current
         self.random_friction = random_friction
         self.random_initial_rotation = random_initial_rotation
+        self.touch_test = touch_test
         self.starting_position = starting_position
         self.touch_coloring = touch_coloring
         self.light_coloring = light_coloring
@@ -392,13 +412,14 @@ if __name__ == '__main__':
             touch_coloring=True,
             light_coloring=False,
             hilly_terrain=False,
-            random_obstacles=True,
+            random_obstacles=False,
             light_noise=False,
             dynamic_light=False,
-            targeted_light=True,
+            targeted_light=False,
             random_current=False,
             random_friction=False,
-            starting_position=(0, 0)
+            starting_position=(0, 0),
+            touch_test=True
             )
 
     morphology_specification = default_brittle_star_morphology_specification(
@@ -408,20 +429,20 @@ if __name__ == '__main__':
             specification=morphology_specification
             )
 
-    dm_env = env_config.environment(
-            morphology=morphology, wrap2gym=True
-            )
-
-    dm_env.reset()
-    import cv2
-
-    for step_index in range(env_config.total_num_timesteps):
-        dm_env.step(dm_env.action_space.sample())
-        if step_index % 30 == 0:
-            frame = dm_env.render()
-            cv2.imshow("frame", frame)
-            cv2.waitKey(1)
-
+    # dm_env = env_config.environment(
+    #         morphology=morphology, wrap2gym=True
+    #         )
+    #
+    # dm_env.reset()
+    # import cv2
+    #
+    # for step_index in range(env_config.total_num_timesteps):
+    #     dm_env.step(dm_env.action_space.sample())
+    #     if step_index % 30 == 0:
+    #         frame = dm_env.render()
+    #         cv2.imshow("frame", frame)
+    #         cv2.waitKey(1)
+    #
     dm_env = env_config.environment(
             morphology=morphology, wrap2gym=False
             )
