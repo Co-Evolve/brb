@@ -104,7 +104,7 @@ class LightEvasionTask(composer.Task):
             self,
             morphology: MJCBrittleStarMorphology
             ) -> MJCBrittleStarMorphology:
-        if self.config.touch_test:
+        if self.config.touch_deprivation_test:
             pin_radius = self._base_specification.disc_specification.radius.value
             self._arena.mjcf_model.worldbody.add('geom',
                                                  name=f"pin",
@@ -261,7 +261,7 @@ class LightEvasionTask(composer.Task):
             self,
             physics: mjcf.Physics
             ) -> None:
-        if self.config.touch_test:
+        if self.config.touch_deprivation_test:
             return
 
         disc_height = self._morphology.morphology_specification.disc_specification.height.value
@@ -373,7 +373,7 @@ class LightEvasionTaskConfiguration(
             random_current: bool = False,
             random_friction: bool = False,
             random_initial_rotation: bool = False,
-            touch_test: bool = False,
+            touch_deprivation_test: bool = False,
             starting_position: Tuple[int, int] = (-8.0, 0.0),
             touch_coloring: bool = False,
             light_coloring: bool = False,
@@ -397,7 +397,7 @@ class LightEvasionTaskConfiguration(
         self.random_current = random_current
         self.random_friction = random_friction
         self.random_initial_rotation = random_initial_rotation
-        self.touch_test = touch_test
+        self.touch_deprivation_test = touch_deprivation_test
         self.starting_position = starting_position
         self.touch_coloring = touch_coloring
         self.light_coloring = light_coloring
@@ -419,7 +419,7 @@ if __name__ == '__main__':
             random_current=False,
             random_friction=False,
             starting_position=(0, 0),
-            touch_test=True
+            touch_deprivation_test=True
             )
 
     morphology_specification = default_brittle_star_morphology_specification(
