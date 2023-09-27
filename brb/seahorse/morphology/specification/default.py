@@ -176,7 +176,7 @@ def default_tendon_actuation_specification(
         hmm_segment_span: int
         ) -> SeahorseTendonActuationSpecification:
     mvm_tendon_actuation_specification = SeahorseMVMTendonActuationSpecification(
-            contraction_factor=0.5, relaxation_factor=1.5, tendon_width=0.0005, p_control_kp=100, damping=1
+            contraction_factor=0.5, relaxation_factor=1.5, tendon_width=0.0005, p_control_kp=90, damping=1
             )
     hmm_tendon_actuation_specification = SeahorseHMMTendonActuationSpecification(
             tendon_strain=0.01, p_control_kp=30, tendon_width=0.0005, segment_span=hmm_segment_span, damping=1
