@@ -74,8 +74,11 @@ class LightEvasionTask(composer.Task):
             ) -> RegularGridInterpolator:
         x = np.arange(0, self._arena.lightmap.shape[1])
         y = np.arange(0, self._arena.lightmap.shape[0])
-        normalized_lightmap = (self._arena.lightmap - np.min(self._arena.lightmap)) / (
-                np.max(self._arena.lightmap) - np.min(self._arena.lightmap))
+        if np.max(self._arena.lightmap) - np.min(self._arena.lightmap) == 0:
+            normalized_lightmap = self._arena.lightmap
+        else:
+            normalized_lightmap = (self._arena.lightmap - np.min(self._arena.lightmap)) / (
+                    np.max(self._arena.lightmap) - np.min(self._arena.lightmap))
         interp = RegularGridInterpolator((y, x), normalized_lightmap, bounds_error=False, fill_value=None)
         return interp
 
