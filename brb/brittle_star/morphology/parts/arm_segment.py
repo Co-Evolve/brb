@@ -280,8 +280,29 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
                 "framepos", name=f"{self.base_name}_position_sensor", objtype="geom", objname=self._capsule.name
                 )
 
+    def _configure_joint_sensors(
+            self
+            ) -> None:
+        self.mjcf_model.sensor.add(
+                "jointpos", joint=self._in_plane_joint, name=f"{self._in_plane_joint.name}"
+                                                             f"_jointpos_sensor"
+                )
+        self.mjcf_model.sensor.add(
+                "jointvel", joint=self._in_plane_joint, name=f"{self._in_plane_joint.name}"
+                                                             f"_jointvel_sensor"
+                )
+        self.mjcf_model.sensor.add(
+                "jointpos", joint=self._out_of_plane_joint, name=f"{self._out_of_plane_joint.name}"
+                                                                 f"_jointpos_sensor"
+                )
+        self.mjcf_model.sensor.add(
+                "jointvel", joint=self._out_of_plane_joint, name=f"{self._out_of_plane_joint.name}"
+                                                                 f"_jointvel_sensor"
+                )
+
     def _configure_sensors(
             self
             ):
         self._configure_touch_sensors()
         self._configure_position_sensor()
+        self._configure_joint_sensors()
