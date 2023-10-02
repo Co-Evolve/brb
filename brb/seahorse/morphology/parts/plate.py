@@ -198,7 +198,7 @@ class SeahorsePlate(MJCMorphologyPart):
     def _configure_mvm_tendon_attachment_points(
             self
             ) -> None:
-        if self.plate_index == 0:
+        if self.plate_index == 1:
             self.mvm_taps = []
 
             x = self.plate_specification.mvm_tap_x_offset.value

@@ -4,6 +4,7 @@ import numpy as np
 from dm_control import mjcf
 from mujoco_utils.robot import MJCMorphology
 
+from brb.seahorse.morphology.observables import SeahorseObservables
 from brb.seahorse.morphology.parts.segment import SeahorseSegment
 from brb.seahorse.morphology.specification.default import default_seahorse_morphology_specification
 from brb.seahorse.morphology.specification.specification import SeahorseMorphologySpecification, \
@@ -37,10 +38,17 @@ class MJCSeahorseMorphology(MJCMorphology):
             ) -> None:
         self._configure_compiler()
         self._build_tail()
+        self._configure_gliding_joint_equality_constraints()
         self._build_hmm_tendons()
         self._build_mvm_tendons()
         self._configure_actuators()
         self._prepare_tendon_coloring()
+        self._configure_sensors()
+
+    def _build_observables(
+            self
+            ) -> None:
+        return SeahorseObservables(self)
 
     def _configure_compiler(
             self
@@ -70,11 +78,34 @@ class MJCSeahorseMorphology(MJCMorphology):
 
             next_parent = segment.vertebrae
 
+    def _configure_gliding_joint_equality_constraints(
+            self
+            ) -> None:
+        for segment, next_segment in zip(self._segments, self._segments[1:]):
+            for plate, next_plate in zip(segment.plates, next_segment.plates):
+                try:
+                    self.mjcf_model.equality.add(
+                            'joint',
+                            joint1=plate.x_axis_gliding_joint,
+                            joint2=next_plate.x_axis_gliding_joint,
+                            polycoef=[0, 1, 0, 0, 0]
+                            )
+                except AttributeError:
+                    pass
+                try:
+                    self.mjcf_model.equality.add(
+                            'joint',
+                            joint1=plate.y_axis_gliding_joint,
+                            joint2=next_plate.y_axis_gliding_joint,
+                            polycoef=[0, 1, 0, 0, 0]
+                            )
+                except AttributeError:
+                    pass
+
     def _build_hmm_tendons(
             self
             ) -> None:
-        self._tendons = []
-        self._tendon_to_base_length = {}
+        self._hmm_tendons = []
 
         hmm_tendon_actuation_specification = self.tendon_actuation_specification.hmm_tendon_actuation_specification
 
@@ -130,7 +161,8 @@ class MJCSeahorseMorphology(MJCMorphology):
                                 )
                     base_length = start_and_stop_indices_to_length[(start_index, stop_index)]
 
-                    num_outer_tendons = min(start_index, hmm_tendon_actuation_specification.segment_span.value)
+                    num_outer_tendons = 1 + min(start_index, hmm_tendon_actuation_specification.segment_span.value)
+                    tendon_translation = num_outer_tendons * hmm_tendon_actuation_specification.tendon_strain.value
 
                     tendon = self.mjcf_model.tendon.add(
                             'spatial',
@@ -138,26 +170,24 @@ class MJCSeahorseMorphology(MJCMorphology):
                             width=hmm_tendon_actuation_specification.tendon_width.value,
                             rgba=colors.rgba_blue,
                             limited=True,
-                            range=[
-                                    base_length - num_outer_tendons *
-                                    hmm_tendon_actuation_specification.tendon_strain.value,
-                                    base_length * 10],
+                            range=[base_length - tendon_translation, 10 * base_length],
                             damping=hmm_tendon_actuation_specification.damping.value
                             )
-                    self._tendon_to_base_length[tendon.name] = base_length
 
                     for i, tap in enumerate(taps):
                         tendon.add('site', site=tap)
 
-                    self._tendons.append(tendon)
+                    self._hmm_tendons.append(tendon)
 
     def _build_mvm_tendons(
             self
             ) -> None:
+        self._mvm_tendons = []
+
         mvm_tendon_actuation_specification = self.tendon_actuation_specification.mvm_tendon_actuation_specification
         for segment, next_segment in zip(self._segments, self._segments[1:]):
-            start_plate = segment.plates[0]
-            end_plate = next_segment.plates[0]
+            start_plate = segment.plates[1]
+            end_plate = next_segment.plates[1]
 
             start_tap = start_plate.mvm_taps[1]
             end_tap = end_plate.mvm_taps[0]
@@ -180,13 +210,13 @@ class MJCSeahorseMorphology(MJCMorphology):
             for tap in taps:
                 tendon.add('site', site=tap)
 
-            self._tendons.append(tendon)
+            self._mvm_tendons.append(tendon)
 
     def _configure_actuators(
             self
             ) -> None:
         self._tendon_actuators = []
-        for tendon in self._tendons:
+        for tendon in self._hmm_tendons + self._mvm_tendons:
             if "mvm" in tendon.name:
                 kp = self.tendon_actuation_specification.mvm_tendon_actuation_specification.p_control_kp.value
             else:
@@ -205,13 +235,19 @@ class MJCSeahorseMorphology(MJCMorphology):
                             )
                     )
 
+    def _configure_sensors(
+            self
+            ) -> None:
+        for tendon in self._hmm_tendons + self._mvm_tendons:
+            self.mjcf_model.sensor.add("tendonpos", name=f"{tendon.name}_position_sensor", tendon=tendon)
+
     def _prepare_tendon_coloring(
             self
             ) -> None:
-        self._contracted_rgbas = np.ones((len(self._tendons), 4))
+        self._contracted_rgbas = np.ones((len(self._hmm_tendons + self._mvm_tendons), 4))
         self._contracted_rgbas[:] = colors.rgba_tendon_contracted
 
-        self._color_changes = np.ones((len(self._tendons), 4))
+        self._color_changes = np.ones((len(self._hmm_tendons + self._mvm_tendons), 4))
         self._color_changes[:] = colors.rgba_tendon_relaxed - colors.rgba_tendon_contracted
         self._color_changes = self._color_changes.T
         self._control_ranges = np.array([act.ctrlrange for act in self._tendon_actuators])
@@ -225,7 +261,8 @@ class MJCSeahorseMorphology(MJCMorphology):
         min_control, max_control = self._control_ranges[:, 0], self._control_ranges[:, 1]
         tendon_control = (tendon_control - min_control) / (max_control - min_control)
 
-        physics.bind(self._tendons).rgba = self._contracted_rgbas + (tendon_control * self._color_changes).T
+        physics.bind(self._hmm_tendons + self._mvm_tendons).rgba = self._contracted_rgbas + (
+                tendon_control * self._color_changes).T
 
     def after_step(
             self,

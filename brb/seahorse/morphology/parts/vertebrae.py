@@ -60,6 +60,7 @@ class SeahorseVertebrae(MJCMorphologyPart):
         self._build_connectors()
         self._configure_spine_tendon_attachment_points()
         self._configure_vertebral_joints()
+        self._configure_sensors()
 
     def _configure_mesh_assets(
             self
@@ -172,7 +173,7 @@ class SeahorseVertebrae(MJCMorphologyPart):
         bend_joint_specification = self.vertebrae_specification.bend_joint_specification
         twist_joint_specification = self.vertebrae_specification.twist_joint_specification
 
-        self.mjcf_body.add(
+        self._coronal_joint = self.mjcf_body.add(
                 'joint',
                 name=f'{self.base_name}_vertebrae_joint_coronal',
                 type='hinge',
@@ -185,7 +186,7 @@ class SeahorseVertebrae(MJCMorphologyPart):
                 frictionloss=bend_joint_specification.friction_loss.value,
                 armature=bend_joint_specification.armature.value
                 )
-        self.mjcf_body.add(
+        self._sagittal_joint = self.mjcf_body.add(
                 'joint',
                 name=f'{self.base_name}_vertebrae_joint_sagittal',
                 type='hinge',
@@ -234,4 +235,15 @@ class SeahorseVertebrae(MJCMorphologyPart):
                 rgba=colors.rgba_orange,
                 pos=np.array(intermediate_pos),
                 size=[0.001]
+                )
+
+    def _configure_sensors(
+            self
+            ) -> None:
+        if not self.is_first_segment:
+            self.mjcf_model.sensor.add("jointpos", name=f"{self._coronal_joint.name}_sensor", joint=self._coronal_joint)
+            self.mjcf_model.sensor.add(
+                "jointpos",
+                name=f"{self._sagittal_joint.name}_sensor",
+                joint=self._sagittal_joint
                 )

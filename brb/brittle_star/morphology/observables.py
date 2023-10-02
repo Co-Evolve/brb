@@ -9,8 +9,15 @@ from mujoco_utils.observables import ConfinedMJCFFeature
 from brb.brittle_star.morphology.utils.morphology import calculate_arm_length
 
 
-def normalizer_factory(original_range: np.ndarray, target_range: np.ndarray = np.array([-1, 1])):
-    def normalizer(observations: SynchronizingArrayWrapper, *args, **kwargs) -> np.ndarray:
+def normalizer_factory(
+        original_range: np.ndarray,
+        target_range: np.ndarray = np.array([-1, 1])
+        ):
+    def normalizer(
+            observations: SynchronizingArrayWrapper,
+            *args,
+            **kwargs
+            ) -> np.ndarray:
         data = np.array(observations)
 
         delta1 = original_range[:, 1] - original_range[:, 0]
@@ -30,69 +37,102 @@ class BrittleStarObservables(composer.Observables):
     _angular_velocity_sensor = None
 
     @property
-    def number_of_arms(self) -> int:
+    def number_of_arms(
+            self
+            ) -> int:
         if self._number_of_arms is None:
             self._number_of_arms = self._entity.morphology_specification.number_of_arms
         return self._number_of_arms
 
     @property
-    def arm_length(self) -> float:
+    def arm_length(
+            self
+            ) -> float:
         if self._arm_length is None:
             self._arm_length = calculate_arm_length(specification=self._entity.morphology_specification)
         return self._arm_length
 
     @property
-    def touch_sensors(self) -> List[mjcf.Element]:
+    def touch_sensors(
+            self
+            ) -> List[mjcf.Element]:
         if self._touch_sensors is None:
             sensors = self._entity.mjcf_model.find_all('sensor')
-            self._touch_sensors = list(filter(lambda sensor: sensor.tag == "touch", sensors))
+            self._touch_sensors = list(
+                filter(
+                    lambda
+                        sensor: sensor.tag == "touch",
+                    sensors
+                    )
+                )
         return self._touch_sensors
 
     @property
-    def linear_velocity_sensor(self) -> mjcf.Element:
+    def linear_velocity_sensor(
+            self
+            ) -> mjcf.Element:
         if self._linear_velocity_sensor is None:
             sensors = self._entity.mjcf_model.find_all('sensor')
-            self._linear_velocity_sensor = \
-                list(filter(lambda sensor: sensor.tag == "framelinvel" and "disc" in sensor.name, sensors))[0]
+            self._linear_velocity_sensor = list(
+                filter(
+                    lambda
+                        sensor: sensor.tag == "framelinvel" and "disc" in sensor.name,
+                    sensors
+                    )
+                )[0]
         return self._linear_velocity_sensor
 
     @property
-    def angular_velocity_sensor(self) -> mjcf.Element:
+    def angular_velocity_sensor(
+            self
+            ) -> mjcf.Element:
         if self._angular_velocity_sensor is None:
             sensors = self._entity.mjcf_model.find_all('sensor')
-            self._angular_velocity_sensor = \
-                list(filter(lambda sensor: sensor.tag == "frameangvel" and "disc" in sensor.name, sensors))[0]
+            self._angular_velocity_sensor = list(
+                filter(
+                    lambda
+                        sensor: sensor.tag == "frameangvel" and "disc" in sensor.name,
+                    sensors
+                    )
+                )[0]
         return self._angular_velocity_sensor
 
     @composer.observable
-    def touch_per_tendon_plate(self) -> MJCFFeature:
-        def convert_to_booleans(observations: SynchronizingArrayWrapper, *args, **kwargs) -> np.ndarray:
+    def touch_per_tendon_plate(
+            self
+            ) -> MJCFFeature:
+        def convert_to_booleans(
+                observations: SynchronizingArrayWrapper,
+                *args,
+                **kwargs
+                ) -> np.ndarray:
             data = np.array(observations)
 
             data[data > 0] = 1
             data[data == 0] = -1
             return data
 
-        return ConfinedMJCFFeature(low=-1,
-                                   high=1,
-                                   shape=[len(self.touch_sensors)],
-                                   kind="sensordata",
-                                   mjcf_element=self.touch_sensors,
-                                   corruptor=convert_to_booleans
-                                   )
+        return ConfinedMJCFFeature(
+            low=-1,
+            high=1,
+            shape=[len(self.touch_sensors)],
+            kind="sensordata",
+            mjcf_element=self.touch_sensors,
+            corruptor=convert_to_booleans
+            )
 
     @composer.observable
-    def linear_velocity(self) -> MJCFFeature:
-        return ConfinedMJCFFeature(low=-5.0,
-                                   high=5.0,
-                                   shape=[3],
-                                   kind="sensordata",
-                                   mjcf_element=self.linear_velocity_sensor)
+    def linear_velocity(
+            self
+            ) -> MJCFFeature:
+        return ConfinedMJCFFeature(
+            low=-5.0, high=5.0, shape=[3], kind="sensordata", mjcf_element=self.linear_velocity_sensor
+            )
 
     @composer.observable
-    def angular_velocity(self) -> MJCFFeature:
-        return ConfinedMJCFFeature(low=-5.0,
-                                   high=5.0,
-                                   shape=[3],
-                                   kind="sensordata",
-                                   mjcf_element=self.angular_velocity_sensor)
+    def angular_velocity(
+            self
+            ) -> MJCFFeature:
+        return ConfinedMJCFFeature(
+            low=-5.0, high=5.0, shape=[3], kind="sensordata", mjcf_element=self.angular_velocity_sensor
+            )

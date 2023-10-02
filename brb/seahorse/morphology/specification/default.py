@@ -57,7 +57,8 @@ def default_mesh_specification(
             mesh_path=str(BASE_MESH_PATH / mesh_name), scale=0.001 * np.ones(3),  # gram to kg
             mass=inertia_values["mass"] / 1000,  # mm to meter
             center_of_mass=np.array(inertia_values["center_of_mass"]) / 1000,  # (g*m^2) to (kg*m^2)
-            fullinertia=np.array(fullinertia) / 1e9, )
+            fullinertia=np.array(fullinertia) / 1e9
+            )
 
 
 def default_gliding_joint_specification(
@@ -66,7 +67,7 @@ def default_gliding_joint_specification(
         axis: str
         ) -> JointSpecification:
     return JointSpecification(
-            stiffness=0, damping=1, friction_loss=0.3, armature=0.045, range=PLATE_GLIDING_JOINT_RANGE / 2
+            stiffness=10, damping=1, friction_loss=0.3, armature=0.045, range=PLATE_GLIDING_JOINT_RANGE / 2
             )
 
 
@@ -124,7 +125,7 @@ def default_seahorse_plate_specification(
 def default_seahorse_vertebrae_specification() -> SeahorseVertebraeSpecification:
 
     bend_joint_specification = JointSpecification(
-            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=15 / 180 * np.pi
+            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=21.24 / 180 * np.pi
             )
     twist_joint_specification = JointSpecification(
             stiffness=0.0, damping=1, friction_loss=0.3, armature=0.045, range=0 / 180 * np.pi  # 5
@@ -176,10 +177,10 @@ def default_tendon_actuation_specification(
         hmm_segment_span: int
         ) -> SeahorseTendonActuationSpecification:
     mvm_tendon_actuation_specification = SeahorseMVMTendonActuationSpecification(
-            contraction_factor=0.5, relaxation_factor=1.5, tendon_width=0.0005, p_control_kp=90, damping=1
+            contraction_factor=0., relaxation_factor=10.0, tendon_width=0.001, p_control_kp=120, damping=1
             )
     hmm_tendon_actuation_specification = SeahorseHMMTendonActuationSpecification(
-            tendon_strain=0.01, p_control_kp=30, tendon_width=0.0005, segment_span=hmm_segment_span, damping=1
+            tendon_strain=0.01, p_control_kp=50, tendon_width=0.001, segment_span=hmm_segment_span, damping=1
             )
 
     return SeahorseTendonActuationSpecification(
