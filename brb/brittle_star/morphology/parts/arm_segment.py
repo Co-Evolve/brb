@@ -244,10 +244,38 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             self._configure_p_control_actuator(self._in_plane_joint)
             self._configure_p_control_actuator(self._out_of_plane_joint)
 
+    def _get_p_control_gear(
+            self,
+            joint: _ElementImpl
+            ) -> float:
+        gear = self.volume * 60_000
+        return gear
+
+    def _configure_torque_control_actuator(
+            self,
+            joint: _ElementImpl
+            ) -> None:
+        self.mjcf_model.actuator.add(
+                'motor',
+                name=f"{joint.name}_torque_control",
+                joint=joint,
+                gear=[self._get_p_control_gear(joint)],
+                ctrllimited=True,
+                ctrlrange=[-1, 1]
+                )
+
+    def _configure_torque_control_actuators(
+            self
+            ) -> None:
+        if self.morphology_specification.actuation_specification.use_torque_control.value:
+            self._configure_torque_control_actuator(self._in_plane_joint)
+            self._configure_torque_control_actuator(self._out_of_plane_joint)
+
     def _configure_actuators(
             self
             ) -> None:
         self._configure_p_control_actuators()
+        self._configure_torque_control_actuators()
 
     def _configure_touch_sensors(
             self

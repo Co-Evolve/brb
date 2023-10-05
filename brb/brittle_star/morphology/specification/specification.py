@@ -75,13 +75,15 @@ class BrittleStarActuationSpecification(Specification):
     def __init__(
             self,
             use_tendons: bool,
-            use_p_control: bool
+            use_p_control: bool,
+            use_torque_control: bool
             ) -> None:
         super().__init__()
-        assert not (use_tendons and use_p_control), ("Simultaneous use of tendon-based and p-controller-based "
-                                                     "actuation is not supported.")
+        assert use_tendons + use_p_control + use_torque_control == 1, "Only one actuation method can be used."
+
         self.use_tendons = FixedParameter(use_tendons)
         self.use_p_control = FixedParameter(use_p_control)
+        self.use_torque_control = FixedParameter(use_torque_control)
 
 
 class BrittleStarMorphologySpecification(MorphologySpecification):

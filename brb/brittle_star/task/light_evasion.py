@@ -422,11 +422,11 @@ if __name__ == '__main__':
             random_current=False,
             random_friction=False,
             starting_position=(0, 0),
-            touch_deprivation_test=True
+            touch_deprivation_test=False
             )
 
     morphology_specification = default_brittle_star_morphology_specification(
-            num_arms=5, num_segments_per_arm=12, use_p_control=True
+            num_arms=5, num_segments_per_arm=12, use_p_control=False, use_torque_control=True
             )
     morphology = MJCBrittleStarMorphology(
             specification=morphology_specification
@@ -458,9 +458,14 @@ if __name__ == '__main__':
     def policy_fn(
             timestep
             ) -> np.ndarray:
-        return 0.1 * brb.brb_random_state.uniform(
-                low=action_spec.minimum, high=action_spec.maximum, size=action_spec.shape
-                )
+        time = timestep.observation["task/time"][0][0]
+        if np.sin(time) > 0:
+            return action_spec.minimum
+        else:
+            return action_spec.maximum
+        # return 0.1 * brb.brb_random_state.uniform(
+        #         low=action_spec.minimum, high=action_spec.maximum, size=action_spec.shape
+        #         )
 
 
     viewer.launch(dm_env, policy=policy_fn)

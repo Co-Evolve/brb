@@ -70,7 +70,8 @@ def default_arm_specification(
 def default_brittle_star_morphology_specification(
         num_arms: int = 5,
         num_segments_per_arm: int = 5,
-        use_p_control: bool = False
+        use_p_control: bool = False,
+        use_torque_control: bool = False
         ) -> BrittleStarMorphologySpecification:
     disc_specification = BrittleStarDiscSpecification(diameter=DISC_DIAMETER, height=DISC_HEIGHT, pentagon=True)
 
@@ -80,13 +81,13 @@ def default_brittle_star_morphology_specification(
         arm_specifications.append(arm_specification)
 
     actuation_specification = BrittleStarActuationSpecification(
-        use_tendons=not use_p_control,
-        use_p_control=use_p_control, )
+            use_tendons=False, use_p_control=use_p_control, use_torque_control=use_torque_control
+            )
     specification = BrittleStarMorphologySpecification(
-        disc_specification=disc_specification,
-        arm_specifications=arm_specifications,
-        actuation_specification=actuation_specification
-        )
+            disc_specification=disc_specification,
+            arm_specifications=arm_specifications,
+            actuation_specification=actuation_specification
+            )
 
     return specification
 
@@ -94,7 +95,8 @@ def default_brittle_star_morphology_specification(
 def default_arm_length_based_brittle_star_morphology_specification(
         num_arms: int = 5,
         arm_length_in_disc_diameters: float = 3,
-        use_p_control: bool = False
+        use_p_control: bool = False,
+        use_torque_control: bool = False
         ) -> BrittleStarMorphologySpecification:
     target_arm_length = DISC_DIAMETER * arm_length_in_disc_diameters
 
@@ -113,12 +115,15 @@ def default_arm_length_based_brittle_star_morphology_specification(
     num_segments = np.argmin(np.abs(length_per_num_segments - target_arm_length)) * 3 + 3
 
     return default_brittle_star_morphology_specification(
-        num_arms=num_arms, num_segments_per_arm=num_segments, use_p_control=use_p_control
-        )
+            num_arms=num_arms,
+            num_segments_per_arm=num_segments,
+            use_p_control=use_p_control,
+            use_torque_control=use_torque_control
+            )
 
 
 if __name__ == '__main__':
     morph_spec = default_arm_length_based_brittle_star_morphology_specification(
-        num_arms=5, arm_length_in_disc_diameters=4, use_p_control=False
-        )
+            num_arms=5, arm_length_in_disc_diameters=4, use_p_control=False
+            )
     MJCBrittleStarMorphology(specification=morph_spec).export_to_xml_with_assets("./shifted")
