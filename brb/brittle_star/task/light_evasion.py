@@ -41,6 +41,10 @@ class LightEvasionTask(composer.Task):
         self._previous_normalised_light_income = None
         self._targeted_segment_position_sensor = None
 
+        self._actuators = None
+        self._actuated_joints = None
+        self._previous_joint_velocities = np.zeros(len(self.actuated_joints))
+
     @property
     def root_entity(
             self
@@ -109,17 +113,18 @@ class LightEvasionTask(composer.Task):
             ) -> MJCBrittleStarMorphology:
         if self.config.touch_deprivation_test:
             pin_radius = self._base_specification.disc_specification.radius.value
-            self._arena.mjcf_model.worldbody.add('geom',
-                                                 name=f"pin",
-                                                 type=f"cylinder",
-                                                 pos=[0.0, 0.0, 1.0],
-                                                 euler=np.zeros(3),
-                                                 size=[pin_radius, 1.0],
-                                                 rgba=colors.rgba_gray,
-                                                 )
+            self._arena.mjcf_model.worldbody.add(
+                    'geom',
+                    name=f"pin",
+                    type=f"cylinder",
+                    pos=[0.0, 0.0, 1.0],
+                    euler=np.zeros(3),
+                    size=[pin_radius, 1.0],
+                    rgba=colors.rgba_gray, )
             morphology_site = self._arena.mjcf_model.worldbody.add('site', pos=[0.0, 0.0, 2.0])
-            self._arena.attach(entity=morphology,
-                               attach_site=morphology_site)
+            self._arena.attach(
+                    entity=morphology, attach_site=morphology_site
+                    )
         else:
             self._arena.add_free_entity(
                     entity=morphology
@@ -147,6 +152,22 @@ class LightEvasionTask(composer.Task):
                             )
                     )
         return self._segment_position_sensors
+
+    @property
+    def actuators(
+            self
+            ) -> List[mjcf.Element]:
+        if self._actuators is None:
+            self._actuators = self._morphology.mjcf_model.find_all("actuator")
+        return self._actuators
+
+    @property
+    def actuated_joints(
+            self
+            ) -> List[mjcf.Element]:
+        if self._actuated_joints is None:
+            self._actuated_joints = [actuator.joint for actuator in self.actuators]
+        return self._actuated_joints
 
     def _get_morphology_xy_position(
             self,
@@ -197,6 +218,30 @@ class LightEvasionTask(composer.Task):
         starting_x_position = self.config.starting_position[0]
         return x_position - starting_x_position
 
+    def _get_joint_velocities(
+            self,
+            physics: mjcf.Physics
+            ) -> np.ndarray:
+        return np.array(physics.bind(self.actuated_joints).qvel)
+
+    def _get_joint_torques(
+            self,
+            physics: mjcf.Physics
+            ) -> np.ndarray:
+        return np.array(physics.bind(self.actuated_joints).qfrc_actuator)
+
+    def _get_work(
+            self,
+            physics: mjcf.Physics
+            ) -> float:
+        joint_torques = self._get_joint_torques(physics=physics)
+        joint_velocities = self._get_joint_velocities(physics=physics)
+
+        work = np.abs(joint_torques * (joint_velocities - self._previous_joint_velocities))
+        average_work = np.mean(work)
+
+        return average_work
+
     def _configure_task_observables(
             self
             ) -> Dict[str, observable.Observable]:
@@ -228,6 +273,13 @@ class LightEvasionTask(composer.Task):
                 high=self.config.arena_size[0] - self.config.starting_position[0],
                 shape=[1],
                 raw_observation_callable=self._get_distance_travelled_along_x_axis
+                )
+
+        task_observables["task/work"] = ConfinedObservable(
+                low=0,
+                high=np.inf,
+                shape=[1],
+                raw_observation_callable=self._get_work
                 )
 
         for obs in task_observables.values():
@@ -318,6 +370,7 @@ class LightEvasionTask(composer.Task):
         self._light_extractor = self._create_light_extractor()
         self._initialize_morphology_pose(physics)
         self._previous_normalised_light_income = self._get_normalised_light_income(physics=physics)
+        self._previous_joint_velocities = self._get_joint_velocities(physics=physics)
         self._targeted_segment_position_sensor = None
 
     def before_step(
@@ -326,6 +379,8 @@ class LightEvasionTask(composer.Task):
             action: np.ndarray,
             random_state: np.random.RandomState
             ) -> None:
+        self._previous_joint_velocities = self._get_joint_velocities(physics=physics)
+        self._previous_normalised_light_income = self._get_normalised_light_income(physics=physics)
         super().before_step(
                 physics=physics, action=action, random_state=random_state
                 )
@@ -352,9 +407,9 @@ class LightEvasionTask(composer.Task):
                 arm_index = brb.brb_random_state.choice(non_empty_arms, size=1)[0]
                 segment_index = num_segments_per_arm[arm_index] - 1
                 self._targeted_segment_position_sensor = \
-                [sensor for sensor in self.segment_position_sensors if sensor.name.startswith(
-                        f"arm_{arm_index}_segment_{segment_index}"
-                        )][0]
+                    [sensor for sensor in self.segment_position_sensors if sensor.name.startswith(
+                            f"arm_{arm_index}_segment_{segment_index}"
+                            )][0]
 
             targeted_segment_xy = np.array(physics.bind(self._targeted_segment_position_sensor).sensordata)[:2]
             self._arena.targeted_lightmap(physics=physics, target_xy_world=targeted_segment_xy)
@@ -462,10 +517,8 @@ if __name__ == '__main__':
         if np.sin(time) > 0:
             return action_spec.minimum
         else:
-            return action_spec.maximum
-        # return 0.1 * brb.brb_random_state.uniform(
-        #         low=action_spec.minimum, high=action_spec.maximum, size=action_spec.shape
-        #         )
+            return action_spec.maximum  # return 0.1 * brb.brb_random_state.uniform(  #  # low=action_spec.minimum,
+            # high=action_spec.maximum, size=action_spec.shape  #         )
 
 
     viewer.launch(dm_env, policy=policy_fn)
