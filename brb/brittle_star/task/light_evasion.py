@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 from typing import Callable, Dict, List, Tuple, Union
 
 import numpy as np
@@ -524,11 +525,7 @@ if __name__ == '__main__':
         target_positions[1::2] = oo_plane
         # target_positions[:] = 0
 
-        target_positions[target_positions > 0] = 1
-        target_positions[target_positions < 0] = -1
-        # P-control
-        strength = 1
-        kp = 100 * strength
+
         current_positions = np.ones(num_actions)
         current_positions[0::2] = timestep.observation["morphology/in_plane_joint_pos"][0]
         current_positions[1::2] = timestep.observation["morphology/out_of_plane_joint_pos"][0]
@@ -536,9 +533,16 @@ if __name__ == '__main__':
         joint_range = morphology_specification.arm_specifications[0].segment_specifications[
             0].in_plane_joint_specification.range.value
         current_positions = renormalize(current_positions, (-joint_range, joint_range), (-1, 1))
-        delta = target_positions - current_positions
-        print(np.mean(delta))
-        actions = kp * delta
+        direction = target_positions - current_positions
+        error = copy.deepcopy(direction)
+
+        direction[error > 0 / 180 * np.pi] = 1
+        direction[error < -0 / 180 * np.pi] = -1
+        print(np.mean(error))
+        compliance = 0
+        gain = 1 - compliance
+
+        actions = gain * direction
 
         actions[num_actions_per_arm:] = 0
         return actions
