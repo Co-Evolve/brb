@@ -25,7 +25,7 @@ def default_joint_specification(
         range: float
         ) -> BrittleStarJointSpecification:
     joint_specification = BrittleStarJointSpecification(
-            range=range, stiffness=10.0, damping_factor=0.25
+            range=range, stiffness=0.1084, damping=0.1084, armature=0.0045, frictionloss=0.003,
             )
 
     return joint_specification

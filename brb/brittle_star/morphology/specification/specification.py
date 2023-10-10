@@ -10,18 +10,16 @@ class BrittleStarJointSpecification(Specification):
             self,
             range: float,
             stiffness: float,
-            damping_factor: float
+            damping: float,
+            armature: float,
+            frictionloss: float
             ) -> None:
         super().__init__()
         self.stiffness = FixedParameter(value=stiffness)
         self.range = FixedParameter(value=range)
-        self.damping_factor = FixedParameter(value=damping_factor)
-
-    @property
-    def damping(
-            self
-            ) -> float:
-        return self.stiffness.value * self.damping_factor.value
+        self.damping = FixedParameter(value=damping)
+        self.armature = FixedParameter(value=armature)
+        self.frictionloss = FixedParameter(value=frictionloss)
 
 
 class BrittleStarArmSegmentSpecification(Specification):

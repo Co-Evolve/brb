@@ -209,7 +209,8 @@ class HillyLightAquarium(Arena):
 
         # Build groundplane.
         self._ground_geom = self._mjcf_root.worldbody.add(
-                'geom', type='hfield', name='height_map_geom', hfield="heightmap", material=ground_material
+                'geom', type='hfield', name='height_map_geom', hfield="heightmap", material=ground_material,
+                friction=[0.9, 0.005, 0.0001]
                 )
         self.needs_collision.append(self._ground_geom)
 
@@ -423,7 +424,7 @@ class HillyLightAquarium(Arena):
             physics: mjcf.Physics
             ) -> None:
         if self._random_friction:
-            random_sliding_friction = brb.brb_random_state.uniform(low=0.5, high=1.2)
+            random_sliding_friction = brb.brb_random_state.uniform(low=0.5, high=0.9)
             ground = physics.bind(self._ground_geom)
             ground.friction[0] = random_sliding_friction
 

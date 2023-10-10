@@ -106,7 +106,9 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
                 range=[-joint_specification.range.value, joint_specification.range.value],
                 axis=axis,
                 stiffness=joint_specification.stiffness.value,
-                damping=joint_specification.damping
+                damping=joint_specification.damping.value,
+                armature=joint_specification.armature.value,
+                frictionloss=joint_specification.frictionloss.value
                 )
         return joint
 
@@ -221,7 +223,7 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             self,
             joint: _ElementImpl
             ) -> float:
-        kp = self.volume * 300_000
+        kp = self.volume * 200_000
         return kp
 
     def _configure_p_control_actuator(
@@ -244,11 +246,11 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             self._configure_p_control_actuator(self._in_plane_joint)
             self._configure_p_control_actuator(self._out_of_plane_joint)
 
-    def _get_p_control_gear(
+    def _get_torque_control_gear(
             self,
             joint: _ElementImpl
             ) -> float:
-        gear = self.volume * 60_000
+        gear = self.volume * 200_000
         return gear
 
     def _configure_torque_control_actuator(
@@ -259,7 +261,7 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
                 'motor',
                 name=f"{joint.name}_torque_control",
                 joint=joint,
-                gear=[self._get_p_control_gear(joint)],
+                gear=[self._get_torque_control_gear(joint)],
                 ctrllimited=True,
                 ctrlrange=[-1, 1]
                 )

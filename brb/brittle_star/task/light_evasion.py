@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, List, Tuple, Union
 
 import numpy as np
 from dm_control import composer
@@ -276,10 +276,7 @@ class LightEvasionTask(composer.Task):
                 )
 
         task_observables["task/work"] = ConfinedObservable(
-                low=0,
-                high=np.inf,
-                shape=[1],
-                raw_observation_callable=self._get_work
+                low=0, high=np.inf, shape=[1], raw_observation_callable=self._get_work
                 )
 
         for obs in task_observables.values():
@@ -467,7 +464,7 @@ class LightEvasionTaskConfiguration(
 
 if __name__ == '__main__':
     env_config = LightEvasionTaskConfiguration(
-            touch_coloring=True,
+            touch_coloring=False,
             light_coloring=False,
             hilly_terrain=False,
             random_obstacles=False,
@@ -487,20 +484,6 @@ if __name__ == '__main__':
             specification=morphology_specification
             )
 
-    # dm_env = env_config.environment(
-    #         morphology=morphology, wrap2gym=True
-    #         )
-    #
-    # dm_env.reset()
-    # import cv2
-    #
-    # for step_index in range(env_config.total_num_timesteps):
-    #     dm_env.step(dm_env.action_space.sample())
-    #     if step_index % 30 == 0:
-    #         frame = dm_env.render()
-    #         cv2.imshow("frame", frame)
-    #         cv2.waitKey(1)
-    #
     dm_env = env_config.environment(
             morphology=morphology, wrap2gym=False
             )
@@ -508,17 +491,78 @@ if __name__ == '__main__':
     action_spec = dm_env.action_spec()
 
     num_actions = dm_env.action_spec().shape[0]
+    num_actions_per_arm = num_actions // 5
+
+
+    def renormalize(
+            data: np.ndarray,
+            original_range: Union[np.ndarray, Tuple[float, float]],
+            target_range: Union[np.ndarray, Tuple[float, float]]
+            ) -> np.ndarray:
+        delta1 = original_range[1] - original_range[0]
+        delta2 = target_range[1] - target_range[0]
+
+        return (delta2 * (data - original_range[0]) / delta1) + target_range[0]
 
 
     def policy_fn(
             timestep
             ) -> np.ndarray:
+        global morphology_specification
         time = timestep.observation["task/time"][0][0]
-        if np.sin(time) > 0:
-            return action_spec.minimum
-        else:
-            return action_spec.maximum  # return 0.1 * brb.brb_random_state.uniform(  #  # low=action_spec.minimum,
-            # high=action_spec.maximum, size=action_spec.shape  #         )
+
+        phase_shift = 0.25
+
+        i_phase = 0.1 * 2 * np.pi * (time + phase_shift)
+        oo_phase = 0.1 * 2 * np.pi * time
+
+        i_plane = np.ones(num_actions // 2) * np.sin(i_phase)
+        oo_plane = np.ones(num_actions // 2) * np.sin(oo_phase)
+
+        target_positions = np.ones(num_actions)
+        target_positions[0::2] = i_plane * 0
+        target_positions[1::2] = oo_plane
+        # target_positions[:] = 0
+
+        target_positions[target_positions > 0] = 1
+        target_positions[target_positions < 0] = -1
+        # P-control
+        strength = 1
+        kp = 100 * strength
+        current_positions = np.ones(num_actions)
+        current_positions[0::2] = timestep.observation["morphology/in_plane_joint_pos"][0]
+        current_positions[1::2] = timestep.observation["morphology/out_of_plane_joint_pos"][0]
+        # todo: we need to rescale current position to [-1, 1]
+        joint_range = morphology_specification.arm_specifications[0].segment_specifications[
+            0].in_plane_joint_specification.range.value
+        current_positions = renormalize(current_positions, (-joint_range, joint_range), (-1, 1))
+        delta = target_positions - current_positions
+        print(np.mean(delta))
+        actions = kp * delta
+
+        actions[num_actions_per_arm:] = 0
+        return actions
+
+        # keep first arm fixed
+        actions[:num_actions_per_arm] = 0
+
+        # Keep second and fifth arm synced
+        negate_in_plane = np.ones(num_actions_per_arm)
+        negate_in_plane[0::2] = -1
+
+        actions[num_actions_per_arm: num_actions_per_arm * 2] = negate_in_plane * actions[
+                                                                                      num_actions_per_arm * 4: 5 *
+                                                                                                           num_actions_per_arm]
+
+        # Keep third and fourth arm synced
+        actions[num_actions_per_arm * 2: num_actions_per_arm * 3] = negate_in_plane * actions[
+                                                                                      3 * num_actions_per_arm: 4 *
+                                                                                                           num_actions_per_arm]
+
+        actions = renormalize(
+            data=actions, original_range=(-1, 1), target_range=(action_spec.minimum[0], action_spec.maximum[0])
+            )
+        return actions
 
 
     viewer.launch(dm_env, policy=policy_fn)
