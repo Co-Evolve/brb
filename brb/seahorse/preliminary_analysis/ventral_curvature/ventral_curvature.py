@@ -133,7 +133,7 @@ def evaluate_ventral_curvature(
 
 
 if __name__ == '__main__':
-    redo_simulation = False
+    redo_simulation = True
     use_mvm = False
     render_last_frame = True
     render_video = False
@@ -142,7 +142,8 @@ if __name__ == '__main__':
     min_segment_span = 1
     max_segment_span = 11 + 1
 
-    tendon_translations = [0.005, 0.01, 0.015, 0.02]
+    # tendon_translations = [0.005, 0.01, 0.015, 0.02]
+    tendon_translations = [0.003]
 
     grids = []
     for tendon_translation in tendon_translations:
@@ -212,28 +213,28 @@ if __name__ == '__main__':
 
         grids.append(grid)
 
-    segment_index = 20 - min_num_segments
-    rows = []
-    for grid in grids:
-        row = grid[segment_index]
-        mask = row != np.inf
-        valid = row[mask]
-        row[mask] = (valid - np.min(valid)) / (np.max(valid) - np.min(valid))
-        rows.append(row)
-    grid = np.stack(rows)
-
-    ax = sns.heatmap(
-            grid,
-            mask=grid == np.inf,
-            linewidth=0.,
-            xticklabels=list(range(min_segment_span, max_segment_span)),
-            yticklabels=tendon_translations,
-            vmin=np.min(grid[grid != np.inf]),
-            vmax=np.max(grid[grid != np.inf])
-            )
-    ax.set_xlabel("tendon segment span")
-    ax.set_ylabel("tendon translation")
-    ax.invert_yaxis()
-
-    plt.savefig(f"20segments.png")
-    plt.close()
+    # segment_index = 20 - min_num_segments
+    # rows = []
+    # for grid in grids:
+    #     row = grid[segment_index]
+    #     mask = row != np.inf
+    #     valid = row[mask]
+    #     row[mask] = (valid - np.min(valid)) / (np.max(valid) - np.min(valid))
+    #     rows.append(row)
+    # grid = np.stack(rows)
+    #
+    # ax = sns.heatmap(
+    #         grid,
+    #         mask=grid == np.inf,
+    #         linewidth=0.,
+    #         xticklabels=list(range(min_segment_span, max_segment_span)),
+    #         yticklabels=tendon_translations,
+    #         vmin=np.min(grid[grid != np.inf]),
+    #         vmax=np.max(grid[grid != np.inf])
+    #         )
+    # ax.set_xlabel("tendon segment span")
+    # ax.set_ylabel("tendon translation")
+    # ax.invert_yaxis()
+    #
+    # plt.savefig(f"20segments.png")
+    # plt.close()

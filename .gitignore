@@ -160,3 +160,5 @@ cython_debug/
 *.DS_Store
 *.mp4
 *.png
+*.zip
+brb/seahorse/preliminary_analysis/ventral_curvature/output
