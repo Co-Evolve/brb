@@ -223,7 +223,7 @@ class MJCBrittleStarArmSegment(MJCMorphologyPart):
             self,
             joint: _ElementImpl
             ) -> float:
-        kp = self.volume * 200_000
+        kp = self.volume * 500_000
         return kp
 
     def _configure_p_control_actuator(

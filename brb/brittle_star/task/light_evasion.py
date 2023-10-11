@@ -231,6 +231,14 @@ class LightEvasionTask(composer.Task):
             ) -> np.ndarray:
         return np.array(physics.bind(self.actuated_joints).qfrc_actuator)
 
+    def _get_average_squared_torque(
+            self,
+            physics: mjcf.Physics
+            ) -> float:
+        torques = self._get_joint_torques(physics=physics)
+        torque = np.mean(np.power(torques, 2))
+        return torque
+
     def _get_work(
             self,
             physics: mjcf.Physics
@@ -278,6 +286,9 @@ class LightEvasionTask(composer.Task):
 
         task_observables["task/work"] = ConfinedObservable(
                 low=0, high=np.inf, shape=[1], raw_observation_callable=self._get_work
+                )
+        task_observables["task/average-squared-torque"] = ConfinedObservable(
+                low=0, high=np.inf, shape=[1], raw_observation_callable=self._get_average_squared_torque
                 )
 
         for obs in task_observables.values():
@@ -525,7 +536,6 @@ if __name__ == '__main__':
         target_positions[1::2] = oo_plane
         # target_positions[:] = 0
 
-
         current_positions = np.ones(num_actions)
         current_positions[0::2] = timestep.observation["morphology/in_plane_joint_pos"][0]
         current_positions[1::2] = timestep.observation["morphology/out_of_plane_joint_pos"][0]
@@ -536,15 +546,20 @@ if __name__ == '__main__':
         direction = target_positions - current_positions
         error = copy.deepcopy(direction)
 
-        direction[error > 0 / 180 * np.pi] = 1
-        direction[error < -0 / 180 * np.pi] = -1
-        print(np.mean(error))
+        # direction[error > 0 / 180 * np.pi] = 1
+        # direction[error < -0 / 180 * np.pi] = -1
+        direction *= 2
         compliance = 0
         gain = 1 - compliance
 
-        actions = gain * direction
+        actions = np.clip(gain * 20 * error, -1, 1)
+        # actions = gain * direction
 
+        # actions = target_positions
         actions[num_actions_per_arm:] = 0
+
+        print(f"Torque: {timestep.observation['task/average-squared-torque']}")
+        print()
         return actions
 
         # keep first arm fixed
@@ -555,17 +570,17 @@ if __name__ == '__main__':
         negate_in_plane[0::2] = -1
 
         actions[num_actions_per_arm: num_actions_per_arm * 2] = negate_in_plane * actions[
-                                                                                      num_actions_per_arm * 4: 5 *
+                                                                                  num_actions_per_arm * 4: 5 *
                                                                                                            num_actions_per_arm]
 
         # Keep third and fourth arm synced
         actions[num_actions_per_arm * 2: num_actions_per_arm * 3] = negate_in_plane * actions[
                                                                                       3 * num_actions_per_arm: 4 *
-                                                                                                           num_actions_per_arm]
+                                                                                                               num_actions_per_arm]
 
         actions = renormalize(
-            data=actions, original_range=(-1, 1), target_range=(action_spec.minimum[0], action_spec.maximum[0])
-            )
+                data=actions, original_range=(-1, 1), target_range=(action_spec.minimum[0], action_spec.maximum[0])
+                )
         return actions
 
 
