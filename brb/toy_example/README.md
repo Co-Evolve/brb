@@ -23,7 +23,9 @@ The code structure presented here should be mimicked for new morphologies and en
         - parts/ (contains the different parts that make up the morphology)
         - specification/
             - specification.py (implements the parameterised morphology specification
-              using [FPRS](https://github.com/Co-Evolve/fprs). Initially, all parameters are FixedParamers TODO)
+              using [FPRS](https://github.com/Co-Evolve/fprs). Initially, all parameters should be set
+              as [FixedParamers](https://github.com/Co-Evolve/fprs/blob/d64e4bc798034c98733923622d00f83153136774/fprs/parameters.py#L53) (
+              i.e. non-mutable).)
             - default.py (defines default parameter values for the specification)
     - arena/
         - assets/ (optional assets directory)
