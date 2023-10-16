@@ -31,7 +31,10 @@ The code structure presented here should be mimicked for new morphologies and en
 
 ## Example scripts
 
--`export_mjcf.py`: shows how to export a morphology's xml format, to be viewed in [MuJoCo's native viewer](https://github.com/google-deepmind/mujoco/releases). 
+-`export_mjcf.py`: shows how to export a morphology's xml format, to be viewed in [MuJoCo's native viewer](https://github.com/google-deepmind/mujoco/releases).
+
 -`dm_control_viewer.py`: shows how to instantiate a morphology and load it into an environment. The running environment is then visualised using [dm_control's viewer](https://github.com/google-deepmind/dm_control/blob/main/dm_control/viewer/README.md).
--`gym_interface.py`: shows how to wrap the dm_control environment with a [gymnasium interface](https://gymnasium.farama.org/) (as more often used for optimisation). The running environment is then visualised using opencv.
+
+-`gym_interface.py`: shows how to wrap the dm_control environment with a [gymnasium interface](https://gymnasium.farama.org/) (as more often used for optimization). The running environment is then visualised using opencv.
+
 -`parameters.py`: shows how to adapt the specification in order to make specific parameters mutable.  
