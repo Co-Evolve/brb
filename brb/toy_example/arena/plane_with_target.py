@@ -24,7 +24,18 @@ class PlaneWithTargetArena(Floor):
             self
             ) -> Target:
         target = Target()
-        self.attach(target)
+        attachment_frame = self.attach(target)
+
+        # MJX compatability
+        attachment_frame.add(
+                "joint",
+                name="target_joint_x",
+                type="slide",
+                axis=[1, 0, 0])
+        attachment_frame.add(
+                "joint", name="target_joint_y", type="slide", axis=[0, 1, 0]
+                )
+
         return target
 
     def randomize_target_location(

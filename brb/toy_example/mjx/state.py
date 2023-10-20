@@ -1,0 +1,28 @@
+from typing import Any, Dict
+
+import jax
+from brax.base import Base
+from flax import struct
+from mujoco import mjx
+
+
+@struct.dataclass
+class State(Base):
+    """Environment state for training and inference with brax.
+
+    Args:
+      pipeline_state: the physics state, mjx.Data
+      obs: environment observations
+      reward: environment reward
+      done: boolean, True if the current episode has terminated
+      metrics: metrics that get tracked per environment step
+      info: environment variables defined and updated by the environment reset
+        and step functions
+    """
+
+    pipeline_state: mjx.Data
+    obs: jax.Array
+    reward: jax.Array
+    done: jax.Array
+    metrics: Dict[str, jax.Array] = struct.field(default_factory=dict)
+    info: Dict[str, Any] = struct.field(default_factory=dict)
