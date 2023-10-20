@@ -22,7 +22,7 @@ def create_brittle_star_light_evasion_environment(
 
     # Define the morphology
     morphology_specification = default_brittle_star_morphology_specification(
-            num_arms=5, num_segments_per_arm=5, use_p_control=False
+            num_arms=5, num_segments_per_arm=5, use_p_control=True
             )
 
     morphology = MJCBrittleStarMorphology(
