@@ -8,9 +8,9 @@ class Target(composer.Entity):
             self
             ):
         self._mjcf_model = mjcf.RootElement("target")
-        self._geom = self._mjcf_model.worldbody.add(
-                'geom', type='sphere', size=[0.2], rgba=colors.rgba_red,
-                contype=0, conaffinity=0)
+        self._target = self._mjcf_model.worldbody.add(
+                'site', name="target_site", type='sphere', size=[0.2], rgba=colors.rgba_red)
+
 
     @property
     def mjcf_model(

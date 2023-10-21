@@ -19,8 +19,8 @@ class State(Base):
       info: environment variables defined and updated by the environment reset
         and step functions
     """
-
-    pipeline_state: mjx.Data
+    model: mjx.Model
+    data: mjx.Data
     obs: jax.Array
     reward: jax.Array
     done: jax.Array

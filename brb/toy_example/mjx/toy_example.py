@@ -4,13 +4,13 @@ import jax
 import mujoco
 import mujoco.viewer
 import numpy as np
-from brax.envs import State
 from dm_control import mjcf
 from dm_control.mjcf import export_with_assets
 from jax import numpy as jnp
 from mujoco import mjx
 
 from brb.toy_example.mjx.env import MjxEnv
+from brb.toy_example.mjx.state import State
 from brb.toy_example.morphology.morphology import MJCToyExampleMorphology
 from brb.toy_example.morphology.specification.default import default_toy_example_morphology_specification
 from brb.toy_example.task.move_to_target import MoveToTargetTask, MoveToTargetTaskConfiguration
@@ -37,11 +37,7 @@ class ToyExampleEnv(MjxEnv):
             self,
             rng: jnp.ndarray
             ) -> State:
-        root_joint = mjcf.get_frame_freejoint(self.task._morphology.mjcf_model)
-        attachment_frame = mjcf.get_attachment_frame(self.task._morphology.mjcf_model)
-
         morphology_joint = self.model.body("morphology/").jntadr[0]
-        target_joint = self.model.body("target/").jntadr[0]
 
         qpos = jnp.copy(self.sys.qpos0)
         qvel = jnp.zeros(self.sys.nv)
@@ -53,31 +49,34 @@ class ToyExampleEnv(MjxEnv):
         rng, rng1 = jax.random.split(rng, 2)
         angle = jax.random.uniform(key=rng1, shape=(), minval=0, maxval=jnp.pi * 2)
         radius = 2.0
-        target_pos = radius * jnp.array([jnp.cos(angle), jnp.sin(angle)])
-        qpos = qpos.at[target_joint: target_joint + 2].set(target_pos)
+        target_pos = radius * jnp.array([jnp.cos(angle), jnp.sin(angle), 0.0])
+        target_id = self.model.body("target/").id
 
-        data = self.pipeline_init(qpos=qpos, qvel=qvel)
+        sys = self.sys.replace(body_pos=self.sys.body_pos.at[target_id].set(target_pos))
+
+        sys, data = self.pipeline_init(sys=sys, qpos=qpos, qvel=qvel)
+
         obs = self._get_obs(data=data, action=jnp.zeros(self.sys.nu))
         reward = 0
         done = 0
         metrics = {}
 
         print("reset called!")
-        return State(pipeline_state=data, obs=obs, reward=reward, done=done, metrics=metrics)
+        return State(model=sys, data=data, obs=obs, reward=reward, done=done, metrics=metrics)
 
     def step(
             self,
             state: State,
             action: jnp.ndarray
             ) -> State:
-        data0 = state.pipeline_state
-        data = self.pipeline_step(data=data0, ctrl=action)
+        data0 = state.data
+        data = self.pipeline_step(sys=state.model, data=data0, ctrl=action)
 
         obs = self._get_obs(data=data, action=jnp.zeros(self.sys.nu))
         reward = 0
         done = 0
 
-        return state.replace(pipeline_state=data, obs=obs, reward=reward, done=done, metrics={})
+        return state.replace(data=data, obs=obs, reward=reward, done=done, metrics={})
 
     def _get_reward(
             self,
@@ -102,29 +101,34 @@ if __name__ == '__main__':
     state = jit_reset(jax.random.PRNGKey(seed=42))
     rollout = [state]
 
-    # mjx.device_get_into(result=env.data, value=state.pipeline_state)
-    state = jit_step(
-            state=state, action=jnp.array(np.random.uniform(low=-0.349, high=0.349, size=env.action_size))
-            )
+
+    # need to update the env.model as well in order to visualise correctly
+    # So basically in order to dynamically change target position upon reset,
+    #   we need to either do this or add joints to targets and set those
+    #   problem when adding joints to targets is that the target starts moving towards origin for some reason
+    env.model.body("target/").pos = state.data.xpos[1]
+    mjx.device_get_into(result=env.data, value=state.data)
+    print(state.data.xpos[1])
+    print(env.data.xpos[1])
     steps = 0
 
-    print(f"Target pos: {state.pipeline_state.qpos[:3]}")
     time.sleep(3)
     # todo: bugfix -> after one step the target starts moving to origin
     #   this only happens when we jit compile!
 
     with mujoco.viewer.launch_passive(model=env.model, data=env.data) as v:
         while True:
+            # if steps % 500 == 0:
+            #     state = jit_reset(jax.random.PRNGKey(seed=42))
+            #
             state = jit_step(
                 state=state,
                 action=jnp.array(np.random.uniform(low=-0.349, high=0.349, size=env.action_size))
                 )
-            mjx.device_get_into(result=env.data, value=state.pipeline_state)
+            mjx.device_get_into(result=env.data, value=state.data)
 
             steps += 1
 
-            print(f"Steps: {steps}\t| Time: {state.pipeline_state.time}")
-            print(f"Target pos: {state.pipeline_state.qpos[:3]}")
-            time.sleep(1)
+            print(f"Steps: {steps}\t| Time: {state.data.time}")
             print()
             v.sync()

@@ -1,3 +1,4 @@
+import time
 from typing import Tuple
 
 import jax
@@ -30,17 +31,19 @@ class MjxEnv(Env):
 
     def pipeline_init(
             self,
+            sys: mjx.Model,
             qpos: jax.Array,
             qvel: jax.Array
             ) -> mjx.Data:
         """Initializes the physics state."""
         data = mjx.device_put(self.data)
-        data = data.replace(qpos=qpos, qvel=qvel, ctrl=jnp.zeros(self.sys.nu))
-        data = mjx.forward(self.sys, data)
-        return data
+        data = data.replace(qpos=qpos, qvel=qvel, ctrl=jnp.zeros(sys.nu))
+        data = mjx.forward(sys, data)
+        return sys, data
 
     def pipeline_step(
             self,
+            sys: mjx.Model,
             data: mjx.Data,
             ctrl: jax.Array
             ) -> mjx.Data:
@@ -51,7 +54,7 @@ class MjxEnv(Env):
                 _
                 ) -> Tuple[mjx.Data, None]:
             data = data.replace(ctrl=ctrl)
-            return (mjx.step(self.sys, data), None,)
+            return (mjx.step(sys, data), None,)
 
         data, _ = jax.lax.scan(f, data, (), self._physics_steps_per_control_step)
         return data

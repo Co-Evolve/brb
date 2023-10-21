@@ -33,5 +33,4 @@ def create_brittle_star_light_evasion_environment(
     env = task_config.environment(
             morphology=morphology, wrap2gym=wrap2gym
             )
-
     return env
