@@ -11,7 +11,8 @@ class State(Base):
     """Environment state for training and inference with brax.
 
     Args:
-      pipeline_state: the physics state, mjx.Data
+      model: the current Model, mjx.Model
+      data: the physics state, mjx.Data
       obs: environment observations
       reward: environment reward
       done: boolean, True if the current episode has terminated
