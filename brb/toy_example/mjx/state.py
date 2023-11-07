@@ -27,3 +27,7 @@ class State(Base):
     done: jax.Array
     metrics: Dict[str, jax.Array] = struct.field(default_factory=dict)
     info: Dict[str, Any] = struct.field(default_factory=dict)
+
+    @property
+    def pipeline_state(self) -> mjx.Data:
+        return self.data

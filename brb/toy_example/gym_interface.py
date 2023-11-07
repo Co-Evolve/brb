@@ -1,3 +1,5 @@
+from typing import Generator
+
 from brb.toy_example.morphology.morphology import MJCToyExampleMorphology
 from brb.toy_example.morphology.specification.default import default_toy_example_morphology_specification
 from brb.toy_example.task.move_to_target import MoveToTargetTaskConfiguration
@@ -19,7 +21,7 @@ if __name__ == '__main__':
     action_space = gym_env.action_space
 
 
-    def run_episode() -> None:
+    def run_episode() -> Generator:
         global gym_env, action_space
 
         done = False
@@ -30,6 +32,5 @@ if __name__ == '__main__':
             obs, reward, terminated, truncated, info = gym_env.step(action=action)
             done = terminated or truncated
             yield gym_env.render(camera_ids=[1])
-
 
     show_video(frame_generator=run_episode())

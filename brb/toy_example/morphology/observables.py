@@ -1,8 +1,11 @@
 from typing import List
 
+import numpy as np
 from dm_control import composer, mjcf
 from dm_control.composer.observation.observable import MJCFFeature
+from dm_control.mjcf.physics import SynchronizingArrayWrapper
 from mujoco_utils.observables import ConfinedMJCFFeature
+from transforms3d.euler import quat2euler
 
 
 class ToyExampleObservables(composer.Observables):
@@ -10,6 +13,7 @@ class ToyExampleObservables(composer.Observables):
     _out_of_plane_joint_pos_sensors = None
     _in_plane_joint_vel_sensors = None
     _out_of_plane_joint_vel_sensors = None
+    _torso_rotation_sensor = None
     _torso_linear_velocity_sensor = None
     _torso_angular_velocity_sensor = None
 
@@ -70,6 +74,20 @@ class ToyExampleObservables(composer.Observables):
         return self._out_of_plane_joint_vel_sensors
 
     @property
+    def torso_rotation_sensor(
+            self
+            ) -> mjcf.Element:
+        if self._torso_rotation_sensor is None:
+            sensors = self._entity.mjcf_model.find_all('sensor')
+            self._torso_rotation_sensor = list(
+                    filter(
+                            lambda
+                                sensor: sensor.tag == "framequat" and "torso" in sensor.name, sensors
+                            )
+                    )[0]
+        return self._torso_rotation_sensor
+
+    @property
     def torso_linear_velocity_sensor(
             self
             ) -> mjcf.Element:
@@ -96,6 +114,28 @@ class ToyExampleObservables(composer.Observables):
                             )
                     )[0]
         return self._torso_angular_velocity_sensor
+
+    @composer.observable
+    def torso_rotation(
+            self
+            ) -> MJCFFeature:
+        def quaternion2euler(
+                observations: SynchronizingArrayWrapper,
+                *args,
+                **kwargs
+                ) -> np.ndarray:
+            quaternion = np.array(observations)
+            euler = quat2euler(quaternion)
+            return euler
+
+        return ConfinedMJCFFeature(
+                low=-np.pi,
+                high=np.pi,
+                shape=[3],
+                kind="sensordata",
+                mjcf_element=self.torso_rotation_sensor,
+                corruptor=quaternion2euler
+                )
 
     @composer.observable
     def torso_linear_velocity(

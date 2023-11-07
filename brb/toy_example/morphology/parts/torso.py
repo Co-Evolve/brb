@@ -41,6 +41,7 @@ class MJCToyExampleTorso(MJCMorphologyPart):
     def _configure_sensors(
             self
             ) -> None:
+        self.mjcf_model.sensor.add("framequat", name=f"{self.base_name}_framequat", objtype="body", objname=self._name)
         self.mjcf_model.sensor.add(
                 "framelinvel", name=f"{self.base_name}_framelinvel", objtype="body", objname=self._name
                 )

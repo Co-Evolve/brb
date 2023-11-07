@@ -10,6 +10,7 @@ from dm_control.composer.observation import observable
 from dm_control.mujoco.math import euler2quat
 from mujoco_utils.environment import MJCEnvironmentConfig
 from mujoco_utils.observables import ConfinedObservable
+from transforms3d.euler import quat2euler
 
 from brb.brittle_star.arena.hilly_light_aquarium import HillyLightAquarium
 from brb.brittle_star.morphology.morphology import MJCBrittleStarMorphology

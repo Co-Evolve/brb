@@ -126,6 +126,7 @@
     <position name="morphology/arm_3_segment_2_out_of_plane_joint_p_control" class="morphology/" ctrllimited="true" ctrlrange="-0.3490658503988659 0.3490658503988659" joint="morphology/arm_3_segment_2_out_of_plane_joint" kp="10"/>
   </actuator>
   <sensor>
+    <framequat name="morphology/torso_framequat" objtype="body" objname="morphology/torso"/>
     <framelinvel name="morphology/torso_framelinvel" objtype="body" objname="morphology/torso"/>
     <frameangvel name="morphology/torso_frameangvel" objtype="body" objname="morphology/torso"/>
     <jointpos name="morphology/arm_0_segment_0_in_plane_joint_jointpos_sensor" joint="morphology/arm_0_segment_0_in_plane_joint"/>
