@@ -48,7 +48,7 @@ def run_passive_viewer(
     state = jit_reset(reset_rng)
 
     device_model_get_into(result=env.mj_model, value=state.model)
-    mjx.device_get_into(result=env.data, value=state.data)
+    mjx.device_get_into(result=env.data, value=state.pipeline_state)
 
     with mujoco.viewer.launch_passive(model=env.mj_model, data=env.data) as v:
         while True:
@@ -56,7 +56,7 @@ def run_passive_viewer(
                 rng, reset_rng = jax.random.split(key=rng, num=2)
                 state = jit_reset(reset_rng)
                 device_model_get_into(result=env.mj_model, value=state.model)
-                mjx.device_get_into(result=env.data, value=state.data)
+                mjx.device_get_into(result=env.data, value=state.pipeline_state)
                 mujoco.mj_forward(env.mj_model, env.data)
                 v.sync()
 
@@ -64,7 +64,7 @@ def run_passive_viewer(
             state = jit_step(
                     state=state, action=actions
                     )
-            mjx.device_get_into(result=env.data, value=state.data)
+            mjx.device_get_into(result=env.data, value=state.pipeline_state)
             v.sync()
 
 
@@ -86,14 +86,13 @@ def run_fixed_viewer(
             state: State
             ) -> np.ndarray:
         device_model_get_into(result=env.mj_model, value=state.model)
-        mjx.device_get_into(result=env.data, value=state.data)
+        mjx.device_get_into(result=env.data, value=state.pipeline_state)
         mujoco.mj_forward(env.mj_model, env.data)
         renderer.update_scene(env.data)
         return renderer.render()[:, :, ::-1]
 
     def run_episode() -> Generator:
         state = reset(reset_rng)
-
 
         while not state.done:
             actions = policy_fn(state.obs)

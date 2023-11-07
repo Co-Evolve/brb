@@ -21,13 +21,9 @@ class State(Base):
         and step functions
     """
     model: mjx.Model
-    data: mjx.Data
+    pipeline_state: mjx.Data
     obs: jax.Array
     reward: jax.Array
     done: jax.Array
     metrics: Dict[str, jax.Array] = struct.field(default_factory=dict)
     info: Dict[str, Any] = struct.field(default_factory=dict)
-
-    @property
-    def pipeline_state(self) -> mjx.Data:
-        return self.data
