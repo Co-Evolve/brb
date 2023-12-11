@@ -213,30 +213,6 @@ class SeahorseVertebrae(MJCMorphologyPart):
                     frictionloss=twist_joint_specification.friction_loss.value
                     )
 
-    def add_intermediate_hmm_tap(
-            self,
-            identifier: str,
-            start_world_pos: np.ndarray,
-            stop_world_pos: np.ndarray
-            ) -> mjcf.Element:
-        # linearly interpolate between two world positions x and y based on z
-        start_z = start_world_pos[2]
-        stop_z = stop_world_pos[2]
-
-        vertebrae_world_z = self.world_coordinates_of_point([0.0, 0.0, 0.0])[2]
-        normalized_z = (vertebrae_world_z - start_z) / (stop_z - start_z)
-        intermediate_pos = start_world_pos + normalized_z * (stop_world_pos - start_world_pos)
-        intermediate_pos[2] = 0
-
-        return self.mjcf_body.add(
-                'site',
-                name=f"{self.base_name}_hmm_tap_intermediate_{identifier}",
-                type="sphere",
-                rgba=colors.rgba_orange,
-                pos=np.array(intermediate_pos),
-                size=[0.001]
-                )
-
     def _configure_sensors(
             self
             ) -> None:

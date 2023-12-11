@@ -9,8 +9,8 @@ from brb.seahorse.morphology.parts.segment import SeahorseSegment
 from brb.seahorse.morphology.specification.default import default_seahorse_morphology_specification
 from brb.seahorse.morphology.specification.specification import SeahorseMorphologySpecification, \
     SeahorseTendonActuationSpecification
-from brb.seahorse.morphology.utils import calculate_relaxed_tendon_length, get_actuator_tendon_plate_indices, \
-    get_all_tendon_start_and_stop_segment_indices
+from brb.seahorse.morphology.utils import calculate_relaxed_tendon_length, get_actuator_ghost_taps_index, \
+    get_actuator_tendon_plate_indices, get_all_tendon_start_and_stop_segment_indices
 from brb.utils import colors
 
 
@@ -20,6 +20,7 @@ class MJCSeahorseMorphology(MJCMorphology):
             specification: SeahorseMorphologySpecification
             ) -> None:
         super().__init__(specification)
+        self.mjcf_body.euler = [np.pi, 0.0, 0.0]
 
     @property
     def morphology_specification(
@@ -108,13 +109,11 @@ class MJCSeahorseMorphology(MJCMorphology):
         self._hmm_tendons = []
 
         hmm_tendon_actuation_specification = self.tendon_actuation_specification.hmm_tendon_actuation_specification
-
+        tendon_segment_span = hmm_tendon_actuation_specification.segment_span.value
         start_and_stop_indices = get_all_tendon_start_and_stop_segment_indices(
-                total_num_segments=self.morphology_specification.num_segments,
-                segment_span=hmm_tendon_actuation_specification.segment_span.value
+                total_num_segments=self.morphology_specification.num_segments, segment_span=tendon_segment_span
                 )
 
-        start_and_stop_indices_to_length = {}
         for x_side in ["ventral", "dorsal"]:
             for y_side in ["dextral", "sinistral"]:
                 for start_index, stop_index in start_and_stop_indices:
@@ -126,40 +125,32 @@ class MJCSeahorseMorphology(MJCMorphology):
                     for segment_index in range(start_index + 1):
                         plate_index, _ = get_actuator_tendon_plate_indices(side=x_side, segment_index=segment_index)
                         plate = self._segments[segment_index].plates[plate_index]
-                        if y_side == "sinistral":
-                            taps += plate.hmm_taps_sinistral
+                        if segment_index < start_index:
+                            ghost_hmm_taps = plate.lower_ghost_hmm_taps
                         else:
-                            taps += plate.hmm_taps_dextral
-                        morphology_parts.append(plate)
-                        morphology_parts.append(plate)
+                            ghost_hmm_taps = plate.upper_ghost_hmm_taps
 
-                    start_world_pos = plate.world_coordinates_of_point(taps[-1].pos)
+                        ghost_taps_index = get_actuator_ghost_taps_index(
+                                x_side=x_side, y_side=y_side, segment_index=segment_index
+                                )
+                        taps += ghost_hmm_taps[ghost_taps_index]
+                        morphology_parts += [plate, plate]
 
                     end_plate_index = self.morphology_specification.corners.index(f"{x_side}_{y_side}")
                     end_plate = self._segments[stop_index].plates[end_plate_index]
-                    end_tap = end_plate.hmm_tap_end
-                    end_world_pos = end_plate.world_coordinates_of_point(end_tap.pos)
 
                     # Route through intermediate segments
-                    for segment_index in range(start_index + 1, stop_index):
-                        vertebrae = self._segments[segment_index].vertebrae
-                        taps.append(
-                                vertebrae.add_intermediate_hmm_tap(
-                                        identifier=f"{x_side}-{y_side}_{start_index}-{stop_index}",
-                                        start_world_pos=start_world_pos,
-                                        stop_world_pos=end_world_pos
-                                        )
-                                )
-                        morphology_parts.append(vertebrae)
+                    for intermediate_tap_index, segment_index in enumerate(range(start_index + 1, stop_index)):
+                        plate = self._segments[segment_index].plates[end_plate_index]
+                        taps += plate.intermediate_hmm_taps[tendon_segment_span - 2 - intermediate_tap_index]
+                        morphology_parts += [plate, plate]
 
                     # Set end point
-                    taps.append(end_plate.hmm_tap_end)
-                    morphology_parts.append(end_plate)
-                    if (start_index, stop_index) not in start_and_stop_indices_to_length:
-                        start_and_stop_indices_to_length[(start_index, stop_index)] = calculate_relaxed_tendon_length(
-                                morphology_parts=morphology_parts, attachment_points=taps
-                                )
-                    base_length = start_and_stop_indices_to_length[(start_index, stop_index)]
+                    taps += end_plate.hmm_tap_end
+                    morphology_parts += [end_plate, end_plate]
+                    base_length = calculate_relaxed_tendon_length(
+                            morphology_parts=morphology_parts, attachment_points=taps
+                            )
 
                     num_outer_tendons = 1 + min(start_index, hmm_tendon_actuation_specification.segment_span.value)
                     tendon_translation = num_outer_tendons * hmm_tendon_actuation_specification.tendon_strain.value
@@ -273,7 +264,7 @@ class MJCSeahorseMorphology(MJCMorphology):
 
 
 if __name__ == '__main__':
-    morphology_specification = default_seahorse_morphology_specification(num_segments=30)
+    morphology_specification = default_seahorse_morphology_specification(num_segments=20, hmm_segment_span=7)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
     # morphology.mjcf_body.euler = [np.pi, 0.0, 0.0]
     morphology.export_to_xml_with_assets("./mjcf")

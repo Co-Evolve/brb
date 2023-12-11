@@ -162,3 +162,4 @@ cython_debug/
 *.png
 *.zip
 brb/seahorse/preliminary_analysis/ventral_curvature/output
+*mjcf/

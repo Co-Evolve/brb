@@ -54,8 +54,12 @@ class SeahorsePlateSpecification(Specification):
             connector_offset_from_vertebrae: float,
             s_tap_x_offset_from_vertebrae: float,
             s_tap_y_offset_from_vertebrae: float,
-            hmm_tap_x_offset_from_plate_origin: float,
-            hmm_tap_y_offset_from_plate_origin: float,
+            hmm_ghost_tap_x_offset_from_plate_origin: float,
+            hmm_ghost_tap_y_offset_from_plate_origin: float,
+            hmm_num_intermediate_taps: int,
+            hmm_y_offset_between_intermediate_taps: float,
+            hmm_intermediate_first_tap_x_offset_from_plate_origin: float,
+            hmm_intermediate_first_tap_y_offset_from_plate_origin: float,
             mvm_tap_x_offset: float,
             mvm_tap_z_offset: float,
             x_axis_gliding_joint_specification: JointSpecification,
@@ -64,8 +68,16 @@ class SeahorsePlateSpecification(Specification):
         self.plate_mesh_specification = plate_mesh_specification
         self.connector_mesh_specification = connector_mesh_specification
         self.offset_from_vertebrae = FixedParameter(offset_from_vertebrae)
-        self.hmm_tap_x_offset_from_plate_origin = FixedParameter(hmm_tap_x_offset_from_plate_origin)
-        self.hmm_tap_y_offset_from_plate_origin = FixedParameter(hmm_tap_y_offset_from_plate_origin)
+        self.hmm_ghost_tap_x_offset_from_plate_origin = FixedParameter(hmm_ghost_tap_x_offset_from_plate_origin)
+        self.hmm_ghost_tap_y_offset_from_plate_origin = FixedParameter(hmm_ghost_tap_y_offset_from_plate_origin)
+        self.hmm_num_intermediate_taps = FixedParameter(hmm_num_intermediate_taps)
+        self.hmm_y_offset_between_intermediate_taps = FixedParameter(hmm_y_offset_between_intermediate_taps)
+        self.hmm_intermediate_first_tap_x_offset_from_plate_origin = FixedParameter(
+            hmm_intermediate_first_tap_x_offset_from_plate_origin
+            )
+        self.hmm_intermediate_first_tap_y_offset_from_plate_origin = FixedParameter(
+                hmm_intermediate_first_tap_y_offset_from_plate_origin
+                )
         self.mvm_tap_x_offset = FixedParameter(mvm_tap_x_offset)
         self.mvm_tap_z_offset = FixedParameter(mvm_tap_z_offset)
         self.connector_offset_from_vertebrae = FixedParameter(connector_offset_from_vertebrae)

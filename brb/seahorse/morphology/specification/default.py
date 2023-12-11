@@ -11,7 +11,7 @@ from brb.seahorse.morphology.utils import is_inner_plate_x_axis, is_inner_plate_
 
 PLATE_INDEX_TO_SIDE = ["ventral_dextral", "ventral_sinistral", "dorsal_sinistral", "dorsal_dextral"]
 
-BASE_MESH_PATH = Path(__file__).parent.parent / "assets" / "v1"
+BASE_MESH_PATH = Path(__file__).parent.parent / "assets" / "v2"
 PLATE_MESH_NAMES = ["ventral_dextral", "ventral_sinistral", "dorsal_sinistral_even", "dorsal_dextral_even",
                     "dorsal_sinistral_odd", "dorsal_dextral_odd"]
 VERTEBRAE_MESH_NAME = "vertebrae.stl"
@@ -23,10 +23,18 @@ VERTEBRAE_CONNECTOR_LENGTH = 0.0036
 PLATE_MESH_NAME_TO_OFFSET_FROM_VERTEBRAE = {
         "ventral_dextral.stl": 0.05098, "ventral_sinistral.stl": 0.05119, "dorsal_sinistral_even.stl": 0.0512,
         "dorsal_sinistral_odd.stl": 0.0512, "dorsal_dextral_even.stl": 0.05145, "dorsal_dextral_odd.stl": 0.0512}
-PLATE_MESH_NAME_TO_HMM_TAP_OFFSET = {
+PLATE_MESH_NAME_TO_HMM_GHOST_TAP_OFFSET = {
         "ventral_sinistral.stl": [0.00219, -0.02981], "ventral_dextral.stl": [0.00235, 0.0304],
         "dorsal_sinistral_even.stl": [-0.00224, -0.02986], "dorsal_dextral_even.stl": [-0.00202, 0.03072],
         "dorsal_sinistral_odd.stl": [-0.00219, -0.03061], "dorsal_dextral_odd.stl": [-0.00219, 0.0298]}
+
+PLATE_HMM_NUM_INTERMEDIATE_TAPS = 10
+PLATE_HMM_Y_OFFSET_BETWEEN_INTERMEDIATE_TAPS = 0.00273
+PLATE_MESH_NAME_TO_FIRST_HMM_INTERMEDIATE_TAP_OFFSET = {
+        "ventral_sinistral.stl": [-0.01, -0.00273], "ventral_dextral.stl": [-0.01, 0.00273],
+        "dorsal_sinistral_even.stl": [0.01, -0.00273], "dorsal_dextral_even.stl": [0.01, 0.00273],
+        "dorsal_sinistral_odd.stl": [0.01, -0.00273], "dorsal_dextral_odd.stl": [0.01, 0.00273]}
+
 MVM_TAP_OFFSET = [0.0435, 0.004]
 OUTER_PLATE_S_TAP_OFFSET_FROM_VERTEBRAE = 0.052
 INNER_PLATE_S_TAP_OFFSET_FROM_VERTEBRAE = 0.048
@@ -102,7 +110,9 @@ def default_seahorse_plate_specification(
     else:
         s_tap_y_offset = OUTER_PLATE_S_TAP_OFFSET_FROM_VERTEBRAE
 
-    hmm_tap_x_offset, hmm_tap_y_offset = PLATE_MESH_NAME_TO_HMM_TAP_OFFSET[plate_mesh_name]
+    hmm_ghost_tap_x_offset, hmm_ghost_tap_y_offset = PLATE_MESH_NAME_TO_HMM_GHOST_TAP_OFFSET[plate_mesh_name]
+    hmm_intermediate_tap_x_offset, hmm_intermediate_tap_y_offset = PLATE_MESH_NAME_TO_FIRST_HMM_INTERMEDIATE_TAP_OFFSET[
+        plate_mesh_name]
 
     plate_specification = SeahorsePlateSpecification(
             plate_mesh_specification=plate_mesh_specification,
@@ -111,8 +121,12 @@ def default_seahorse_plate_specification(
             depth=PLATE_DEPTH,
             s_tap_x_offset_from_vertebrae=s_tap_x_offset,
             s_tap_y_offset_from_vertebrae=s_tap_y_offset,
-            hmm_tap_x_offset_from_plate_origin=hmm_tap_x_offset,
-            hmm_tap_y_offset_from_plate_origin=hmm_tap_y_offset,
+            hmm_ghost_tap_x_offset_from_plate_origin=hmm_ghost_tap_x_offset,
+            hmm_ghost_tap_y_offset_from_plate_origin=hmm_ghost_tap_y_offset,
+            hmm_num_intermediate_taps=PLATE_HMM_NUM_INTERMEDIATE_TAPS,
+            hmm_y_offset_between_intermediate_taps=PLATE_HMM_Y_OFFSET_BETWEEN_INTERMEDIATE_TAPS,
+            hmm_intermediate_first_tap_x_offset_from_plate_origin=hmm_intermediate_tap_x_offset,
+            hmm_intermediate_first_tap_y_offset_from_plate_origin=hmm_intermediate_tap_y_offset,
             mvm_tap_x_offset=MVM_TAP_OFFSET[0],
             mvm_tap_z_offset=MVM_TAP_OFFSET[1],
             connector_offset_from_vertebrae=connector_offset_from_vertebrae,

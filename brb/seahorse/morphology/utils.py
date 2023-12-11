@@ -84,6 +84,29 @@ def get_actuator_tendon_plate_indices(
             return 3, 2
 
 
+def get_actuator_ghost_taps_index(
+        x_side: str,
+        y_side: str,
+        segment_index: str
+        ) -> int:
+    if x_side == "ventral":
+        if y_side == "dextral":
+            return 1
+        else:
+            return 0
+    else:
+        if segment_index % 2 == 0:
+            if y_side == "dextral":
+                return 1
+            else:
+                return 0
+        else:
+            if y_side == "dextral":
+                return 0
+            else:
+                return 1
+
+
 def get_plate_position(
         plate_index: int,
         plate_specification: SeahorsePlateSpecification

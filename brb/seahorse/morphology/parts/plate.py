@@ -48,7 +48,7 @@ class SeahorsePlate(MJCMorphologyPart):
         self._build_plate()
         self._build_connectors()
         self._configure_gliding_joints()
-        self._configure_actuator_tendon_attachment_points()
+        self._configure_hmm_tendon_attachment_points()
         self._configure_mvm_tendon_attachment_points()
         self._configure_spine_tendon_attachment_points()
 
@@ -130,70 +130,133 @@ class SeahorsePlate(MJCMorphologyPart):
                     mesh_specification=self.plate_specification.connector_mesh_specification
                     )
 
-    def _add_actuator_tendon_attachment_points(
+    def _add_hmm_ghost_tendon_attachment_points(
             self,
-            side: str,
-            plate_index, ) -> List[mjcf.Element]:
+            side: str, ) -> List[mjcf.Element]:
         plate_specification = \
-            self.morphology_specification.segment_specifications[self.segment_index].plate_specifications[plate_index]
-        plate_position = get_plate_position(
-                plate_index=plate_index, plate_specification=plate_specification
-                )
+            self.morphology_specification.segment_specifications[self.segment_index].plate_specifications[
+                self.plate_index]
 
         bottom_site = self.mjcf_body.add(
                 'site',
-                name=f"{self.base_name}_tap_{side}_bottom",
+                name=f"{self.base_name}_ghost_tap_{side}_bottom",
                 type="sphere",
                 rgba=colors.rgba_red,
-                pos=plate_position + np.array(
-                        [plate_specification.hmm_tap_x_offset_from_plate_origin.value,
-                         plate_specification.hmm_tap_y_offset_from_plate_origin.value, -plate_specification.depth.value]
+                pos=self.plate.pos + np.array(
+                        [plate_specification.hmm_ghost_tap_x_offset_from_plate_origin.value,
+                         plate_specification.hmm_ghost_tap_y_offset_from_plate_origin.value,
+                         -plate_specification.depth.value]
                         ),
                 size=[0.001]
                 )
         top_site = self.mjcf_body.add(
                 'site',
-                name=f"{self.base_name}_hmm_tap_{side}_top",
+                name=f"{self.base_name}_hmm_ghost_tap_{side}_top",
                 type="sphere",
                 rgba=colors.rgba_red,
-                pos=plate_position + np.array(
-                        [plate_specification.hmm_tap_x_offset_from_plate_origin.value,
-                         plate_specification.hmm_tap_y_offset_from_plate_origin.value, 0.0]
+                pos=self.plate.pos + np.array(
+                        [plate_specification.hmm_ghost_tap_x_offset_from_plate_origin.value,
+                         plate_specification.hmm_ghost_tap_y_offset_from_plate_origin.value, 0.0]
                         ),
                 size=[0.001]
                 )
         return [bottom_site, top_site]
 
-    def _configure_actuator_tendon_attachment_points(
+    def _configure_hmm_tendon_attachment_points(
             self
             ) -> None:
-        self.hmm_tap_end = self.mjcf_body.add(
-                'site',
-                name=f"{self.base_name}_hmm_tap_end",
-                type="sphere",
-                rgba=colors.rgba_red,
-                pos=self.plate.pos,
-                size=[0.001]
-                )
+        self._configure_intermediate_hmm_taps()
+        self._configure_ghost_hmm_taps()
+        self._configure_end_hmm_taps()
 
-        for side in ["ventral", "dorsal"]:
-            main_plate_index, other_plate_index = get_actuator_tendon_plate_indices(
-                    side=side, segment_index=self.segment_index
+    def _configure_intermediate_hmm_taps(
+            self
+            ) -> None:
+        first_tap_pos = np.array(
+                [self.plate_specification.hmm_intermediate_first_tap_x_offset_from_plate_origin.value,
+                 self.plate_specification.hmm_intermediate_first_tap_y_offset_from_plate_origin.value, 0.0]
+                ) + self.plate.pos
+        translation = np.array([0.0, self.plate_specification.hmm_y_offset_between_intermediate_taps.value, 0.0])
+        self.intermediate_hmm_taps = []
+        z_offsets = [-0.0092, -0.0057]
+        for tap_index in range(self.plate_specification.hmm_num_intermediate_taps.value):
+            pos = first_tap_pos + -np.sign(first_tap_pos[1]) * tap_index * translation
+            taps = []
+            for sub_index, z_offset in enumerate(z_offsets):
+                pos[2] += z_offset
+                taps.append(
+                        self.mjcf_body.add(
+                                'site',
+                                pos=pos,
+                                type="sphere",
+                                size=[0.0005],
+                                rgba=colors.rgba_red,
+                                name=f"{self.base_name}_intermediate_hmm_tap_{tap_index}_{sub_index}"
+                                )
+                        )
+                pos[2] -= z_offset
+            self.intermediate_hmm_taps.append(taps)
+
+    def _configure_ghost_hmm_taps(
+            self
+            ) -> None:
+        self.upper_ghost_hmm_taps = []
+        self.lower_ghost_hmm_taps = []
+        side = self.morphology_specification.corners[self.plate_index].split("_")[0]
+        if self.plate_index != get_actuator_tendon_plate_indices(side=side,
+                                                                 segment_index=self.segment_index)[0]:
+            return
+
+        pos = np.array(
+                [self.plate_specification.hmm_ghost_tap_x_offset_from_plate_origin.value,
+                 self.plate_specification.hmm_ghost_tap_y_offset_from_plate_origin.value, 0.0]
+                ) + self.plate.pos
+
+        y_offsets = [0.0, -np.sign(pos[1]) * 0.012]
+        z_offsets = [-0.0092, -0.0057]
+        x_offsets = [-0.002, 0.002][:: -1 if side == "dorsal" else 1]
+        for tap_index, (taps, x_offset) in enumerate(
+                zip(
+                        [self.upper_ghost_hmm_taps, self.lower_ghost_hmm_taps], x_offsets
+                        )
+                ):
+            pos[0] += x_offset
+            for side, y_offset in zip(["a", "b"], y_offsets):
+                side_taps = []
+                pos[1] += y_offset
+                for sub_index, z_offset in enumerate(z_offsets):
+                    pos[2] += z_offset
+                    side_taps.append(
+                            self.mjcf_body.add(
+                                    'site',
+                                    pos=pos,
+                                    type="sphere",
+                                    size=[0.0005],
+                                    rgba=colors.rgba_red,
+                                    name=f"{self.base_name}_ghost_hmm_tap_{side}_{tap_index}_{sub_index}"
+                                    )
+                            )
+                    pos[2] -= z_offset
+                taps.append(side_taps)
+                pos[1] -= y_offset
+            pos[0] -= x_offset
+
+    def _configure_end_hmm_taps(
+            self
+            ) -> None:
+        self.hmm_tap_end = []
+        z_offsets = [-0.002, 0.0]
+        for tap_index, z_offset in enumerate(z_offsets):
+            self.hmm_tap_end.append(
+                    self.mjcf_body.add(
+                            'site',
+                            name=f"{self.base_name}_end_hmm_tap_{tap_index}",
+                            type="sphere",
+                            rgba=colors.rgba_red,
+                            pos=self.plate.pos + np.array([0.0, 0.0, z_offset]),
+                            size=[0.001]
+                            )
                     )
-            if self.plate_index == main_plate_index:
-                if 1 <= main_plate_index <= 2:
-                    sinistral_plate_index = main_plate_index
-                    dextral_plate_index = other_plate_index
-                else:
-                    sinistral_plate_index = other_plate_index
-                    dextral_plate_index = main_plate_index
-
-                self.hmm_taps_sinistral = self._add_actuator_tendon_attachment_points(
-                        side=f"{side}_sinistral", plate_index=sinistral_plate_index
-                        )
-                self.hmm_taps_dextral = self._add_actuator_tendon_attachment_points(
-                        side=f"{side}_dextral", plate_index=dextral_plate_index
-                        )
 
     def _configure_mvm_tendon_attachment_points(
             self
