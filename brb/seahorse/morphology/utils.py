@@ -84,6 +84,12 @@ def get_actuator_tendon_plate_indices(
             return 3, 2
 
 
+def plate_index_to_sides(
+        plate_index: int
+        ) -> Tuple[str, str]:
+    return tuple(PLATE_INDEX_TO_SIDE[plate_index].split("_"))
+
+
 def get_actuator_ghost_taps_index(
         x_side: str,
         y_side: str,
