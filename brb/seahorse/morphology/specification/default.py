@@ -56,7 +56,7 @@ def default_mesh_specification(
         *,
         mesh_name: str
         ) -> MeshSpecification:
-    inertia_values = MESH_NAME_TO_INERTIA_VALUES[mesh_name]
+    inertia_values = MESH_NAME_TO_INERTIA_VALUES[mesh_name.replace("_base", "")]
     indices = [[0, 0], [1, 1], [2, 2], [0, 1], [0, 2], [1, 2]]
     fullinertia = []
     for x, y in indices:
@@ -88,12 +88,17 @@ def default_seahorse_plate_specification(
     side = PLATE_INDEX_TO_SIDE[plate_index]
 
     if side.startswith("ventral"):
-        plate_mesh_name = f"{side}.stl"
+        plate_mesh_name = f"{side}"
     else:
         alternator = "even" if segment_index % 2 == 0 else "odd"
-        plate_mesh_name = f"{side}_{alternator}.stl"
+        plate_mesh_name = f"{side}_{alternator}"
+
+    if segment_index == 0:
+        plate_mesh_name += "_base"
+    plate_mesh_name += ".stl"
 
     plate_mesh_specification = default_mesh_specification(mesh_name=plate_mesh_name)
+    plate_mesh_name = plate_mesh_name.replace("_base", "")
     connector_mesh_specification = default_mesh_specification(mesh_name=PLATE_CONNECTOR_MESH_NAME)
 
     x_axis_gliding_joint_specification = default_gliding_joint_specification(plate_index=plate_index, axis='x')

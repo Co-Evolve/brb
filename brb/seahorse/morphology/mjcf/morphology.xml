@@ -10,13 +10,13 @@
     <mesh name="segment_0_vertebrae_vertebrae" class="/" file="vertebrae-1a6e59f61ff64431079c9651083134acb96bb971.stl" scale="0.001 0.001 0.001"/>
     <mesh name="segment_0_vertebrae_ball_bearing" class="/" file="ball_bearing-82cd80c511924a6cc447691ead255c788d7333b0.stl" scale="0.001 0.001 0.001"/>
     <mesh name="segment_0_vertebrae_connector" class="/" file="connector_vertebrae-e18202cdeebd939730592d6691f55a0c0d0ffced.stl" scale="0.001 0.001 0.001"/>
-    <mesh name="segment_0_plate_0_plate" class="/" file="ventral_dextral-0e283a42df70cf153d7e020ce451de7fa392b724.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_0_plate" class="/" file="ventral_dextral_base-426e18880528561e9658de16683a29a2e29ccd26.stl" scale="0.001 0.001 0.001"/>
     <mesh name="segment_0_plate_0_connector" class="/" file="connector_plate-6d0330a0b2c617bae532ec2171efb7dca690f17c.stl" scale="0.001 0.001 0.001"/>
-    <mesh name="segment_0_plate_1_plate" class="/" file="ventral_sinistral-c542f1186fa6f54bff9649076ad48ddd5a7760e8.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_1_plate" class="/" file="ventral_sinistral_base-0a9068981c0d572bd8cc05aac359d2d4be6bb5af.stl" scale="0.001 0.001 0.001"/>
     <mesh name="segment_0_plate_1_connector" class="/" file="connector_plate-6d0330a0b2c617bae532ec2171efb7dca690f17c.stl" scale="0.001 0.001 0.001"/>
-    <mesh name="segment_0_plate_2_plate" class="/" file="dorsal_sinistral_even-af3ec2d7ee49c27e71e1dbfecb3a8e7d4a5c2360.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_2_plate" class="/" file="dorsal_sinistral_even_base-8d7e7562a82675a06896e6e325383e24416bbd0e.stl" scale="0.001 0.001 0.001"/>
     <mesh name="segment_0_plate_2_connector" class="/" file="connector_plate-6d0330a0b2c617bae532ec2171efb7dca690f17c.stl" scale="0.001 0.001 0.001"/>
-    <mesh name="segment_0_plate_3_plate" class="/" file="dorsal_dextral_even-6049e82217824b6b3ea08921add7ff123b9515ea.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="segment_0_plate_3_plate" class="/" file="dorsal_dextral_even_base-94a1be8eaf37d984cf94244b86df2486068e332e.stl" scale="0.001 0.001 0.001"/>
     <mesh name="segment_0_plate_3_connector" class="/" file="connector_plate-6d0330a0b2c617bae532ec2171efb7dca690f17c.stl" scale="0.001 0.001 0.001"/>
     <mesh name="segment_1_vertebrae_vertebrae" class="/" file="vertebrae-1a6e59f61ff64431079c9651083134acb96bb971.stl" scale="0.001 0.001 0.001"/>
     <mesh name="segment_1_vertebrae_ball_bearing" class="/" file="ball_bearing-82cd80c511924a6cc447691ead255c788d7333b0.stl" scale="0.001 0.001 0.001"/>
@@ -229,7 +229,7 @@
     <mesh name="segment_19_plate_3_connector" class="/" file="connector_plate-6d0330a0b2c617bae532ec2171efb7dca690f17c.stl" scale="0.001 0.001 0.001"/>
   </asset>
   <worldbody>
-    <body name="//unnamed_body_0" euler="3.1415926535897931 0 0">
+    <body name="//unnamed_body_0">
       <body name="segment_0" pos="0 0 0" euler="0 0 0">
         <body name="segment_0_vertebrae" pos="0 0 0" euler="0 0 0">
           <body name="segment_0_vertebrae_vertebrae_body" pos="0 0 0" euler="0 0 0">
