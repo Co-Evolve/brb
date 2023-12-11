@@ -20,7 +20,6 @@ class MJCSeahorseMorphology(MJCMorphology):
             specification: SeahorseMorphologySpecification
             ) -> None:
         super().__init__(specification)
-        self.mjcf_body.euler = [np.pi, 0.0, 0.0]
 
     @property
     def morphology_specification(
