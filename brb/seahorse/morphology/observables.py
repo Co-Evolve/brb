@@ -147,7 +147,10 @@ class SeahorseObservables(composer.Observables):
     def mvm_tendon_pos(
             self
             ) -> MJCFFeature:
-        low, high = np.array([sensor.tendon.range for sensor in self.mvm_tendon_pos_sensors]).T
+        if len(self.mvm_tendon_pos_sensors) > 0:
+            low, high = np.array([sensor.tendon.range for sensor in self.mvm_tendon_pos_sensors]).T
+        else:
+            low, high = -1, 1
         return ConfinedMJCFFeature(
                 low=low,
                 high=high,

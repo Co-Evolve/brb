@@ -165,6 +165,7 @@ class SeahorseMVMTendonActuationSpecification(Specification):
     def __init__(
             self,
             *,
+            enabled: bool,
             contraction_factor: float,
             relaxation_factor: float,
             p_control_kp: float,
@@ -172,6 +173,7 @@ class SeahorseMVMTendonActuationSpecification(Specification):
             damping: float
             ) -> None:
         super().__init__()
+        self.enabled = FixedParameter(enabled)
         self.contraction_factor = FixedParameter(contraction_factor)
         self.relaxation_factor = FixedParameter(relaxation_factor)
         self.p_control_kp = FixedParameter(p_control_kp)

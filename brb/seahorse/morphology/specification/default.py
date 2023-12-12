@@ -193,9 +193,11 @@ def default_seahorse_segment_specification(
 
 
 def default_tendon_actuation_specification(
-        hmm_segment_span: int
+        hmm_segment_span: int,
+        mvm_enabled: bool
         ) -> SeahorseTendonActuationSpecification:
     mvm_tendon_actuation_specification = SeahorseMVMTendonActuationSpecification(
+            enabled=mvm_enabled,
             contraction_factor=0., relaxation_factor=10.0, tendon_width=0.001, p_control_kp=120, damping=1
             )
     hmm_tendon_actuation_specification = SeahorseHMMTendonActuationSpecification(
@@ -211,11 +213,13 @@ def default_tendon_actuation_specification(
 def default_seahorse_morphology_specification(
         *,
         num_segments: int,
-        hmm_segment_span: int
+        hmm_segment_span: int,
+        mvm_enabled: bool = True
         ) -> SeahorseMorphologySpecification:
     segment_specifications = [default_seahorse_segment_specification(segment_index=segment_index) for segment_index in
                               range(num_segments)]
-    tendon_actuation_specification = default_tendon_actuation_specification(hmm_segment_span=hmm_segment_span)
+    tendon_actuation_specification = default_tendon_actuation_specification(hmm_segment_span=hmm_segment_span,
+                                                                            mvm_enabled=mvm_enabled)
 
     morphology_specification = SeahorseMorphologySpecification(
             segment_specifications=segment_specifications, tendon_actuation_specification=tendon_actuation_specification

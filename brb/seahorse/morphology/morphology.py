@@ -173,6 +173,8 @@ class MJCSeahorseMorphology(MJCMorphology):
             self
             ) -> None:
         self._mvm_tendons = []
+        if not self.tendon_actuation_specification.mvm_tendon_actuation_specification.enabled.value:
+            return
 
         mvm_tendon_actuation_specification = self.tendon_actuation_specification.mvm_tendon_actuation_specification
         for segment, next_segment in zip(self._segments, self._segments[1:]):
@@ -263,7 +265,8 @@ class MJCSeahorseMorphology(MJCMorphology):
 
 
 if __name__ == '__main__':
-    morphology_specification = default_seahorse_morphology_specification(num_segments=20, hmm_segment_span=7)
+    morphology_specification = default_seahorse_morphology_specification(num_segments=20, hmm_segment_span=7,
+                                                                         mvm_enabled=True)
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
-    # morphology.mjcf_body.euler = [np.pi, 0.0, 0.0]
+    morphology.mjcf_body.euler = [np.pi, 0.0, 0.0]
     morphology.export_to_xml_with_assets("./mjcf")
