@@ -1,7 +1,6 @@
 from typing import Union
 
 import numpy as np
-from dm_control import mjcf
 from mujoco_utils.robot import MJCMorphology, MJCMorphologyPart
 
 from brb.seahorse.morphology.specification.specification import SeahorseMorphologySpecification, \
@@ -170,56 +169,55 @@ class SeahorseVertebrae(MJCMorphologyPart):
 
         joint_pos = np.array([0.0, 0.0, -self.vertebrae_specification.z_offset_to_ball_bearing.value])
 
-        bend_joint_specification = self.vertebrae_specification.bend_joint_specification
-        twist_joint_specification = self.vertebrae_specification.twist_joint_specification
+        yaw_joint_specification = self.vertebrae_specification.yaw_joint_specification
+        pitch_joint_specification = self.vertebrae_specification.pitch_joint_specification
+        roll_joint_specification = self.vertebrae_specification.roll_joint_specification
 
-        self._coronal_joint = self.mjcf_body.add(
+        self._pitch_joint = self.mjcf_body.add(
                 'joint',
-                name=f'{self.base_name}_vertebrae_joint_coronal',
+                name=f'{self.base_name}_vertebrae_joint_pitch',
                 type='hinge',
                 pos=joint_pos,
                 limited=True,
                 axis=[0, 1, 0],
-                range=(-bend_joint_specification.range.value, bend_joint_specification.range.value),
-                damping=bend_joint_specification.damping.value,
-                stiffness=bend_joint_specification.stiffness.value,
-                frictionloss=bend_joint_specification.friction_loss.value,
-                armature=bend_joint_specification.armature.value
+                range=(-pitch_joint_specification.range.value, pitch_joint_specification.range.value),
+                damping=pitch_joint_specification.damping.value,
+                stiffness=pitch_joint_specification.stiffness.value,
+                frictionloss=pitch_joint_specification.friction_loss.value,
+                armature=pitch_joint_specification.armature.value
                 )
-        self._sagittal_joint = self.mjcf_body.add(
+        self._roll_joint = self.mjcf_body.add(
                 'joint',
-                name=f'{self.base_name}_vertebrae_joint_sagittal',
+                name=f'{self.base_name}_vertebrae_joint_roll',
                 type='hinge',
                 pos=joint_pos,
                 limited=True,
                 axis=[1, 0, 0],
-                range=(-bend_joint_specification.range.value, bend_joint_specification.range.value),
-                damping=bend_joint_specification.damping.value,
-                stiffness=bend_joint_specification.stiffness.value,
-                frictionloss=bend_joint_specification.friction_loss.value,
-                armature=bend_joint_specification.armature.value
+                range=(-roll_joint_specification.range.value, roll_joint_specification.range.value),
+                damping=roll_joint_specification.damping.value,
+                stiffness=roll_joint_specification.stiffness.value,
+                frictionloss=roll_joint_specification.friction_loss.value,
+                armature=roll_joint_specification.armature.value
                 )
-        if twist_joint_specification.range.value != 0:
+        if yaw_joint_specification.range.value != 0:
             self.mjcf_body.add(
                     'joint',
-                    name=f'{self.base_name}_vertebrae_joint_twist',
+                    name=f'{self.base_name}_vertebrae_joint_yaw',
                     type='hinge',
                     pos=joint_pos,
                     limited=True,
                     axis=[0, 0, 1],
-                    range=(-twist_joint_specification.range.value, twist_joint_specification.range.value),
-                    damping=twist_joint_specification.damping.value,
-                    stiffness=twist_joint_specification.stiffness.value,
-                    frictionloss=twist_joint_specification.friction_loss.value
+                    range=(-yaw_joint_specification.range.value, yaw_joint_specification.range.value),
+                    damping=yaw_joint_specification.damping.value,
+                    stiffness=yaw_joint_specification.stiffness.value,
+                    frictionloss=yaw_joint_specification.friction_loss.value
                     )
 
     def _configure_sensors(
             self
             ) -> None:
         if not self.is_first_segment:
-            self.mjcf_model.sensor.add("jointpos", name=f"{self._coronal_joint.name}_sensor", joint=self._coronal_joint)
+            self.mjcf_model.sensor.add("jointpos", name=f"{self._pitch_joint.name}_sensor", joint=self._pitch_joint)
             self.mjcf_model.sensor.add(
-                "jointpos",
-                name=f"{self._sagittal_joint.name}_sensor",
-                joint=self._sagittal_joint
-                )
+                    "jointpos", name=f"{self._roll_joint.name}_sensor", joint=self._roll_joint
+                    )

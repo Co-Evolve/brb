@@ -143,10 +143,13 @@ def default_seahorse_plate_specification(
 
 def default_seahorse_vertebrae_specification() -> SeahorseVertebraeSpecification:
 
-    bend_joint_specification = JointSpecification(
+    roll_joint_specification = JointSpecification(
             stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=21.24 / 180 * np.pi
             )
-    twist_joint_specification = JointSpecification(
+    pitch_joint_specification = JointSpecification(
+            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=21.24 / 180 * np.pi
+            )
+    yaw_joint_specification = JointSpecification(
             stiffness=0.0, damping=1, friction_loss=0.3, armature=0.045, range=0 / 180 * np.pi  # 5
             )
 
@@ -158,8 +161,9 @@ def default_seahorse_vertebrae_specification() -> SeahorseVertebraeSpecification
             vertebral_mesh_specification=default_mesh_specification(mesh_name=VERTEBRAE_MESH_NAME),
             ball_bearing_mesh_specification=default_mesh_specification(mesh_name=BALL_BEARING_MESH_NAME),
             connector_mesh_specification=default_mesh_specification(mesh_name=VERTEBRAE_CONNECTOR_MESH_NAME),
-            bend_joint_specification=bend_joint_specification,
-            twist_joint_specification=twist_joint_specification
+            roll_joint_specification=roll_joint_specification,
+            pitch_joint_specification=pitch_joint_specification,
+            yaw_joint_specification=yaw_joint_specification
             )
     return vertebrae_specification
 

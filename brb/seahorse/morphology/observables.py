@@ -33,8 +33,8 @@ def get_joint_range_from_sensor(
 
 
 class SeahorseObservables(composer.Observables):
-    _vertebrae_coronal_joint_pos_sensors = None
-    _vertebrae_sagittal_joint_pos_sensors = None
+    _vertebrae_pitch_joint_pos_sensors = None
+    _vertebrae_roll_joint_pos_sensors = None
     _hmm_tendon_pos_sensors = None
     _mvm_tendon_pos_sensors = None
 
@@ -45,36 +45,36 @@ class SeahorseObservables(composer.Observables):
         return self._entity.morphology_specification
 
     @property
-    def vertebrae_coronal_joint_pos_sensors(
+    def vertebrae_pitch_joint_pos_sensors(
             self
             ) -> mjcf.Element:
-        if self._vertebrae_coronal_joint_pos_sensors is None:
+        if self._vertebrae_pitch_joint_pos_sensors is None:
             sensors = self._entity.mjcf_model.find_all('sensor')
-            self._vertebrae_coronal_joint_pos_sensors = list(
+            self._vertebrae_pitch_joint_pos_sensors = list(
                     filter(
                             lambda
-                                sensor: sensor.tag == "jointpos" and "vertebrae" in sensor.name and "coronal" in
+                                sensor: sensor.tag == "jointpos" and "vertebrae" in sensor.name and "pitch" in
                                         sensor.name,
                             sensors
                             )
                     )
-        return self._vertebrae_coronal_joint_pos_sensors
+        return self._vertebrae_pitch_joint_pos_sensors
 
     @property
-    def vertebrae_sagittal_joint_pos_sensors(
+    def vertebrae_roll_joint_pos_sensors(
             self
             ) -> mjcf.Element:
-        if self._vertebrae_sagittal_joint_pos_sensors is None:
+        if self._vertebrae_roll_joint_pos_sensors is None:
             sensors = self._entity.mjcf_model.find_all('sensor')
-            self._vertebrae_sagittal_joint_pos_sensors = list(
+            self._vertebrae_roll_joint_pos_sensors = list(
                     filter(
                             lambda
-                                sensor: sensor.tag == "jointpos" and "vertebrae" in sensor.name and "sagittal" in
+                                sensor: sensor.tag == "jointpos" and "vertebrae" in sensor.name and "roll" in
                                         sensor.name,
                             sensors
                             )
                     )
-        return self._vertebrae_sagittal_joint_pos_sensors
+        return self._vertebrae_roll_joint_pos_sensors
 
     @property
     def hmm_tendon_pos_sensors(
@@ -105,29 +105,29 @@ class SeahorseObservables(composer.Observables):
         return self._mvm_tendon_pos_sensors
 
     @composer.observable
-    def vertebrae_coronal_joint_pos(
+    def vertebrae_pitch_joint_pos(
             self
             ) -> MJCFFeature:
-        low, high = np.array([sensor.joint.range for sensor in self.vertebrae_coronal_joint_pos_sensors]).T
+        low, high = np.array([sensor.joint.range for sensor in self.vertebrae_pitch_joint_pos_sensors]).T
         return ConfinedMJCFFeature(
                 low=low,
                 high=high,
-                shape=[len(self.vertebrae_coronal_joint_pos_sensors)],
+                shape=[len(self.vertebrae_pitch_joint_pos_sensors)],
                 kind="sensordata",
-                mjcf_element=self.vertebrae_coronal_joint_pos_sensors
+                mjcf_element=self.vertebrae_pitch_joint_pos_sensors
                 )
 
     @composer.observable
-    def vertebrae_sagittal_joint_pos(
+    def vertebrae_roll_joint_pos(
             self
             ) -> MJCFFeature:
-        low, high = np.array([sensor.joint.range for sensor in self.vertebrae_sagittal_joint_pos_sensors]).T
+        low, high = np.array([sensor.joint.range for sensor in self.vertebrae_roll_joint_pos_sensors]).T
         return ConfinedMJCFFeature(
                 low=low,
                 high=high,
-                shape=[len(self.vertebrae_sagittal_joint_pos_sensors)],
+                shape=[len(self.vertebrae_roll_joint_pos_sensors)],
                 kind="sensordata",
-                mjcf_element=self.vertebrae_sagittal_joint_pos_sensors
+                mjcf_element=self.vertebrae_roll_joint_pos_sensors
                 )
 
     @composer.observable

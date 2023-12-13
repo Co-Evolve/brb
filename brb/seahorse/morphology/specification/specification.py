@@ -73,8 +73,8 @@ class SeahorsePlateSpecification(Specification):
         self.hmm_num_intermediate_taps = FixedParameter(hmm_num_intermediate_taps)
         self.hmm_y_offset_between_intermediate_taps = FixedParameter(hmm_y_offset_between_intermediate_taps)
         self.hmm_intermediate_first_tap_x_offset_from_plate_origin = FixedParameter(
-            hmm_intermediate_first_tap_x_offset_from_plate_origin
-            )
+                hmm_intermediate_first_tap_x_offset_from_plate_origin
+                )
         self.hmm_intermediate_first_tap_y_offset_from_plate_origin = FixedParameter(
                 hmm_intermediate_first_tap_y_offset_from_plate_origin
                 )
@@ -99,8 +99,10 @@ class SeahorseVertebraeSpecification(Specification):
             vertebral_mesh_specification: MeshSpecification,
             ball_bearing_mesh_specification: MeshSpecification,
             connector_mesh_specification: MeshSpecification,
-            bend_joint_specification: JointSpecification,
-            twist_joint_specification: JointSpecification, ) -> None:
+            yaw_joint_specification: JointSpecification,
+            pitch_joint_specification: JointSpecification,
+            roll_joint_specification: JointSpecification
+            ) -> None:
         super().__init__()
         self.z_offset_to_ball_bearing = FixedParameter(z_offset_to_ball_bearing)
         self.offset_to_spine_attachment_point = FixedParameter(offset_to_spine_attachment_point)
@@ -109,8 +111,9 @@ class SeahorseVertebraeSpecification(Specification):
         self.vertebral_mesh_specification = vertebral_mesh_specification
         self.ball_bearing_mesh_specification = ball_bearing_mesh_specification
         self.connector_mesh_specification = connector_mesh_specification
-        self.bend_joint_specification = bend_joint_specification
-        self.twist_joint_specification = twist_joint_specification
+        self.yaw_joint_specification = yaw_joint_specification
+        self.pitch_joint_specification = pitch_joint_specification
+        self.roll_joint_specification = roll_joint_specification
 
 
 class SeahorseTendonSpineSpecification(Specification):
