@@ -173,32 +173,35 @@ class SeahorseVertebrae(MJCMorphologyPart):
         pitch_joint_specification = self.vertebrae_specification.pitch_joint_specification
         roll_joint_specification = self.vertebrae_specification.roll_joint_specification
 
-        self._pitch_joint = self.mjcf_body.add(
-                'joint',
-                name=f'{self.base_name}_vertebrae_joint_pitch',
-                type='hinge',
-                pos=joint_pos,
-                limited=True,
-                axis=[0, 1, 0],
-                range=(-pitch_joint_specification.range.value, pitch_joint_specification.range.value),
-                damping=pitch_joint_specification.damping.value,
-                stiffness=pitch_joint_specification.stiffness.value,
-                frictionloss=pitch_joint_specification.friction_loss.value,
-                armature=pitch_joint_specification.armature.value
-                )
-        self._roll_joint = self.mjcf_body.add(
-                'joint',
-                name=f'{self.base_name}_vertebrae_joint_roll',
-                type='hinge',
-                pos=joint_pos,
-                limited=True,
-                axis=[1, 0, 0],
-                range=(-roll_joint_specification.range.value, roll_joint_specification.range.value),
-                damping=roll_joint_specification.damping.value,
-                stiffness=roll_joint_specification.stiffness.value,
-                frictionloss=roll_joint_specification.friction_loss.value,
-                armature=roll_joint_specification.armature.value
-                )
+        self._pitch_joint = self._roll_joint = self._yaw_joint = None
+        if pitch_joint_specification.range.value != 0:
+            self._pitch_joint = self.mjcf_body.add(
+                    'joint',
+                    name=f'{self.base_name}_vertebrae_joint_pitch',
+                    type='hinge',
+                    pos=joint_pos,
+                    limited=True,
+                    axis=[0, 1, 0],
+                    range=(-pitch_joint_specification.range.value, pitch_joint_specification.range.value),
+                    damping=pitch_joint_specification.damping.value,
+                    stiffness=pitch_joint_specification.stiffness.value,
+                    frictionloss=pitch_joint_specification.friction_loss.value,
+                    armature=pitch_joint_specification.armature.value
+                    )
+        if roll_joint_specification.range.value != 0:
+            self._roll_joint = self.mjcf_body.add(
+                    'joint',
+                    name=f'{self.base_name}_vertebrae_joint_roll',
+                    type='hinge',
+                    pos=joint_pos,
+                    limited=True,
+                    axis=[1, 0, 0],
+                    range=(-roll_joint_specification.range.value, roll_joint_specification.range.value),
+                    damping=roll_joint_specification.damping.value,
+                    stiffness=roll_joint_specification.stiffness.value,
+                    frictionloss=roll_joint_specification.friction_loss.value,
+                    armature=roll_joint_specification.armature.value
+                    )
         if yaw_joint_specification.range.value != 0:
             self.mjcf_body.add(
                     'joint',
@@ -217,7 +220,13 @@ class SeahorseVertebrae(MJCMorphologyPart):
             self
             ) -> None:
         if not self.is_first_segment:
-            self.mjcf_model.sensor.add("jointpos", name=f"{self._pitch_joint.name}_sensor", joint=self._pitch_joint)
-            self.mjcf_model.sensor.add(
-                    "jointpos", name=f"{self._roll_joint.name}_sensor", joint=self._roll_joint
-                    )
+            if self._pitch_joint:
+                self.mjcf_model.sensor.add("jointpos", name=f"{self._pitch_joint.name}_sensor", joint=self._pitch_joint)
+            if self._roll_joint:
+                self.mjcf_model.sensor.add(
+                        "jointpos", name=f"{self._roll_joint.name}_sensor", joint=self._roll_joint
+                        )
+            if self._yaw_joint:
+                self.mjcf_model.sensor.add(
+                        "jointpos", name=f"{self._yaw_joint.name}_sensor", joint=self._yaw_joint
+                        )

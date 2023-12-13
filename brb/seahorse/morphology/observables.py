@@ -34,6 +34,7 @@ def get_joint_range_from_sensor(
 
 class SeahorseObservables(composer.Observables):
     _vertebrae_pitch_joint_pos_sensors = None
+    _vertebrae_yaw_joint_pos_sensors = None
     _vertebrae_roll_joint_pos_sensors = None
     _hmm_tendon_pos_sensors = None
     _mvm_tendon_pos_sensors = None
@@ -59,6 +60,22 @@ class SeahorseObservables(composer.Observables):
                             )
                     )
         return self._vertebrae_pitch_joint_pos_sensors
+
+    @property
+    def vertebrae_yaw_joint_pos_sensors(
+            self
+            ) -> mjcf.Element:
+        if self._vertebrae_yaw_joint_pos_sensors is None:
+            sensors = self._entity.mjcf_model.find_all('sensor')
+            self._vertebrae_yaw_joint_pos_sensors = list(
+                    filter(
+                            lambda
+                                sensor: sensor.tag == "jointpos" and "vertebrae" in sensor.name and "yaw" in
+                                        sensor.name,
+                            sensors
+                            )
+                    )
+        return self._vertebrae_yaw_joint_pos_sensors
 
     @property
     def vertebrae_roll_joint_pos_sensors(
@@ -108,7 +125,10 @@ class SeahorseObservables(composer.Observables):
     def vertebrae_pitch_joint_pos(
             self
             ) -> MJCFFeature:
-        low, high = np.array([sensor.joint.range for sensor in self.vertebrae_pitch_joint_pos_sensors]).T
+        if len(self.vertebrae_pitch_joint_pos_sensors) > 0:
+            low, high = np.array([sensor.joint.range for sensor in self.vertebrae_pitch_joint_pos_sensors]).T
+        else:
+            low, high = -1, 1
         return ConfinedMJCFFeature(
                 low=low,
                 high=high,
@@ -118,10 +138,29 @@ class SeahorseObservables(composer.Observables):
                 )
 
     @composer.observable
+    def vertebrae_yaw_joint_pos(
+            self
+            ) -> MJCFFeature:
+        if len(self.vertebrae_yaw_joint_pos_sensors) > 0:
+            low, high = np.array([sensor.joint.range for sensor in self.vertebrae_yaw_joint_pos_sensors]).T
+        else:
+            low, high = -1, 1
+        return ConfinedMJCFFeature(
+                low=low,
+                high=high,
+                shape=[len(self.vertebrae_yaw_joint_pos_sensors)],
+                kind="sensordata",
+                mjcf_element=self.vertebrae_yaw_joint_pos_sensors
+                )
+
+    @composer.observable
     def vertebrae_roll_joint_pos(
             self
             ) -> MJCFFeature:
-        low, high = np.array([sensor.joint.range for sensor in self.vertebrae_roll_joint_pos_sensors]).T
+        if len(self.vertebrae_roll_joint_pos_sensors) > 0:
+            low, high = np.array([sensor.joint.range for sensor in self.vertebrae_roll_joint_pos_sensors]).T
+        else:
+            low, high = -1, 1
         return ConfinedMJCFFeature(
                 low=low,
                 high=high,
