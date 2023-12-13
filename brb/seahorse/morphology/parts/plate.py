@@ -333,6 +333,8 @@ class SeahorsePlate(MJCMorphologyPart):
     def _configure_gliding_joints(
             self
             ) -> None:
+        if self.segment_index == 0:
+            return
 
         x_axis_joint_specification = self.plate_specification.x_axis_gliding_joint_specification
         y_axis_joint_specification = self.plate_specification.y_axis_gliding_joint_specification
