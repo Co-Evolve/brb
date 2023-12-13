@@ -236,10 +236,10 @@ class MJCSeahorseMorphology(MJCMorphology):
     def _prepare_tendon_coloring(
             self
             ) -> None:
-        self._contracted_rgbas = np.ones((len(self._hmm_tendons + self._mvm_tendons), 4))
+        self._contracted_rgbas = np.ones((len(self._tendon_actuators), 4))
         self._contracted_rgbas[:] = colors.rgba_tendon_contracted
 
-        self._color_changes = np.ones((len(self._hmm_tendons + self._mvm_tendons), 4))
+        self._color_changes = np.ones((len(self._tendon_actuators), 4))
         self._color_changes[:] = colors.rgba_tendon_relaxed - colors.rgba_tendon_contracted
         self._color_changes = self._color_changes.T
         self._control_ranges = np.array([act.ctrlrange for act in self._tendon_actuators])
@@ -265,8 +265,9 @@ class MJCSeahorseMorphology(MJCMorphology):
 
 
 if __name__ == '__main__':
-    morphology_specification = default_seahorse_morphology_specification(num_segments=20, hmm_segment_span=7,
-                                                                         mvm_enabled=True)
+    morphology_specification = default_seahorse_morphology_specification(
+        num_segments=20, hmm_segment_span=7, mvm_enabled=True
+        )
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
     morphology.mjcf_body.euler = [np.pi, 0.0, 0.0]
     morphology.export_to_xml_with_assets("./mjcf")
