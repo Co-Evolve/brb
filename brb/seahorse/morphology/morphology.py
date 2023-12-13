@@ -253,8 +253,8 @@ class MJCSeahorseMorphology(MJCMorphology):
         min_control, max_control = self._control_ranges[:, 0], self._control_ranges[:, 1]
         tendon_control = (tendon_control - min_control) / (max_control - min_control)
 
-        physics.bind(self._hmm_tendons + self._mvm_tendons).rgba = self._contracted_rgbas + (
-                tendon_control * self._color_changes).T
+        actuated_tendons = [tendon_actuator.tendon for tendon_actuator in self._tendon_actuators]
+        physics.bind(actuated_tendons).rgba = self._contracted_rgbas + (tendon_control * self._color_changes).T
 
     def after_step(
             self,
