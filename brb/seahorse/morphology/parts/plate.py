@@ -359,8 +359,9 @@ class SeahorsePlate(MJCMorphologyPart):
                     axis=[1, 0, 0],
                     range=x_axis_range,
                     damping=x_axis_joint_specification.damping.value,
-                    stiffness=x_axis_joint_specification.stiffness.value
-                    )
+                    stiffness=x_axis_joint_specification.stiffness.value,
+                    solimplimit = [0.90, 0.9999, 0.001, 0.1, 6]
+            )
         if y_axis_joint_specification.range.value != 0:
             self.y_axis_gliding_joint = self.mjcf_body.add(
                     'joint',
@@ -371,5 +372,6 @@ class SeahorsePlate(MJCMorphologyPart):
                     axis=[0, 1, 0],
                     range=y_axis_range,
                     damping=y_axis_joint_specification.damping.value,
-                    stiffness=y_axis_joint_specification.stiffness.value
-                    )
+                    stiffness=y_axis_joint_specification.stiffness.value,
+                    solimplimit = [0.90, 0.9999, 0.001, 0.1, 6]
+            )

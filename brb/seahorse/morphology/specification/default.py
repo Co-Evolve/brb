@@ -144,10 +144,10 @@ def default_seahorse_plate_specification(
 def default_seahorse_vertebrae_specification() -> SeahorseVertebraeSpecification:
 
     roll_joint_specification = JointSpecification(
-            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=21.24 / 180 * np.pi
+            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=14 / 180 * np.pi
             )
     pitch_joint_specification = JointSpecification(
-            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=21.24 / 180 * np.pi
+            stiffness=0.0, damping=1, friction_loss=0.03, armature=0.045, range=14 / 180 * np.pi
             )
     yaw_joint_specification = JointSpecification(
             stiffness=0.0, damping=1, friction_loss=0.3, armature=0.045, range=0 / 180 * np.pi  # 5
@@ -205,7 +205,7 @@ def default_tendon_actuation_specification(
             contraction_factor=0., relaxation_factor=10.0, tendon_width=0.001, p_control_kp=120, damping=1
             )
     hmm_tendon_actuation_specification = SeahorseHMMTendonActuationSpecification(
-            tendon_strain=0.01, p_control_kp=50, tendon_width=0.001, segment_span=hmm_segment_span, damping=1
+            tendon_strain=0.015, p_control_kp=50, tendon_width=0.001, segment_span=hmm_segment_span, damping=0.01
             )
 
     return SeahorseTendonActuationSpecification(
