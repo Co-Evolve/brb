@@ -1,0 +1,226 @@
+<mujoco model="morphology">
+  <compiler angle="radian"/>
+  <default>
+    <default class="/"/>
+
+  </default>
+  <extension>
+    <plugin plugin="mujoco.sdf.sdflib">
+      <instance name="sdf">
+        <config key="aabb" value="0"/>
+      </instance>
+    </plugin>
+  </extension>
+  <asset>
+    <mesh name="vertebrae" class="/" file="vertebrae-1a6e59f61ff64431079c9651083134acb96bb971.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="ball_bearing" class="/" file="ball_bearing-82cd80c511924a6cc447691ead255c788d7333b0.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="connector_vertebrae" class="/" file="connector_vertebrae-e18202cdeebd939730592d6691f55a0c0d0ffced.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="ventral_dextral_base" class="/" file="ventral_dextral_base-426e18880528561e9658de16683a29a2e29ccd26.stl" scale="0.001 0.001 0.001">
+      <plugin instance="sdf"/>
+    </mesh>
+    <mesh name="connector_plate" class="/" file="connector_plate-6d0330a0b2c617bae532ec2171efb7dca690f17c.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="ventral_sinistral_base" class="/" file="ventral_sinistral_base-0a9068981c0d572bd8cc05aac359d2d4be6bb5af.stl" scale="0.001 0.001 0.001">
+      <plugin instance="sdf"/>
+    </mesh>
+    <mesh name="dorsal_sinistral_even_base" class="/" file="dorsal_sinistral_even_base-8d7e7562a82675a06896e6e325383e24416bbd0e.stl" scale="0.001 0.001 0.001">
+      <plugin instance="sdf"/>
+    </mesh>
+    <mesh name="dorsal_dextral_even_base" class="/" file="dorsal_dextral_even_base-94a1be8eaf37d984cf94244b86df2486068e332e.stl" scale="0.001 0.001 0.001">
+      <plugin instance="sdf"/>
+    </mesh>
+    <mesh name="ventral_dextral" class="/" file="ventral_dextral-0e283a42df70cf153d7e020ce451de7fa392b724.stl" scale="0.001 0.001 0.001">
+      <plugin instance="sdf"/>
+    </mesh>
+    <mesh name="ventral_sinistral" class="/" file="ventral_sinistral-c542f1186fa6f54bff9649076ad48ddd5a7760e8.stl" scale="0.001 0.001 0.001">
+      <plugin instance="sdf"/>
+    </mesh>
+    <mesh name="dorsal_sinistral_odd" class="/" file="dorsal_sinistral_odd-ca0005a7a888fee6e5f27f7541c42d2daace22e8.stl" scale="0.001 0.001 0.001">
+      <plugin instance="sdf"/>
+    </mesh>
+    <mesh name="dorsal_dextral_odd" class="/" file="dorsal_dextral_odd-313cf6a9370dda2131870d222b5ed6d7d8dac222.stl" scale="0.001 0.001 0.001">
+      <plugin instance="sdf"/>
+    </mesh>
+  </asset>
+  <worldbody>
+    <body name="//unnamed_body_0" euler="3.1415926535897931 0 0">
+      <body name="segment_0" pos="0 0 0" euler="0 0 0">
+        <body name="segment_0_vertebrae" pos="0 0 0" euler="0 0 0">
+          <body name="segment_0_vertebrae_vertebrae_body" pos="0 0 0" euler="0 0 0">
+            <inertial pos="0 0 -0.00095999999999999992" mass="0.0045199999999999997" fullinertia="2.9638000000000001e-07 2.9612999999999999e-07 3.199e-07 0 0 0"/>
+            <geom name="segment_0_vertebrae_vertebrae_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.61960784313725492 0.14901960784313725 0.83137254901960789 1" mesh="vertebrae"/>
+          </body>
+          <body name="segment_0_vertebrae_ball_bearing_body" pos="0 0 0.016" euler="0 0 0">
+            <inertial pos="0 0 0" mass="0.00214" fullinertia="1.3730000000000001e-08 1.3730000000000001e-08 1.3730000000000001e-08 0 0 0"/>
+            <geom name="segment_0_vertebrae_ball_bearing_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="ball_bearing"/>
+          </body>
+          <body name="segment_0_vertebrae_connector_ventral_body" pos="0.0178 0 0" euler="0 0 0">
+            <inertial pos="-1.944e-05 5.8900000000000004e-06 -4.9699999999999998e-06" mass="7.0069999999999998e-05" fullinertia="2.6584000000000004e-10 3.4100000000000001e-10 3.4082000000000002e-10 -1.2199999999999999e-12 -8.3e-13 -1.0000000000000002e-14"/>
+            <geom name="segment_0_vertebrae_connector_ventral_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_vertebrae"/>
+          </body>
+          <body name="segment_0_vertebrae_connector_dextral_body" pos="1.0899356512411443e-18 0.0178 0" euler="0 0 1.5707963267948966">
+            <inertial pos="-1.944e-05 5.8900000000000004e-06 -4.9699999999999998e-06" mass="7.0069999999999998e-05" fullinertia="2.6584000000000004e-10 3.4100000000000001e-10 3.4082000000000002e-10 -1.2199999999999999e-12 -8.3e-13 -1.0000000000000002e-14"/>
+            <geom name="segment_0_vertebrae_connector_dextral_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_vertebrae"/>
+          </body>
+          <body name="segment_0_vertebrae_connector_dorsal_body" pos="-0.0178 2.1798713024822886e-18 0" euler="0 0 3.1415926535897931">
+            <inertial pos="-1.944e-05 5.8900000000000004e-06 -4.9699999999999998e-06" mass="7.0069999999999998e-05" fullinertia="2.6584000000000004e-10 3.4100000000000001e-10 3.4082000000000002e-10 -1.2199999999999999e-12 -8.3e-13 -1.0000000000000002e-14"/>
+            <geom name="segment_0_vertebrae_connector_dorsal_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_vertebrae"/>
+          </body>
+          <body name="segment_0_vertebrae_connector_sinistral_body" pos="-3.2698069537234327e-18 -0.0178 0" euler="0 0 4.7123889803846897">
+            <inertial pos="-1.944e-05 5.8900000000000004e-06 -4.9699999999999998e-06" mass="7.0069999999999998e-05" fullinertia="2.6584000000000004e-10 3.4100000000000001e-10 3.4082000000000002e-10 -1.2199999999999999e-12 -8.3e-13 -1.0000000000000002e-14"/>
+            <geom name="segment_0_vertebrae_connector_sinistral_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_vertebrae"/>
+          </body>
+          <body name="segment_0_plate_0" pos="0 0 0" euler="0 0 0">
+            <body name="segment_0_plate_0_plate_body" pos="0.036048303704890185 -0.036048303704890199 0.0074999999999999997" euler="0 0 0">
+              <inertial pos="-0.0015300000000000001 0.00299 -0.0051999999999999998" mass="0.01094" fullinertia="3.0665900000000001e-06 2.7330399999999998e-06 4.8996599999999996e-06 1.56855e-06 1.1539e-07 -1.5232e-07"/>
+              <geom name="segment_0_plate_0_plate_geom" class="/" type="sdf" contype="1" conaffinity="1" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mesh="ventral_dextral_base">
+                <plugin instance="sdf"/>
+              </geom>
+            </body>
+          </body>
+          <body name="segment_0_plate_1" pos="0 0 0" euler="0 0 0">
+            <body name="segment_0_plate_1_plate_body" pos="0.036196796128939376 0.036196796128939356 0.0074999999999999997" euler="0 0 0">
+              <inertial pos="-0.00382 -0.0035600000000000002 -0.0050699999999999999" mass="0.0103" fullinertia="3.1223899999999997e-06 2.3303500000000001e-06 4.5836200000000002e-06 -1.38558e-06 1.6469999999999999e-07 1.5737000000000001e-07"/>
+              <geom name="segment_0_plate_1_plate_geom" class="/" type="sdf" contype="1" conaffinity="1" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mesh="ventral_sinistral_base">
+                <plugin instance="sdf"/>
+              </geom>
+            </body>
+            <body name="segment_0_plate_1_connector_x_body" pos="0.037010000000000001 0 0" euler="0 0 0">
+              <inertial pos="7.5900000000000002e-06 0 4.1900000000000005e-06" mass="0.00014003999999999999" fullinertia="5.3129000000000003e-10 1.9255300000000001e-09 1.9251500000000001e-09 -8.0000000000000013e-14 0 0"/>
+              <geom name="segment_0_plate_1_connector_x_geom" class="/" type="mesh" contype="0" conaffinity="0" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_plate"/>
+            </body>
+          </body>
+          <body name="segment_0_plate_2" pos="0 0 0" euler="0 0 0">
+            <body name="segment_0_plate_2_plate_body" pos="-0.036203867196751234 0.036203867196751234 0.0074999999999999997" euler="0 0 0">
+              <inertial pos="0.0028999999999999998 -0.0052199999999999998 -0.0052100000000000002" mass="0.01069" fullinertia="3.00733e-06 2.4509000000000001e-06 4.5894099999999995e-06 1.2840899999999998e-06 -1.4041999999999998e-07 1.9553e-07"/>
+              <geom name="segment_0_plate_2_plate_geom" class="/" type="sdf" contype="1" conaffinity="1" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mesh="dorsal_sinistral_even_base">
+                <plugin instance="sdf"/>
+              </geom>
+            </body>
+            <body name="segment_0_plate_2_connector_x_body" pos="-0.037010000000000001 0 0" euler="0 0 0">
+              <inertial pos="7.5900000000000002e-06 0 4.1900000000000005e-06" mass="0.00014003999999999999" fullinertia="5.3129000000000003e-10 1.9255300000000001e-09 1.9251500000000001e-09 -8.0000000000000013e-14 0 0"/>
+              <geom name="segment_0_plate_2_connector_x_geom" class="/" type="mesh" contype="0" conaffinity="0" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_plate"/>
+            </body>
+            <body name="segment_0_plate_2_connector_y_body" pos="0 0.037010000000000001 0" euler="0 0 1.5707963267948966">
+              <inertial pos="7.5900000000000002e-06 0 4.1900000000000005e-06" mass="0.00014003999999999999" fullinertia="5.3129000000000003e-10 1.9255300000000001e-09 1.9251500000000001e-09 -8.0000000000000013e-14 0 0"/>
+              <geom name="segment_0_plate_2_connector_y_geom" class="/" type="mesh" contype="0" conaffinity="0" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_plate"/>
+            </body>
+          </body>
+          <body name="segment_0_plate_3" pos="0 0 0" euler="0 0 0">
+            <body name="segment_0_plate_3_plate_body" pos="-0.036380643892047877 -0.03638064389204787 0.0074999999999999997" euler="0 0 0">
+              <inertial pos="0.00231 0.0044400000000000004 -0.0052300000000000003" mass="0.010749999999999999" fullinertia="2.5685399999999999e-06 2.69075e-06 4.36785e-06 -1.3525e-06 -1.2062e-07 -1.7221e-07"/>
+              <geom name="segment_0_plate_3_plate_geom" class="/" type="sdf" contype="1" conaffinity="1" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mesh="dorsal_dextral_even_base">
+                <plugin instance="sdf"/>
+              </geom>
+            </body>
+            <body name="segment_0_plate_3_connector_y_body" pos="0 -0.037010000000000001 0" euler="0 0 1.5707963267948966">
+              <inertial pos="7.5900000000000002e-06 0 4.1900000000000005e-06" mass="0.00014003999999999999" fullinertia="5.3129000000000003e-10 1.9255300000000001e-09 1.9251500000000001e-09 -8.0000000000000013e-14 0 0"/>
+              <geom name="segment_0_plate_3_connector_y_geom" class="/" type="mesh" contype="0" conaffinity="0" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_plate"/>
+            </body>
+          </body>
+          <body name="segment_1" pos="0 0 0.032000000000000001" euler="0 0 0">
+            <body name="segment_1_vertebrae" pos="0 0 0" euler="0 0 0">
+              <body name="segment_1_vertebrae_vertebrae_body" pos="0 0 0" euler="0 0 0">
+                <inertial pos="0 0 -0.00095999999999999992" mass="0.0045199999999999997" fullinertia="2.9638000000000001e-07 2.9612999999999999e-07 3.199e-07 0 0 0"/>
+                <geom name="segment_1_vertebrae_vertebrae_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.61960784313725492 0.14901960784313725 0.83137254901960789 1" mesh="vertebrae"/>
+              </body>
+              <body name="segment_1_vertebrae_connector_ventral_body" pos="0.0178 0 0" euler="0 0 0">
+                <inertial pos="-1.944e-05 5.8900000000000004e-06 -4.9699999999999998e-06" mass="7.0069999999999998e-05" fullinertia="2.6584000000000004e-10 3.4100000000000001e-10 3.4082000000000002e-10 -1.2199999999999999e-12 -8.3e-13 -1.0000000000000002e-14"/>
+                <geom name="segment_1_vertebrae_connector_ventral_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_vertebrae"/>
+              </body>
+              <body name="segment_1_vertebrae_connector_dextral_body" pos="1.0899356512411443e-18 0.0178 0" euler="0 0 1.5707963267948966">
+                <inertial pos="-1.944e-05 5.8900000000000004e-06 -4.9699999999999998e-06" mass="7.0069999999999998e-05" fullinertia="2.6584000000000004e-10 3.4100000000000001e-10 3.4082000000000002e-10 -1.2199999999999999e-12 -8.3e-13 -1.0000000000000002e-14"/>
+                <geom name="segment_1_vertebrae_connector_dextral_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_vertebrae"/>
+              </body>
+              <body name="segment_1_vertebrae_connector_dorsal_body" pos="-0.0178 2.1798713024822886e-18 0" euler="0 0 3.1415926535897931">
+                <inertial pos="-1.944e-05 5.8900000000000004e-06 -4.9699999999999998e-06" mass="7.0069999999999998e-05" fullinertia="2.6584000000000004e-10 3.4100000000000001e-10 3.4082000000000002e-10 -1.2199999999999999e-12 -8.3e-13 -1.0000000000000002e-14"/>
+                <geom name="segment_1_vertebrae_connector_dorsal_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_vertebrae"/>
+              </body>
+              <body name="segment_1_vertebrae_connector_sinistral_body" pos="-3.2698069537234327e-18 -0.0178 0" euler="0 0 4.7123889803846897">
+                <inertial pos="-1.944e-05 5.8900000000000004e-06 -4.9699999999999998e-06" mass="7.0069999999999998e-05" fullinertia="2.6584000000000004e-10 3.4100000000000001e-10 3.4082000000000002e-10 -1.2199999999999999e-12 -8.3e-13 -1.0000000000000002e-14"/>
+                <geom name="segment_1_vertebrae_connector_sinistral_geom" class="/" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_vertebrae"/>
+              </body>
+              <joint name="segment_1_vertebrae_vertebrae_joint_pitch" class="/" type="hinge" pos="0 0 -0.016" axis="0 1 0" limited="true" stiffness="0" range="-0.8 0.8" armature="0.044999999999999998" damping="0.1" frictionloss="0.029999999999999999"/>
+              <body name="segment_1_plate_0" pos="0 0 0" euler="0 0 0">
+                <body name="segment_1_plate_0_plate_body" pos="0.036048303704890185 -0.036048303704890199 0.0074999999999999997" euler="0 0 0">
+                  <inertial pos="-0.0015300000000000001 0.00299 -0.0051999999999999998" mass="0.01094" fullinertia="3.0665900000000001e-06 2.7330399999999998e-06 4.8996599999999996e-06 1.56855e-06 1.1539e-07 -1.5232e-07"/>
+                  <geom name="segment_1_plate_0_plate_geom" class="/" type="sdf" contype="1" conaffinity="1" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mesh="ventral_dextral">
+                    <plugin instance="sdf"/>
+                  </geom>
+                </body>
+              </body>
+              <body name="segment_1_plate_1" pos="0 0 0" euler="0 0 0">
+                <body name="segment_1_plate_1_plate_body" pos="0.036196796128939376 0.036196796128939356 0.0074999999999999997" euler="0 0 0">
+                  <inertial pos="-0.00382 -0.0035600000000000002 -0.0050699999999999999" mass="0.0103" fullinertia="3.1223899999999997e-06 2.3303500000000001e-06 4.5836200000000002e-06 -1.38558e-06 1.6469999999999999e-07 1.5737000000000001e-07"/>
+                  <geom name="segment_1_plate_1_plate_geom" class="/" type="sdf" contype="1" conaffinity="1" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mesh="ventral_sinistral">
+                    <plugin instance="sdf"/>
+                  </geom>
+                </body>
+                <body name="segment_1_plate_1_connector_x_body" pos="0.037010000000000001 0 0" euler="0 0 0">
+                  <inertial pos="7.5900000000000002e-06 0 4.1900000000000005e-06" mass="0.00014003999999999999" fullinertia="5.3129000000000003e-10 1.9255300000000001e-09 1.9251500000000001e-09 -8.0000000000000013e-14 0 0"/>
+                  <geom name="segment_1_plate_1_connector_x_geom" class="/" type="mesh" contype="0" conaffinity="0" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_plate"/>
+                </body>
+              </body>
+              <body name="segment_1_plate_2" pos="0 0 0" euler="0 0 0">
+                <body name="segment_1_plate_2_plate_body" pos="-0.036203867196751234 0.036203867196751234 0.0074999999999999997" euler="0 0 0">
+                  <inertial pos="0.0023900000000000002 -0.00479 -0.0048600000000000006" mass="0.0097100000000000016" fullinertia="2.4469899999999998e-06 2.5972600000000003e-06 4.2084999999999996e-06 1.30431e-06 -1.3012999999999999e-07 1.924e-07"/>
+                  <geom name="segment_1_plate_2_plate_geom" class="/" type="sdf" contype="1" conaffinity="1" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mesh="dorsal_sinistral_odd">
+                    <plugin instance="sdf"/>
+                  </geom>
+                </body>
+                <body name="segment_1_plate_2_connector_y_body" pos="0 0.037010000000000001 0" euler="0 0 1.5707963267948966">
+                  <inertial pos="7.5900000000000002e-06 0 4.1900000000000005e-06" mass="0.00014003999999999999" fullinertia="5.3129000000000003e-10 1.9255300000000001e-09 1.9251500000000001e-09 -8.0000000000000013e-14 0 0"/>
+                  <geom name="segment_1_plate_2_connector_y_geom" class="/" type="mesh" contype="0" conaffinity="0" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_plate"/>
+                </body>
+              </body>
+              <body name="segment_1_plate_3" pos="0 0 0" euler="0 0 0">
+                <body name="segment_1_plate_3_plate_body" pos="-0.036203867196751234 -0.036203867196751234 0.0074999999999999997" euler="0 0 0">
+                  <inertial pos="0.00331 0.0057000000000000002 -0.0048600000000000006" mass="0.0096699999999999998" fullinertia="2.8941700000000002e-06 2.3431000000000001e-06 4.4225200000000001e-06 -1.2382400000000001e-06 -1.5391000000000001e-07 -2.1444999999999999e-07"/>
+                  <geom name="segment_1_plate_3_plate_geom" class="/" type="sdf" contype="1" conaffinity="1" group="0" rgba="0.49019607843137253 0.70980392156862748 0.6588235294117647 1" mesh="dorsal_dextral_odd">
+                    <plugin instance="sdf"/>
+                  </geom>
+                </body>
+                <body name="segment_1_plate_3_connector_x_body" pos="-0.037010000000000001 0 0" euler="0 0 0">
+                  <inertial pos="7.5900000000000002e-06 0 4.1900000000000005e-06" mass="0.00014003999999999999" fullinertia="5.3129000000000003e-10 1.9255300000000001e-09 1.9251500000000001e-09 -8.0000000000000013e-14 0 0"/>
+                  <geom name="segment_1_plate_3_connector_x_geom" class="/" type="mesh" contype="0" conaffinity="0" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_plate"/>
+                </body>
+                <body name="segment_1_plate_3_connector_y_body" pos="0 -0.037010000000000001 0" euler="0 0 1.5707963267948966">
+                  <inertial pos="7.5900000000000002e-06 0 4.1900000000000005e-06" mass="0.00014003999999999999" fullinertia="5.3129000000000003e-10 1.9255300000000001e-09 1.9251500000000001e-09 -8.0000000000000013e-14 0 0"/>
+                  <geom name="segment_1_plate_3_connector_y_geom" class="/" type="mesh" contype="0" conaffinity="0" group="0" rgba="0.34901960784313724 0.34901960784313724 0.34901960784313724 1" mesh="connector_plate"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <contact>
+    <exclude name="segment_0_segment_0_plate_0_segment_0_plate_1" body1="segment_0_plate_0_plate_body" body2="segment_0_plate_1_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_0_segment_0_plate_2" body1="segment_0_plate_0_plate_body" body2="segment_0_plate_2_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_0_segment_0_plate_3" body1="segment_0_plate_0_plate_body" body2="segment_0_plate_3_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_1_segment_0_plate_1" body1="segment_0_plate_1_plate_body" body2="segment_0_plate_1_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_1_segment_0_plate_2" body1="segment_0_plate_1_plate_body" body2="segment_0_plate_2_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_1_segment_0_plate_3" body1="segment_0_plate_1_plate_body" body2="segment_0_plate_3_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_2_segment_0_plate_1" body1="segment_0_plate_2_plate_body" body2="segment_0_plate_1_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_2_segment_0_plate_2" body1="segment_0_plate_2_plate_body" body2="segment_0_plate_2_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_2_segment_0_plate_3" body1="segment_0_plate_2_plate_body" body2="segment_0_plate_3_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_3_segment_0_plate_1" body1="segment_0_plate_3_plate_body" body2="segment_0_plate_1_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_3_segment_0_plate_2" body1="segment_0_plate_3_plate_body" body2="segment_0_plate_2_plate_body"/>
+    <exclude name="segment_0_segment_0_plate_3_segment_0_plate_3" body1="segment_0_plate_3_plate_body" body2="segment_0_plate_3_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_0_segment_1_plate_1" body1="segment_1_plate_0_plate_body" body2="segment_1_plate_1_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_0_segment_1_plate_2" body1="segment_1_plate_0_plate_body" body2="segment_1_plate_2_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_0_segment_1_plate_3" body1="segment_1_plate_0_plate_body" body2="segment_1_plate_3_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_1_segment_1_plate_1" body1="segment_1_plate_1_plate_body" body2="segment_1_plate_1_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_1_segment_1_plate_2" body1="segment_1_plate_1_plate_body" body2="segment_1_plate_2_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_1_segment_1_plate_3" body1="segment_1_plate_1_plate_body" body2="segment_1_plate_3_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_2_segment_1_plate_1" body1="segment_1_plate_2_plate_body" body2="segment_1_plate_1_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_2_segment_1_plate_2" body1="segment_1_plate_2_plate_body" body2="segment_1_plate_2_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_2_segment_1_plate_3" body1="segment_1_plate_2_plate_body" body2="segment_1_plate_3_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_3_segment_1_plate_1" body1="segment_1_plate_3_plate_body" body2="segment_1_plate_1_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_3_segment_1_plate_2" body1="segment_1_plate_3_plate_body" body2="segment_1_plate_2_plate_body"/>
+    <exclude name="segment_1_segment_1_plate_3_segment_1_plate_3" body1="segment_1_plate_3_plate_body" body2="segment_1_plate_3_plate_body"/>
+  </contact>
+  <actuator>
+    <position name="pitch" ctrllimited="true" ctrlrange="-0.8 0.8" joint="segment_1_vertebrae_vertebrae_joint_pitch"></position>
+  </actuator>
+</mujoco>

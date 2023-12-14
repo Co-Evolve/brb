@@ -97,6 +97,13 @@ class SeahorseSegment(MJCMorphologyPart):
                     )
             self.plates.append(plate)
 
+        for plate1 in self.plates:
+            for plate2 in self.plates[1:]:
+                self.mjcf_model.contact.add("exclude", name=f"{self.base_name}_{plate1.base_name}_"
+                                                            f"{plate2.base_name}",
+                                            body1=plate1.plate,
+                                            body2=plate2.plate),
+
     def _build_spines(
             self
             ) -> None:

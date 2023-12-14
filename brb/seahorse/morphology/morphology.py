@@ -37,6 +37,7 @@ class MJCSeahorseMorphology(MJCMorphology):
             self
             ) -> None:
         self._configure_compiler()
+        self._configure_extensions()
         self._build_tail()
         self._configure_gliding_joint_equality_constraints()
         self._build_hmm_tendons()
@@ -54,7 +55,12 @@ class MJCSeahorseMorphology(MJCMorphology):
             self
             ) -> None:
         self.mjcf_model.compiler.angle = 'radian'
-        self.mjcf_model.option.flag.contact = 'disable'
+        # self.mjcf_model.option.flag.contact = 'disable'
+
+    def _configure_extensions(self) -> None:
+        sdf_plugin = self.mjcf_model.extension.add("plugin", plugin="mujoco.sdf.sdflib")
+        sdf_instance = sdf_plugin.add("instance", name="sdf")
+        sdf_instance.add("config", key="aabb", value="0")
 
     def _build_tail(
             self
@@ -266,7 +272,7 @@ class MJCSeahorseMorphology(MJCMorphology):
 
 if __name__ == '__main__':
     morphology_specification = default_seahorse_morphology_specification(
-        num_segments=20, hmm_segment_span=7, mvm_enabled=True
+        num_segments=10, hmm_segment_span=1, mvm_enabled=True
         )
     morphology = MJCSeahorseMorphology(specification=morphology_specification)
     morphology.mjcf_body.euler = [np.pi, 0.0, 0.0]

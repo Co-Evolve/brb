@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import List
 
 import numpy as np
@@ -23,6 +24,10 @@ class MeshSpecification(Specification):
         self.mass = FixedParameter(mass)
         self.center_of_mass = FixedParameter(center_of_mass)
         self.fullinertia = FixedParameter(fullinertia)
+
+    @property
+    def mesh_name(self) -> str:
+        return Path(self.mesh_path.value).stem
 
 
 class JointSpecification(Specification):

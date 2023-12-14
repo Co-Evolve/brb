@@ -1,7 +1,9 @@
+from collections import OrderedDict
 from typing import List, Tuple
 
 import numpy as np
 from dm_control import mjcf
+from dm_control.mjcf.schema import AttributeSpec, ElementSpec
 from mujoco_utils.robot import MJCMorphologyPart
 
 from brb.seahorse.morphology.specification.specification import MeshSpecification, SeahorsePlateSpecification
@@ -162,12 +164,12 @@ def calculate_relaxed_tendon_length(
 def add_mesh_to_body(
         body: mjcf.Element,
         name: str,
-        mesh_name: str,
         position: np.ndarray,
         euler: np.ndarray,
         rgba: np.ndarray,
         group: int,
-        mesh_specification: MeshSpecification, ) -> mjcf.Element:
+        mesh_specification: MeshSpecification,
+        sdf: bool = False) -> mjcf.Element:
     sub_body = body.add(
             'body', name=f"{name}_body", pos=position, euler=euler
             )
@@ -179,7 +181,35 @@ def add_mesh_to_body(
             fullinertia=mesh_specification.fullinertia.value
             )
 
-    sub_body.add(
-            'geom', name=f"{name}_geom", type="mesh", mesh=mesh_name, rgba=rgba, group=group
+    type = "mesh"
+    if sdf:
+        type = "sdf"
+        sub_body._spec.children['geom'].attributes["type"][5]["valid_values"].append("sdf")
+    geom = sub_body.add(
+            'geom', name=f"{name}_geom", type=type, mesh=mesh_specification.mesh_name, rgba=rgba, group=group,
+            contype=0, conaffinity=0
             )
+    if sdf:
+        geom.contype = 1
+        geom.conaffinity = 1
+        instance_attribute = AttributeSpec(
+                name="instance",
+                type=mjcf.attribute.String,
+                required=True,
+                conflict_allowed=False,
+                conflict_behavior="replace",
+                other_kwargs={}
+                )
+        plugin_spec = ElementSpec(
+                name="plugin",
+                repeated=True,
+                on_demand=False,
+                identifier=None,
+                namespace=None,
+                attributes=OrderedDict([("instance", instance_attribute)]),
+                children=OrderedDict([])
+                )
+        plugin_spec.attributes["instance"] = instance_attribute
+        geom._spec.children["plugin"] = plugin_spec
+        geom.add("plugin", instance="sdf")
     return sub_body

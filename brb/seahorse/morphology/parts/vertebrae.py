@@ -68,24 +68,29 @@ class SeahorseVertebrae(MJCMorphologyPart):
         ball_bearing_mesh_specification = self.vertebrae_specification.ball_bearing_mesh_specification
         connector_mesh_specification = self.vertebrae_specification.connector_mesh_specification
 
-        self.mjcf_model.asset.add(
-                "mesh",
-                name=f"{self.base_name}_vertebrae",
-                file=vertebrae_mesh_specification.mesh_path.value,
-                scale=vertebrae_mesh_specification.scale_ratio.value
-                )
-        self.mjcf_model.asset.add(
-                "mesh",
-                name=f"{self.base_name}_ball_bearing",
-                file=ball_bearing_mesh_specification.mesh_path.value,
-                scale=ball_bearing_mesh_specification.scale_ratio.value
-                )
-        self.mjcf_model.asset.add(
-                "mesh",
-                name=f"{self.base_name}_connector",
-                file=connector_mesh_specification.mesh_path.value,
-                scale=connector_mesh_specification.scale_ratio.value
-                )
+        current_meshes = {mesh.name for mesh in self.mjcf_model.asset.mesh}
+
+        if vertebrae_mesh_specification.mesh_name not in current_meshes:
+            self.mjcf_model.asset.add(
+                    "mesh",
+                    name=vertebrae_mesh_specification.mesh_name,
+                    file=vertebrae_mesh_specification.mesh_path.value,
+                    scale=vertebrae_mesh_specification.scale_ratio.value
+                    )
+        if ball_bearing_mesh_specification.mesh_name not in current_meshes:
+            self.mjcf_model.asset.add(
+                    "mesh",
+                    name=ball_bearing_mesh_specification.mesh_name,
+                    file=ball_bearing_mesh_specification.mesh_path.value,
+                    scale=ball_bearing_mesh_specification.scale_ratio.value
+                    )
+        if connector_mesh_specification.mesh_name not in current_meshes:
+            self.mjcf_model.asset.add(
+                    "mesh",
+                    name=connector_mesh_specification.mesh_name,
+                    file=connector_mesh_specification.mesh_path.value,
+                    scale=connector_mesh_specification.scale_ratio.value
+                    )
 
     def _build_vertebrae(
             self
@@ -93,12 +98,12 @@ class SeahorseVertebrae(MJCMorphologyPart):
         self.vertebrae = add_mesh_to_body(
                 body=self.mjcf_body,
                 name=f"{self.base_name}_vertebrae",
-                mesh_name=f"{self.base_name}_vertebrae",
                 position=np.zeros(3),
                 euler=np.zeros(3),
                 rgba=SEAHORSE_VERTEBRAE_COLOR,
                 group=1,
-                mesh_specification=self.vertebrae_specification.vertebral_mesh_specification, )
+                mesh_specification=self.vertebrae_specification.vertebral_mesh_specification
+                )
 
     def _build_ball_bearing(
             self
@@ -107,7 +112,6 @@ class SeahorseVertebrae(MJCMorphologyPart):
             self.ball_bearing = add_mesh_to_body(
                     body=self.mjcf_body,
                     name=f"{self.base_name}_ball_bearing",
-                    mesh_name=f"{self.base_name}_ball_bearing",
                     position=np.array([0, 0, self.vertebrae_specification.z_offset_to_ball_bearing.value]),
                     euler=np.zeros(3),
                     rgba=colors.rgba_gray,
@@ -132,7 +136,6 @@ class SeahorseVertebrae(MJCMorphologyPart):
             connector = add_mesh_to_body(
                     body=self.mjcf_body,
                     name=f"{self.base_name}_connector_{side}",
-                    mesh_name=f"{self.base_name}_connector",
                     position=position,
                     euler=euler,
                     rgba=colors.rgba_gray,

@@ -1,7 +1,10 @@
+import copy
+from collections import OrderedDict
 from typing import List, Union
 
 import numpy as np
 from dm_control import mjcf
+from dm_control.mjcf.schema import AttributeSpec, ElementSpec
 from mujoco_utils.robot import MJCMorphology, MJCMorphologyPart
 
 from brb.seahorse.morphology.specification.specification import SeahorseMorphologySpecification, \
@@ -58,18 +61,45 @@ class SeahorsePlate(MJCMorphologyPart):
         plate_mesh_specification = self.plate_specification.plate_mesh_specification
         connector_mesh_specification = self.plate_specification.connector_mesh_specification
 
-        self.mjcf_model.asset.add(
-                "mesh",
-                name=f"{self.base_name}_plate",
-                file=plate_mesh_specification.mesh_path.value,
-                scale=plate_mesh_specification.scale_ratio.value
+        current_meshes = {mesh.name for mesh in self.mjcf_model.asset.mesh}
+
+        if plate_mesh_specification.mesh_name not in current_meshes:
+            plate_mesh_asset = self.mjcf_model.asset.add(
+                    "mesh",
+                    name=plate_mesh_specification.mesh_name,
+                    file=plate_mesh_specification.mesh_path.value,
+                    scale=plate_mesh_specification.scale_ratio.value
+                    )
+            # todo: Temporary hack until plugin is added as a child to the asset>mesh element in PyMJCF
+            #   dm_control issue: https://github.com/google-deepmind/dm_control/issues/444
+            instance_attribute = AttributeSpec(
+                    name="instance",
+                    type=mjcf.attribute.String,
+                    required=True,
+                    conflict_allowed=False,
+                    conflict_behavior="replace",
+                    other_kwargs={}
+                    )
+            plugin_spec = ElementSpec(
+                name="plugin",
+                repeated=True,
+                on_demand=False,
+                identifier=None,
+                namespace=None,
+                attributes=OrderedDict([("instance", instance_attribute)]),
+                children=OrderedDict([])
                 )
-        self.mjcf_model.asset.add(
-                "mesh",
-                name=f"{self.base_name}_connector",
-                file=connector_mesh_specification.mesh_path.value,
-                scale=connector_mesh_specification.scale_ratio.value
-                )
+            plugin_spec.attributes["instance"] = instance_attribute
+            plate_mesh_asset._spec.children["plugin"] = plugin_spec
+            plate_mesh_asset.add("plugin", instance="sdf")
+
+        if connector_mesh_specification.mesh_name not in current_meshes:
+            self.mjcf_model.asset.add(
+                    "mesh",
+                    name=connector_mesh_specification.mesh_name,
+                    file=connector_mesh_specification.mesh_path.value,
+                    scale=connector_mesh_specification.scale_ratio.value
+                    )
 
     def _build_plate(
             self
@@ -78,12 +108,12 @@ class SeahorsePlate(MJCMorphologyPart):
         self.plate = add_mesh_to_body(
                 body=self.mjcf_body,
                 name=f"{self.base_name}_plate",
-                mesh_name=f"{self.base_name}_plate",
                 position=position,
                 euler=np.zeros(3),
                 rgba=colors.rgba_green,
                 group=0,
-                mesh_specification=self.plate_specification.plate_mesh_specification
+                mesh_specification=self.plate_specification.plate_mesh_specification,
+                sdf=True
                 )
 
     def _build_connectors(
@@ -106,7 +136,6 @@ class SeahorsePlate(MJCMorphologyPart):
             self.connectors["x"] = add_mesh_to_body(
                     body=self.mjcf_body,
                     name=f"{self.base_name}_connector_x",
-                    mesh_name=f"{self.base_name}_connector",
                     position=connector_pos,
                     euler=np.zeros(3),
                     rgba=colors.rgba_gray,
@@ -122,7 +151,6 @@ class SeahorsePlate(MJCMorphologyPart):
             self.connectors["y"] = add_mesh_to_body(
                     body=self.mjcf_body,
                     name=f"{self.base_name}_connector_y",
-                    mesh_name=f"{self.base_name}_connector",
                     position=connector_pos,
                     euler=connector_euler,
                     rgba=colors.rgba_gray,
@@ -203,8 +231,9 @@ class SeahorsePlate(MJCMorphologyPart):
         self.upper_ghost_hmm_taps = []
         self.lower_ghost_hmm_taps = []
         side = self.morphology_specification.corners[self.plate_index].split("_")[0]
-        if self.plate_index != get_actuator_tendon_plate_indices(side=side,
-                                                                 segment_index=self.segment_index)[0]:
+        if self.plate_index != get_actuator_tendon_plate_indices(
+                side=side, segment_index=self.segment_index
+                )[0]:
             return
 
         pos = np.array(
@@ -261,8 +290,9 @@ class SeahorsePlate(MJCMorphologyPart):
     def _configure_mvm_tendon_attachment_points(
             self
             ) -> None:
-        if not (self.morphology_specification.tendon_actuation_specification.mvm_tendon_actuation_specification
-                .enabled.value):
+        if not (
+                self.morphology_specification.tendon_actuation_specification.mvm_tendon_actuation_specification
+                        .enabled.value):
             return
         if self.plate_index == 1:
             self.mvm_taps = []
@@ -360,8 +390,8 @@ class SeahorsePlate(MJCMorphologyPart):
                     range=x_axis_range,
                     damping=x_axis_joint_specification.damping.value,
                     stiffness=x_axis_joint_specification.stiffness.value,
-                    solimplimit = [0.90, 0.9999, 0.001, 0.1, 6]
-            )
+                    solimplimit=[0.90, 0.9999, 0.001, 0.1, 6]
+                    )
         if y_axis_joint_specification.range.value != 0:
             self.y_axis_gliding_joint = self.mjcf_body.add(
                     'joint',
@@ -373,5 +403,5 @@ class SeahorsePlate(MJCMorphologyPart):
                     range=y_axis_range,
                     damping=y_axis_joint_specification.damping.value,
                     stiffness=y_axis_joint_specification.stiffness.value,
-                    solimplimit = [0.90, 0.9999, 0.001, 0.1, 6]
-            )
+                    solimplimit=[0.90, 0.9999, 0.001, 0.1, 6]
+                    )
