@@ -9,7 +9,8 @@ from brb.toy_example.arena.target import Target
 class PlaneWithTargetArenaConfiguration(ArenaConfiguration):
     def __init__(
             self,
-            size: Tuple[int, int] = (8, 8), ) -> None:
+            size: Tuple[int, int] = (8, 8)
+            ) -> None:
         super().__init__(name="PlaneWithTargetArena")
         self.size = size
 

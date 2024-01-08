@@ -3,7 +3,7 @@ fprs @ git+https://github.com/Co-Evolve/fprs@40ee809ca6ba15e66961d2153ee86e83550
 gymnasium==0.29.1
 mujoco==3.1.1
 mujoco_mjx==3.1.1
-mujoco_utils @ git+https://github.com/Co-Evolve/mujoco-utils@e328a4256837e815589ee276356ca9a6caad7782
+mujoco_utils @ git+https://github.com/Co-Evolve/mujoco-utils@dd9aa6948dd65b8c4e97c26a7a091f12dce19fba
 numpy==1.26.3
 opencv_python==4.9.0.80
 perlin_noise==1.12
