@@ -1,6 +1,6 @@
 from typing import Callable
 
-import gym
+import gymnasium
 import jax
 import jax.numpy as jnp
 
@@ -10,7 +10,7 @@ from brb.toy_example.mjx.example_usage_single import create_mjx_environment
 
 
 def get_action_generator(
-        action_space: gym.spaces.Box
+        action_space: gymnasium.spaces.Box
         ) -> Callable[[float], jnp.ndarray]:
     def action_generator(
             t: float
