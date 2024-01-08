@@ -1,10 +1,9 @@
 dm_control==1.0.16
 fprs @ git+https://github.com/Co-Evolve/fprs@40ee809ca6ba15e66961d2153ee86e83550592c1
 gymnasium==0.29.1
-jax==0.4.23
 mujoco==3.1.1
 mujoco_mjx==3.1.1
-mujoco_utils @ git+https://github.com/Co-Evolve/mujoco-utils@e7c931ed2b7527c7f009d9a600c46d26f1f2c511
+mujoco_utils @ git+https://github.com/Co-Evolve/mujoco-utils@49c2af977d41e4955e889df9d3a66408c0d22843
 numpy==1.26.3
 opencv_python==4.9.0.80
 perlin_noise==1.12
