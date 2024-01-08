@@ -53,7 +53,8 @@ if __name__ == '__main__':
         batched_state = jit_batched_step(state=batched_state, action=batched_action)
         done = jnp.any((batched_state.terminated | batched_state.truncated))
         if steps % int((1 / fps) / environment_configuration.control_timestep) == 0:
-            post_render(env.render(batched_state), environment_configuration=environment_configuration)
+            post_render(env.render(batched_state),
+                        environment_configuration=environment_configuration)
             print(batched_state.observations["segment_ground_contact"])
 
         steps += 1
