@@ -1,6 +1,7 @@
-from typing import Tuple, Union
+from typing import Callable, Tuple, Union
 
 import cv2
+import gymnasium
 import numpy as np
 
 from brb.toy_example.arena.arena import MJCFPlaneWithTargetArena, PlaneWithTargetArenaConfiguration
@@ -38,6 +39,26 @@ def post_render(
     cv2.waitKey(1)
 
 
+def create_mjc_open_loop_controller(
+        single_action_space: gymnasium.spaces.Box,
+        num_envs: int
+        ) -> Callable[[float], np.ndarray]:
+    def open_loop_controller(
+            t: float
+            ) -> np.ndarray:
+        actions = np.ones(single_action_space.shape)
+        actions[::2] = np.cos(5 * t)
+        actions[1::2] = np.sin(5 * t)
+        actions[-actions.shape[0] // 2::2] *= -1
+        return actions
+
+    if num_envs > 1:
+        batched_open_loop_controller = lambda \
+                t: np.stack([open_loop_controller(tt) for tt in t])
+        return batched_open_loop_controller
+    return open_loop_controller
+
+
 if __name__ == '__main__':
     environment_configuration = ToyExampleEnvironmentConfiguration(
             render_mode="human", camera_ids=[0, 1]
@@ -45,17 +66,17 @@ if __name__ == '__main__':
     env = create_mjc_environment(environment_configuration=environment_configuration)
     obs, info = env.reset()
 
+    controller = create_mjc_open_loop_controller(
+            single_action_space=env.action_space, num_envs=1
+            )
     done = False
     steps = 0
     fps = 60
     while not done:
         t = info["time"]
-        action = np.ones(env.action_space.shape)
-        action[::2] = np.cos(5 * t)
-        action[1::2] = np.sin(5 * t)
+        actions = controller(t)
 
-        action[-len(action) // 2::2] *= -1
-        obs, reward, terminated, truncated, info = env.step(action=action)
+        obs, reward, terminated, truncated, info = env.step(actions=actions)
         done = terminated or truncated
         if steps % int((1 / fps) / environment_configuration.control_timestep) == 0:
             post_render(env.render(), environment_configuration=environment_configuration)

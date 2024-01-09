@@ -273,9 +273,9 @@ class ToyExampleMJCEnvironment(MJCEnv):
 
     def step(
             self,
-            action: ActType
+            actions: ActType
             ) -> tuple[ObsType, SupportsFloat, bool, bool, dict[str, Any]]:
-        self._take_n_steps(ctrl=action)
+        self._take_n_steps(ctrl=actions)
 
         observations = self._get_observations()
         reward = self._get_reward()

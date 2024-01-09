@@ -1,3 +1,6 @@
+from typing import Callable
+
+import gymnasium
 import jax
 import jax.numpy as jnp
 
@@ -22,6 +25,29 @@ def create_mjx_environment(
     return env
 
 
+def create_mjx_open_loop_controller(
+        single_action_space: gymnasium.spaces.Box,
+        num_envs: int
+        ) -> Callable[[float], jnp.ndarray]:
+    def open_loop_controller(
+            t: float
+            ) -> jnp.ndarray:
+        actions = jnp.ones(single_action_space.shape)
+        actions = actions.at[jnp.arange(0, len(actions), 2)].set(jnp.cos(5 * t))
+        actions = actions.at[jnp.arange(1, len(actions), 2)].set(jnp.sin(5 * t))
+        actions = actions.at[jnp.arange(len(actions) // 2, len(actions), 2)].set(
+                actions[jnp.arange(len(actions) // 2, len(actions), 2)] * -1
+                )
+        return actions
+
+    if num_envs > 1:
+        open_loop_controller = jax.vmap(open_loop_controller)
+
+    open_loop_controller = jax.jit(open_loop_controller)
+
+    return open_loop_controller
+
+
 if __name__ == '__main__':
     environment_configuration = ToyExampleEnvironmentConfiguration(
             render_mode="human", camera_ids=[0, 1]
@@ -36,19 +62,18 @@ if __name__ == '__main__':
 
     state = jit_reset(rng=subrng)
 
+    controller = create_mjx_open_loop_controller(
+            single_action_space=env.action_space, num_envs=1
+            )
+
     done = False
     steps = 0
     fps = 60
     while not done:
         t = state.info["time"]
-        action = jnp.ones(env.action_space.shape)
-        action = action.at[jnp.arange(0, len(action), 2)].set(jnp.cos(5 * t))
-        action = action.at[jnp.arange(1, len(action), 2)].set(jnp.sin(5 * t))
-        action = action.at[jnp.arange(len(action) // 2, len(action), 2)].set(
-                action[jnp.arange(len(action) // 2, len(action), 2)] * -1
-                )
+        actions = controller(t)
 
-        state = jit_step(state=state, action=action)
+        state = jit_step(state=state, actions=actions)
         done = bool(state.terminated or state.truncated)
         if steps % int((1 / fps) / environment_configuration.control_timestep) == 0:
             post_render(env.render(state), environment_configuration=environment_configuration)

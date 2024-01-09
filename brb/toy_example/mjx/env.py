@@ -213,10 +213,10 @@ class ToyExampleMJXEnvironment(MJXEnv):
     def step(
             self,
             state: MJXState,
-            action: jnp.ndarray
+            actions: jnp.ndarray
             ) -> MJXState:
         mjx_data0 = state.mjx_data
-        mjx_data = self._take_n_steps(mjx_model=state.mjx_model, mjx_data=state.mjx_data, ctrl=action)
+        mjx_data = self._take_n_steps(mjx_model=state.mjx_model, mjx_data=state.mjx_data, ctrl=actions)
 
         observations = self._get_observations(mjx_model=state.mjx_model, mjx_data=mjx_data)
         reward = self._get_reward(mjx_model=state.mjx_model, mjx_data=mjx_data, mjx_data0=mjx_data0)

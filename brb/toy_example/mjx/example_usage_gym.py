@@ -1,11 +1,9 @@
-import jax
 import jax.numpy as jnp
 from mujoco_utils.environment.mjx_env import MJXGymEnvWrapper
 
 from brb.toy_example.mjc.env import ToyExampleEnvironmentConfiguration
 from brb.toy_example.mjc.example_usage_single import post_render
-from brb.toy_example.mjx.example_usage_batch import get_action_generator
-from brb.toy_example.mjx.example_usage_single import create_mjx_environment
+from brb.toy_example.mjx.example_usage_single import create_mjx_environment, create_mjx_open_loop_controller
 
 if __name__ == '__main__':
     num_envs = 2
@@ -15,9 +13,9 @@ if __name__ == '__main__':
     mjx_env = create_mjx_environment(environment_configuration=environment_configuration)
     gym_env = MJXGymEnvWrapper(env=mjx_env, num_envs=num_envs)
 
-    get_actions = get_action_generator(action_space=gym_env.single_action_space)
-    if num_envs > 1:
-        get_actions = jax.jit(jax.vmap(get_actions))
+    controller = create_mjx_open_loop_controller(
+            single_action_space=gym_env.single_action_space, num_envs=num_envs
+            )
 
     obs, info = gym_env.reset()
 
@@ -26,7 +24,7 @@ if __name__ == '__main__':
     fps = 60
     while not done:
         t = info["time"]
-        actions = get_actions(t)
+        actions = controller(t)
         obs, reward, terminated, truncated, info = gym_env.step(actions=actions)
 
         done = jnp.any((terminated | truncated))
